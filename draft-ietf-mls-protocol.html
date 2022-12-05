@@ -23,26 +23,26 @@ protocol that provides efficient asynchronous group key establishment
 with forward secrecy and post-compromise security for groups
 in size ranging from two to thousands. 
     " name="description">
-<meta content="xml2rfc 3.15.0" name="generator">
+<meta content="xml2rfc 3.15.3" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-mls-protocol-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.15.0
-    Python 3.10.5
+  xml2rfc 3.15.3
+    Python 3.10.8
     appdirs 1.4.4
     ConfigArgParse 1.5.3
     google-i18n-address 2.5.2
     html5lib 1.1
     intervaltree 3.1.0
     Jinja2 3.1.2
-    kitchen 1.2.6
     lxml 4.9.1
     MarkupSafe 2.1.1
     pycountry 22.3.5
     PyYAML 6.0
-    requests 2.27.1
-    setuptools 59.4.0
+    requests 2.28.1
+    setuptools 65.6.0
     six 1.16.0
+    wcwidth 0.2.5
 -->
 <link href="draft-ietf-mls-protocol.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -386,7 +386,7 @@ dl {
 dl > dt {
   float: left;
   margin-right: 1em;
-  min-width: 20ch;
+  min-width: 12ch;
 }
 dl.dlNewline > dt {
   float: none;
@@ -1049,11 +1049,11 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MLS</td>
-<td class="right">October 2022</td>
+<td class="right">December 2022</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Barnes, et al.</td>
-<td class="center">Expires 6 April 2023</td>
+<td class="center">Expires 8 June 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-protocol-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-10-03" class="published">3 October 2022</time>
+<time datetime="2022-12-05" class="published">5 December 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-04-06">6 April 2023</time></dd>
+<dd class="expires"><time datetime="2023-06-08">8 June 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1084,6 +1084,7 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </div>
 <div class="author">
       <div class="author-name">R. Robert</div>
+<div class="org">Phoenix R&amp;D</div>
 </div>
 <div class="author">
       <div class="author-name">J. Millican</div>
@@ -1141,7 +1142,7 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 April 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2041,8 +2042,8 @@ have variable-size length headers.<a href="#section-2.1-1" class="pilcrow">¶</a
 <p id="section-2.1.1-1">An optional value is encoded with a presence-signaling octet, followed by the
 value itself if present.  When decoding, a presence octet with a value other
 than 0 or 1 MUST be rejected as malformed.<a href="#section-2.1.1-1" class="pilcrow">¶</a></p>
-<div id="section-2.1.1-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-2.1.1-2">
+<pre>
 struct {
     uint8 present;
     select (present) {
@@ -2068,8 +2069,8 @@ a variable-length integer encoding based on the one in Section 16 of
 <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span>. (They differ only in that the one here requires a minimum-size
 encoding.) Instead of presenting min and max values, the vector description
 simply includes a <code>V</code>. For example:<a href="#section-2.1.2-2" class="pilcrow">¶</a></p>
-<div id="section-2.1.2-3">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-2.1.2-3">
+<pre>
 struct {
     uint32 fixed&lt;0..255&gt;;
     opaque variable&lt;V&gt;;
@@ -2138,8 +2139,8 @@ the two byte sequence 0x7bbd decodes to 15293; and the single byte 0x25
 decodes to 37.<a href="#section-2.1.2-8" class="pilcrow">¶</a></p>
 <p id="section-2.1.2-9">The following figure adapts the pseudocode provided in <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span> to add a
 check for minimum-length encoding:<a href="#section-2.1.2-9" class="pilcrow">¶</a></p>
-<div id="section-2.1.2-10">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-2.1.2-10">
+<pre>
 ReadVarint(data):
   // The length of variable-length integers is encoded in the
   // first two bits of the first byte.
@@ -3075,8 +3076,8 @@ produces a single ciphertext output from AEAD encryption (aligning with
 are opaque values in a format defined by the underlying
 protocol (see the Cryptographic Dependencies section of the HPKE specification for more
 information).<a href="#section-6.1-4" class="pilcrow">¶</a></p>
-<div id="section-6.1-5">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-6.1-5">
+<pre>
 opaque HPKEPublicKey&lt;V&gt;;
 </pre><a href="#section-6.1-5" class="pilcrow">¶</a>
 </div>
@@ -3087,8 +3088,8 @@ of the tree (including the leaf node information in KeyPackages used to add new
 members).<a href="#section-6.1-6" class="pilcrow">¶</a></p>
 <p id="section-6.1-7">Like HPKE public keys, signature public keys are represented as opaque values in
 a format defined by the ciphersuite's signature scheme.<a href="#section-6.1-7" class="pilcrow">¶</a></p>
-<div id="section-6.1-8">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-6.1-8">
+<pre>
 opaque SignaturePublicKey&lt;V&gt;;
 </pre><a href="#section-6.1-8" class="pilcrow">¶</a>
 </div>
@@ -3102,8 +3103,8 @@ In particular, ECDSA signatures are DER-encoded and EdDSA signatures are defined
 as the concatenation of <code>r</code> and <code>s</code> as specified in <span>[<a href="#RFC8032" class="cite xref">RFC8032</a>]</span>.<a href="#section-6.1-10" class="pilcrow">¶</a></p>
 <p id="section-6.1-11">To disambiguate different signatures used in MLS, each signed value is prefixed
 by a label as shown below:<a href="#section-6.1-11" class="pilcrow">¶</a></p>
-<div id="section-6.1-12">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-6.1-12">
+<pre>
 SignWithLabel(SignatureKey, Label, Content) =
     Signature.Sign(SignatureKey, SignContent)
 
@@ -3131,16 +3132,16 @@ by the signature algorithm.<a href="#section-6.1-13" class="pilcrow">¶</a></p>
 <p id="section-6.2-1">Some MLS messages refer to other MLS objects by hash.  For example, Welcome
 messages refer to KeyPackages for the members being welcomed, and Commits refer
 to Proposals they cover.  These identifiers are computed as follows:<a href="#section-6.2-1" class="pilcrow">¶</a></p>
-<div id="section-6.2-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-6.2-2">
+<pre>
 opaque HashReference&lt;V&gt;;
 
 HashReference KeyPackageRef;
 HashReference ProposalRef;
 </pre><a href="#section-6.2-2" class="pilcrow">¶</a>
 </div>
-<div id="section-6.2-3">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-6.2-3">
+<pre>
 MakeKeyPackageRef(value) = RefHash("MLS 1.0 KeyPackage Reference", value)
 MakeProposalRef(value)   = RefHash("MLS 1.0 Proposal Reference", value)
 
@@ -3179,8 +3180,8 @@ address, it can check that the desired identifier is among those attested.
 Using the terminology from <span>[<a href="#RFC6125" class="cite xref">RFC6125</a>]</span>, a Credential provides "presented
 identifiers", and it is up to the application to supply a "reference identifier"
 for the authenticated client, if any.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
-<div id="section-6.3-3">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-6.3-3">
+<pre>
 // See IANA registry for registered values
 uint16 CredentialType;
 
@@ -3274,8 +3275,8 @@ all present in an MLS group, then those devices' clients could all present the
 user's application-layer identifiers.<a href="#section-6.3.2-3" class="pilcrow">¶</a></p>
 <p id="section-6.3.2-4">If needed, applications may add application-specific identifiers to the
 <code>extensions</code> field of a LeafNode object with the <code>application_id</code> extension.<a href="#section-6.3.2-4" class="pilcrow">¶</a></p>
-<div id="section-6.3.2-5">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-6.3.2-5">
+<pre>
 opaque application_id&lt;V&gt;;
 </pre><a href="#section-6.3.2-5" class="pilcrow">¶</a>
 </div>
@@ -3314,8 +3315,8 @@ application messages and SHOULD use MLSCiphertext to encode
 handshake messages, but MAY transmit handshake messages encoded
 as MLSPlaintext objects in cases where it is necessary for the
 Delivery Service to examine such messages.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<div id="section-7-4">
-<pre class="breakable lang-tls sourcecode">
+<div class="breakable lang-tls sourcecode" id="section-7-4">
+<pre>
 enum {
     reserved(0),
     mls10(1),
@@ -3401,8 +3402,8 @@ struct {
 <a href="#external-proposals" class="auto internal xref">Section 13.1.8</a> and <a href="#joining-via-external-commits" class="auto internal xref">Section 13.4.3.2</a> for more details.<a href="#section-7-5" class="pilcrow">¶</a></p>
 <p id="section-7-6">The following structure is used to fully describe the data transmitted in
 plaintexts or ciphertexts.<a href="#section-7-6" class="pilcrow">¶</a></p>
-<div id="section-7-7">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-7-7">
+<pre>
 struct {
     WireFormat wire_format;
     MLSContent content;
@@ -3485,8 +3486,8 @@ consume them:<a href="#section-7-8" class="pilcrow">¶</a></p>
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-content-authentication" class="section-name selfRef">Content Authentication</a>
         </h3>
 <p id="section-7.1-1">MLSContent is authenticated using the MLSContentAuthData structure.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<div id="section-7.1-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-7.1-2">
+<pre>
 struct {
     ProtocolVersion version = mls10;
     WireFormat wire_format;
@@ -3563,8 +3564,8 @@ the <code>signature</code> and <code>confirmation_tag</code> fields are valid.<a
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-encoding-and-decoding-a-pla" class="section-name selfRef">Encoding and Decoding a Plaintext</a>
         </h3>
 <p id="section-7.2-1">Plaintexts are encoded using the MLSPlaintext structure.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
-<div id="section-7.2-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-7.2-2">
+<pre>
 struct {
     MLSContent content;
     MLSContentAuthData auth;
@@ -3582,16 +3583,16 @@ struct {
 <p id="section-7.2-3">The <code>membership_tag</code> field in the MLSPlaintext object authenticates the sender's
 membership in the group. For messages sent by members, it MUST be set to the
 following value:<a href="#section-7.2-3" class="pilcrow">¶</a></p>
-<div id="section-7.2-4">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-7.2-4">
+<pre>
 struct {
   MLSContentTBS content_tbs;
   MLSContentAuthData auth;
 } MLSContentTBM;
 </pre><a href="#section-7.2-4" class="pilcrow">¶</a>
 </div>
-<div id="section-7.2-5">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-7.2-5">
+<pre>
 membership_tag = MAC(membership_key, MLSContentTBM)
 </pre><a href="#section-7.2-5" class="pilcrow">¶</a>
 </div>
@@ -3606,8 +3607,8 @@ MLSContentAuthData is valid.<a href="#section-7.2-6" class="pilcrow">¶</a></p>
 <a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-encoding-and-decoding-a-cip" class="section-name selfRef">Encoding and Decoding a Ciphertext</a>
         </h3>
 <p id="section-7.3-1">Ciphertexts are encoded using the MLSCiphertext structure.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<div id="section-7.3-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-7.3-2">
+<pre>
 struct {
     opaque group_id&lt;V&gt;;
     uint64 epoch;
@@ -3627,8 +3628,8 @@ and MLSCiphertextContent.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
 <a href="#section-7.3.1" class="section-number selfRef">7.3.1. </a><a href="#name-content-encryption" class="section-name selfRef">Content Encryption</a>
           </h4>
 <p id="section-7.3.1-1">The ciphertext content is encoded using the MLSCiphertextContent structure.<a href="#section-7.3.1-1" class="pilcrow">¶</a></p>
-<div id="section-7.3.1-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-7.3.1-2">
+<pre>
 struct {
     select (MLSCiphertext.content_type) {
         case application:
@@ -3689,8 +3690,8 @@ decryption.<a href="#section-7.3.1-6" class="pilcrow">¶</a></p>
 <p id="section-7.3.1-8">The Additional Authenticated Data (AAD) input to the encryption
 contains an object of the following form, with the values used to
 identify the key and nonce:<a href="#section-7.3.1-8" class="pilcrow">¶</a></p>
-<div id="section-7.3.1-9">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-7.3.1-9">
+<pre>
 struct {
     opaque group_id&lt;V&gt;;
     uint64 epoch;
@@ -3712,8 +3713,8 @@ MLSContentAuthData is valid.<a href="#section-7.3.1-10" class="pilcrow">¶</a></
 encrypted with the ciphersuite's AEAD with a key and nonce derived from both the
 <code>sender_data_secret</code> and a sample of the encrypted content. Before being
 encrypted, the sender data is encoded as an object of the following form:<a href="#section-7.3.2-1" class="pilcrow">¶</a></p>
-<div id="section-7.3.2-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-7.3.2-2">
+<pre>
 struct {
     uint32 leaf_index;
     uint32 generation;
@@ -3730,8 +3731,8 @@ in the case of state loss or corruption, as described in <a href="#content-encry
 <code>KDF.Nh</code> bytes of the ciphertext generated in the previous section. If the
 length of the ciphertext is less than <code>KDF.Nh</code>, the whole ciphertext is used.
 In pseudocode, the key and nonce are derived as:<a href="#section-7.3.2-5" class="pilcrow">¶</a></p>
-<div id="section-7.3.2-6">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-7.3.2-6">
+<pre>
 ciphertext_sample = ciphertext[0..KDF.Nh-1]
 
 sender_data_key = ExpandWithLabel(sender_data_secret, "key",
@@ -3742,8 +3743,8 @@ sender_data_nonce = ExpandWithLabel(sender_data_secret, "nonce",
 </div>
 <p id="section-7.3.2-7">The Additional Authenticated Data (AAD) for the SenderData ciphertext is the
 first three fields of MLSCiphertext:<a href="#section-7.3.2-7" class="pilcrow">¶</a></p>
-<div id="section-7.3.2-8">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-7.3.2-8">
+<pre>
 struct {
     opaque group_id&lt;V&gt;;
     uint64 epoch;
@@ -3779,8 +3780,8 @@ describe the content of the tree and the required operations.<a href="#section-8
 <p id="section-8.1-1">As discussed in <a href="#ratchet-tree-nodes" class="auto internal xref">Section 5.1.1</a>, the nodes of a ratchet tree contain
 several types of data describing individual members (for leaf nodes) or
 subgroups of the group (for parent nodes).  Parent nodes are simpler:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<div id="section-8.1-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-8.1-2">
+<pre>
 struct {
     HPKEPublicKey encryption_key;
     opaque parent_hash&lt;V&gt;;
@@ -3805,8 +3806,8 @@ entries in the <code>unmerged_leaves</code> vector MUST be sorted in increasing 
 appearance in the group, signed by that client. It is also used in client
 KeyPackage objects to store the information that will be needed to add a
 client to a group.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<div id="section-8.2-2">
-<pre class="breakable lang-tls sourcecode">
+<div class="breakable lang-tls sourcecode" id="section-8.2-2">
+<pre>
 enum {
     reserved(0),
     key_package(1),
@@ -4039,8 +4040,8 @@ path, as follows. In this setting, <code>path_secret[0]</code> refers to the fir
 in the filtered direct path, <code>path_secret[1]</code> to the second parent node, and so on.<a href="#section-8.4-4.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<div id="section-8.4-5">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-8.4-5">
+<pre>
 path_secret[0] is sampled at random
 path_secret[n] = DeriveSecret(path_secret[n-1], "path")
 </pre><a href="#section-8.4-5" class="pilcrow">¶</a>
@@ -4050,8 +4051,8 @@ path_secret[n] = DeriveSecret(path_secret[n-1], "path")
 node on the leaf's direct path, as follows.<a href="#section-8.4-6.1" class="pilcrow">¶</a>
 </li>
         </ul>
-<div id="section-8.4-7">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-8.4-7">
+<pre>
 node_secret[n] = DeriveSecret(path_secret[n], "node")
 node_priv[n], node_pub[n] = KEM.DeriveKeyPair(node_secret[n])
 </pre><a href="#section-8.4-7" class="pilcrow">¶</a>
@@ -4377,8 +4378,8 @@ UpdatePath, with a new LeafNode and set of parent nodes for the sender's
 filtered direct path. For each parent node, the UpdatePath contains a new
 public key and encrypted path secret. The parent nodes are kept in the same
 order as the filtered direct path.<a href="#section-8.6-1" class="pilcrow">¶</a></p>
-<div id="section-8.6-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-8.6-2">
+<pre>
 struct {
     opaque kem_output&lt;V&gt;;
     opaque ciphertext&lt;V&gt;;
@@ -4401,8 +4402,8 @@ the <code>encrypted_path_secret</code> vector MUST be equal to the length of the
 of the copath node (excluding new leaf nodes), with each ciphertext being the
 encryption to the respective resolution node.<a href="#section-8.6-3" class="pilcrow">¶</a></p>
 <p id="section-8.6-4">The HPKECiphertext values are computed as<a href="#section-8.6-4" class="pilcrow">¶</a></p>
-<div id="section-8.6-5">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-8.6-5">
+<pre>
 kem_output, context = SetupBaseS(node_public_key, group_context)
 ciphertext = context.Seal("", path_secret)
 </pre><a href="#section-8.6-5" class="pilcrow">¶</a>
@@ -4413,8 +4414,8 @@ for the group, and the functions <code>SetupBaseS</code> and
 <code>Seal</code> are defined according to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-8.6-6" class="pilcrow">¶</a></p>
 <p id="section-8.6-7">Decryption is performed in the corresponding way, using the private
 key of the resolution node.<a href="#section-8.6-7" class="pilcrow">¶</a></p>
-<div id="section-8.6-8">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-8.6-8">
+<pre>
 context = SetupBaseR(kem_output, node_private_key, group_context)
 path_secret = context.Open("", ciphertext)
 </pre><a href="#section-8.6-8" class="pilcrow">¶</a>
@@ -4519,8 +4520,8 @@ contain the <code>leaf_index</code> and the <code>LeafNode</code> (if any). <cod
 objects contain the <code>ParentNode</code> (if any) and the tree hash of the node's left
 and right children.  For both parent and leaf nodes, the optional node value
 MUST be absent if the node is blank and present if the node contains a value.<a href="#section-8.8-4" class="pilcrow">¶</a></p>
-<div id="section-8.8-5">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-8.8-5">
+<pre>
 enum {
     reserved(0),
     leaf(1),
@@ -4621,8 +4622,8 @@ L
 the ratchet tree along a path from a leaf L traversing node D (and hence also
 P). The new "Parent hash of P (with copath child S)" is obtained by hashing P's
 <code>ParentHashInput</code> struct.<a href="#section-8.9-7" class="pilcrow">¶</a></p>
-<div id="section-8.9-8">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-8.9-8">
+<pre>
 struct {
     HPKEPublicKey encryption_key;
     opaque parent_hash&lt;V&gt;;
@@ -4768,8 +4769,8 @@ chain from the committer's leaf to the root.<a href="#section-8.9.2-7" class="pi
       </h2>
 <p id="section-9-1">Group keys are derived using the <code>Extract</code> and <code>Expand</code> functions from the KDF
 for the group's ciphersuite, as well as the functions defined below:<a href="#section-9-1" class="pilcrow">¶</a></p>
-<div id="section-9-2">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-9-2">
+<pre>
 ExpandWithLabel(Secret, Label, Context, Length) =
     KDF.Expand(Secret, KDFLabel, Length)
 
@@ -4778,8 +4779,8 @@ DeriveSecret(Secret, Label) =
 </pre><a href="#section-9-2" class="pilcrow">¶</a>
 </div>
 <p id="section-9-3">Where KDFLabel is specified as:<a href="#section-9-3" class="pilcrow">¶</a></p>
-<div id="section-9-4">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-9-4">
+<pre>
 struct {
     uint16 length = Length;
     opaque label&lt;V&gt; = "MLS 1.0 " + Label;
@@ -4947,8 +4948,8 @@ proceeds as shown in the following diagram:<a href="#section-9-9" class="pilcrow
 </div>
 <p id="section-9-13">The <code>external_secret</code> is used to derive an HPKE key pair whose private key is
 held by the entire group:<a href="#section-9-13" class="pilcrow">¶</a></p>
-<div id="section-9-14">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-9-14">
+<pre>
 external_priv, external_pub = KEM.DeriveKeyPair(external_secret)
 </pre><a href="#section-9-14" class="pilcrow">¶</a>
 </div>
@@ -4961,8 +4962,8 @@ in order to allow non-members to join the group using an external commit.<a href
         </h3>
 <p id="section-9.1-1">Each member of the group maintains a GroupContext object that
 summarizes the state of the group:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
-<div id="section-9.1-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-9.1-2">
+<pre>
 struct {
     ProtocolVersion version = mls10;
     CipherSuite cipher_suite;
@@ -5046,8 +5047,8 @@ MLSAuthenticatedContent.  The MLSAuthenticatedContent struct is split into
 ConfirmedTranscriptHashInput and InterimTranscriptHashInput. The former is used to
 update the confirmed transcript hash and the latter to update the interim
 transcript hash.<a href="#section-9.2-5" class="pilcrow">¶</a></p>
-<div id="section-9.2-6">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-9.2-6">
+<pre>
 struct {
     WireFormat wire_format;
     MLSContent content; /* with content_type == commit */
@@ -5059,8 +5060,8 @@ struct {
 } InterimTranscriptHashInput;
 </pre><a href="#section-9.2-6" class="pilcrow">¶</a>
 </div>
-<div id="section-9.2-7">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-9.2-7">
+<pre>
 interim_transcript_hash_[0] = ""; /* zero-length octet string */
 
 confirmed_transcript_hash_[n] =
@@ -5087,16 +5088,16 @@ is joining via an external commit.<a href="#section-9.3-1" class="pilcrow">¶</a
 the HPKE export method.  The joiner then uses that <code>init_secret</code> with
 information provided in the GroupInfo and an external Commit to initialize
 their copy of the key schedule for the new epoch.<a href="#section-9.3-2" class="pilcrow">¶</a></p>
-<div id="section-9.3-3">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-9.3-3">
+<pre>
 kem_output, context = SetupBaseS(external_pub, "")
 init_secret = context.export("MLS 1.0 external init secret", KDF.Nh)
 </pre><a href="#section-9.3-3" class="pilcrow">¶</a>
 </div>
 <p id="section-9.3-4">Members of the group receive the <code>kem_output</code> in an ExternalInit proposal and
 perform the corresponding calculation to retrieve the <code>init_secret</code> value.<a href="#section-9.3-4" class="pilcrow">¶</a></p>
-<div id="section-9.3-5">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-9.3-5">
+<pre>
 context = SetupBaseR(kem_output, external_priv, "")
 init_secret = context.export("MLS 1.0 external init secret", KDF.Nh)
 </pre><a href="#section-9.3-5" class="pilcrow">¶</a>
@@ -5136,8 +5137,8 @@ and new members added in the Commit are informed by the GroupSecrets object in t
 Welcome message corresponding to the Commit.  To ensure that existing and new
 members compute the same PSK input to the key schedule, the Commit and
 GroupSecrets objects MUST indicate the same set of PSKs, in the same order.<a href="#section-9.4-5" class="pilcrow">¶</a></p>
-<div id="section-9.4-6">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-9.4-6">
+<pre>
 enum {
   reserved(0),
   external(1),
@@ -5179,8 +5180,8 @@ schedule in the order listed in the Commit, or in the <code>psks</code> field re
 For resumption PSKs, the PSK is defined as the <code>resumption_psk</code> of the group and
 epoch specified in the <code>PreSharedKeyID</code> object. Specifically, <code>psk_secret</code> is
 computed as follows:<a href="#section-9.4-8" class="pilcrow">¶</a></p>
-<div id="section-9.4-9">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-9.4-9">
+<pre>
 struct {
     PreSharedKeyID id;
     uint16 index;
@@ -5188,8 +5189,8 @@ struct {
 } PSKLabel;
 </pre><a href="#section-9.4-9" class="pilcrow">¶</a>
 </div>
-<div id="section-9.4-10">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-9.4-10">
+<pre>
 psk_extracted_[i] = KDF.Extract(0, psk_[i])
 psk_input_[i] = ExpandWithLabel(psk_extracted_[i], "derived psk",
                   PSKLabel, KDF.Nh)
@@ -5276,8 +5277,8 @@ the resulting <code>psk_secret</code> is <code>psk_secret_[0]</code>, the all-ze
         </h3>
 <p id="section-9.5-1">The main MLS key schedule provides an <code>exporter_secret</code> which can
 be used by an application to derive new secrets for use outside of MLS.<a href="#section-9.5-1" class="pilcrow">¶</a></p>
-<div id="section-9.5-2">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-9.5-2">
+<pre>
 MLS-Exporter(Label, Context, Length) =
        ExpandWithLabel(DeriveSecret(exporter_secret, Label),
                          "exporter", Hash(Context), Length)
@@ -5481,8 +5482,8 @@ more than one message.<a href="#section-10.1-7" class="pilcrow">¶</a></p>
 <p id="section-10.1-8">Keys, nonces, and the secrets in ratchets are derived using
 DeriveTreeSecret. The context in a given call consists of the current position
 in the ratchet.<a href="#section-10.1-8" class="pilcrow">¶</a></p>
-<div id="section-10.1-9">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-10.1-9">
+<pre>
 DeriveTreeSecret(Secret, Label, Generation, Length) =
     ExpandWithLabel(Secret, Label, Generation, Length)
 </pre><a href="#section-10.1-9" class="pilcrow">¶</a>
@@ -5628,8 +5629,8 @@ considered malformed.<a href="#section-11-4" class="pilcrow">¶</a></p>
 <p id="section-11-5">The signature is computed by the function <code>SignWithLabel</code> with a label
 <code>KeyPackageTBS</code> and a content comprising of all of the fields except for the
 signature field.<a href="#section-11-5" class="pilcrow">¶</a></p>
-<div id="section-11-6">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-11-6">
+<pre>
 struct {
     ProtocolVersion version;
     CipherSuite cipher_suite;
@@ -5772,8 +5773,8 @@ KeyPackage and the leaf secret from which the Commit is built.<a href="#section-
 group.  At a minimum, all members of the group need to support the ciphersuite
 and protocol version in use.  Additional requirements can be imposed by
 including a <code>required_capabilities</code> extension in the GroupContext.<a href="#section-12.1-1" class="pilcrow">¶</a></p>
-<div id="section-12.1-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-12.1-2">
+<pre>
 struct {
     ExtensionType extension_types&lt;V&gt;;
     ProposalType proposal_types&lt;V&gt;;
@@ -5903,8 +5904,8 @@ a state transition occurs, the epoch number is incremented by one.<a href="#sect
         </h3>
 <p id="section-13.1-1">Proposals are included in an MLSContent by way of a Proposal structure
 that indicates their type:<a href="#section-13.1-1" class="pilcrow">¶</a></p>
-<div id="section-13.1-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.1-2">
+<pre>
 // See IANA registry for registered values
 uint16 ProposalType;
 
@@ -5934,8 +5935,8 @@ that it can be retrieved by hash (as a ProposalOrRef object) in a later Commit m
           </h4>
 <p id="section-13.1.1-1">An Add proposal requests that a client with a specified KeyPackage be added
 to the group.<a href="#section-13.1.1-1" class="pilcrow">¶</a></p>
-<div id="section-13.1.1-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.1.1-2">
+<pre>
 struct {
     KeyPackage key_package;
 } Add;
@@ -5971,8 +5972,8 @@ the <code>leaf_node</code> field of the KeyPackage in the Add.<a href="#section-
 <p id="section-13.1.2-1">An Update proposal is a similar mechanism to Add with the distinction
 that it replaces the sender's LeafNode in the tree instead of adding a new leaf
 to the tree.<a href="#section-13.1.2-1" class="pilcrow">¶</a></p>
-<div id="section-13.1.2-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.1.2-2">
+<pre>
 struct {
     LeafNode leaf_node;
 } Update;
@@ -5996,8 +5997,8 @@ proposal according to <a href="#leaf-node-validation" class="auto internal xref"
           </h4>
 <p id="section-13.1.3-1">A Remove proposal requests that the member with the leaf index <code>removed</code> be removed
 from the group.<a href="#section-13.1.3-1" class="pilcrow">¶</a></p>
-<div id="section-13.1.3-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.1.3-2">
+<pre>
 struct {
     uint32 removed;
 } Remove;
@@ -6028,8 +6029,8 @@ the smallest value such that <code>2^d &gt; L</code>.<a href="#section-13.1.3-5.
           </h4>
 <p id="section-13.1.4-1">A PreSharedKey proposal can be used to request that a pre-shared key be
 injected into the key schedule in the process of advancing the epoch.<a href="#section-13.1.4-1" class="pilcrow">¶</a></p>
-<div id="section-13.1.4-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.1.4-2">
+<pre>
 struct {
     PreSharedKeyID psk;
 } PreSharedKey;
@@ -6059,8 +6060,8 @@ in the Commit.<a href="#section-13.1.4-5" class="pilcrow">¶</a></p>
 parameters, for example, to increase the version number or to change the
 ciphersuite. The reinitialization is done by creating a completely new group
 and shutting down the old one.<a href="#section-13.1.5-1" class="pilcrow">¶</a></p>
-<div id="section-13.1.5-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.1.5-2">
+<pre>
 struct {
     opaque group_id&lt;V&gt;;
     ProtocolVersion version;
@@ -6083,8 +6084,8 @@ send the Welcome message that matches the ReInit, according to the criteria in
           </h4>
 <p id="section-13.1.6-1">An ExternalInit proposal is used by new members that want to join a group by
 using an external commit. This proposal can only be used in that context.<a href="#section-13.1.6-1" class="pilcrow">¶</a></p>
-<div id="section-13.1.6-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.1.6-2">
+<pre>
 struct {
   opaque kem_output&lt;V&gt;;
 } ExternalInit;
@@ -6102,8 +6103,8 @@ The <code>kem_output</code> field contains the required KEM output.<a href="#sec
           </h4>
 <p id="section-13.1.7-1">A GroupContextExtensions proposal is used to update the list of extensions in
 the GroupContext for the group.<a href="#section-13.1.7-1" class="pilcrow">¶</a></p>
-<div id="section-13.1.7-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.1.7-2">
+<pre>
 struct {
   Extension extensions&lt;V&gt;;
 } GroupContextExtensions;
@@ -6156,8 +6157,8 @@ will not have the keys necessary to construct an MLSCiphertext object.<a href="#
 <p id="section-13.1.8.1-1">The <code>external_senders</code> extension is a group context extension that contains
 the credentials and signature keys of senders that are permitted to send
 external proposals to the group.<a href="#section-13.1.8.1-1" class="pilcrow">¶</a></p>
-<div id="section-13.1.8.1-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.1.8.1-2">
+<pre>
 struct {
   SignaturePublicKey signature_key;
   Credential credential;
@@ -6295,8 +6296,8 @@ refer to new Proposals from the committer can be included by value. Commits
 for previously sent proposals from anyone (including the committer) can be sent
 by reference.  Proposals sent by reference are specified by including the hash of
 the MLSAuthenticatedContent object in which the proposal was sent (see <a href="#hash-based-identifiers" class="auto internal xref">Section 6.2</a>).<a href="#section-13.4-2" class="pilcrow">¶</a></p>
-<div id="section-13.4-3">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.4-3">
+<pre>
 enum {
   reserved(0),
   proposal(1)
@@ -6367,8 +6368,8 @@ a path.  An UpdatePath is required to evict the removed member or the old
 appearance of the updated member.<a href="#section-13.4-12" class="pilcrow">¶</a></p>
 <p id="section-13.4-13">In pseudocode, the logic for validating the <code>path</code> field of a Commit is as
 follows:<a href="#section-13.4-13" class="pilcrow">¶</a></p>
-<div id="section-13.4-14">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-13.4-14">
+<pre>
 pathRequiredTypes = [
     update,
     remove,
@@ -6705,8 +6706,8 @@ the secret tree for a short time to decrypt late messages in the previous epoch.
 <p id="section-13.4.3-1">New members can join the group in two ways. Either by being added by a group
 member, or by adding themselves through an external Commit. In both cases, the
 new members need information to bootstrap their local group state.<a href="#section-13.4.3-1" class="pilcrow">¶</a></p>
-<div id="section-13.4.3-2">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.4.3-2">
+<pre>
 struct {
     GroupContext group_context;
     Extension extensions&lt;V&gt;;
@@ -6723,8 +6724,8 @@ currently participating in.<a href="#section-13.4.3-3" class="pilcrow">¶</a></p
 leaf node of the ratchet tree with leaf index <code>signer</code>. The
 signature covers the following structure, comprising all the fields in the
 GroupInfo above <code>signature</code>:<a href="#section-13.4.3-4" class="pilcrow">¶</a></p>
-<div id="section-13.4.3-5">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.4.3-5">
+<pre>
 struct {
     GroupContext group_context;
     Extension extensions&lt;V&gt;;
@@ -6756,8 +6757,8 @@ reset by the corresponding Commit.<a href="#section-13.4.3.1-2" class="pilcrow">
 <p id="section-13.4.3.1-3">If the sender of the Welcome message wants the receiving member to include a PSK
 in the derivation of the <code>epoch_secret</code>, they can populate the <code>psks</code> field
 indicating which PSK to use.<a href="#section-13.4.3.1-3" class="pilcrow">¶</a></p>
-<div id="section-13.4.3.1-4">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.4.3.1-4">
+<pre>
 struct {
   opaque path_secret&lt;V&gt;;
 } PathSecret;
@@ -6808,8 +6809,8 @@ the <code>welcome_key</code> and <code>welcome_nonce</code>. Use the key and non
 <code>encrypted_group_info</code> field.<a href="#section-13.4.3.1-7.4" class="pilcrow">¶</a>
 </li>
             </ul>
-<div id="section-13.4.3.1-8">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-13.4.3.1-8">
+<pre>
 welcome_nonce = KDF.Expand(welcome_secret, "nonce", AEAD.Nn)
 welcome_key = KDF.Expand(welcome_secret, "key", AEAD.Nk)
 </pre><a href="#section-13.4.3.1-8" class="pilcrow">¶</a>
@@ -6937,8 +6938,8 @@ following information for the group's current epoch:<a href="#section-13.4.3.2-3
             </ul>
 <p id="section-13.4.3.2-5">In other words, to join a group via an External Commit, a new member needs a
 GroupInfo with an <code>external_pub</code> extension present in its <code>extensions</code> field.<a href="#section-13.4.3.2-5" class="pilcrow">¶</a></p>
-<div id="section-13.4.3.2-6">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.4.3.2-6">
+<pre>
 struct {
     HPKEPublicKey external_pub;
 } ExternalPub;
@@ -7007,8 +7008,8 @@ tree need not be trusted to maintain the integrity of tree.<a href="#section-13.
 <p id="section-13.4.3.3-2">In cases where the application does not wish to provide such an external source,
 the whole public state of the ratchet tree can be provided in an extension of
 type <code>ratchet_tree</code>, containing a <code>ratchet_tree</code> object of the following form:<a href="#section-13.4.3.3-2" class="pilcrow">¶</a></p>
-<div id="section-13.4.3.3-3">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-13.4.3.3-3">
+<pre>
 struct {
     NodeType node_type;
     select (Node.node_type) {
@@ -7039,8 +7040,8 @@ leaf with index <code>L</code> in array position <code>2*L</code>). The root nod
 position <code>2^d - 1</code> of the array. Intermediate parent nodes can be identified by
 performing the same calculation to the subarrays to the left and right of the
 root, following something like the following algorithm:<a href="#section-13.4.3.3-7" class="pilcrow">¶</a></p>
-<div id="section-13.4.3.3-8">
-<pre class="lang-python sourcecode">
+<div class="lang-python sourcecode" id="section-13.4.3.3-8">
+<pre>
 # Assuming a class Node that has left and right members
 def subtree_root(nodes):
     # If there is only one node in the array return it
@@ -7597,14 +7598,14 @@ this document<a href="#section-17-4" class="pilcrow">¶</a></p>
 <p id="section-17.1-1">A ciphersuite is a combination of a protocol version and the set of
 cryptographic algorithms that should be used.<a href="#section-17.1-1" class="pilcrow">¶</a></p>
 <p id="section-17.1-2">Ciphersuite names follow the naming convention:<a href="#section-17.1-2" class="pilcrow">¶</a></p>
-<div id="section-17.1-3">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="section-17.1-3">
+<pre>
 CipherSuite MLS_LVL_KEM_AEAD_HASH_SIG = VALUE;
 </pre><a href="#section-17.1-3" class="pilcrow">¶</a>
 </div>
 <p id="section-17.1-4">Where VALUE is represented as a sixteen-bit integer:<a href="#section-17.1-4" class="pilcrow">¶</a></p>
-<div id="section-17.1-5">
-<pre class="lang-tls sourcecode">
+<div class="lang-tls sourcecode" id="section-17.1-5">
+<pre>
 uint16 CipherSuite;
 </pre><a href="#section-17.1-5" class="pilcrow">¶</a>
 </div>
@@ -8736,8 +8737,8 @@ the following structure:<a href="#appendix-C-1" class="pilcrow">¶</a></p>
 manipulating indices, rather than having to maintain complicated structures in
 memory. The basic rule is that the high-order bits of parent and child nodes
 indices have the following relation (where <code>x</code> is an arbitrary bit string):<a href="#appendix-C-3" class="pilcrow">¶</a></p>
-<div id="appendix-C-4">
-<pre class="lang-pseudocode sourcecode">
+<div class="lang-pseudocode sourcecode" id="appendix-C-4">
+<pre>
 parent=01x =&gt; left=00x, right=10x
 </pre><a href="#appendix-C-4" class="pilcrow">¶</a>
 </div>
@@ -8752,8 +8753,8 @@ the array:<a href="#appendix-C-5" class="pilcrow">¶</a></p>
       </ul>
 <p id="appendix-C-7">The following python code demonstrates the tree computations necessary to use an
 array-based tree for MLS.<a href="#appendix-C-7" class="pilcrow">¶</a></p>
-<div id="appendix-C-8">
-<pre class="breakable lang-python sourcecode">
+<div class="breakable lang-python sourcecode" id="appendix-C-8">
+<pre>
 # The exponent of the largest power of 2 less than x. Equivalent to:
 #   int(math.floor(math.log(x, 2)))
 def log2(x):
@@ -8890,8 +8891,8 @@ balanced structure of the tree as the tree is extended to add new members,
 or truncated when members are removed.<a href="#appendix-D-1" class="pilcrow">¶</a></p>
 <p id="appendix-D-2">The following code snippet shows how these algorithms could be implemented in
 Python.<a href="#appendix-D-2" class="pilcrow">¶</a></p>
-<div id="appendix-D-3">
-<pre class="lang-python sourcecode">
+<div class="lang-python sourcecode" id="appendix-D-3">
+<pre>
 class Node:
     def __init__(self, value, left=None, right=None):
         self.value = value    # Value of the node
@@ -8997,7 +8998,7 @@ class Tree:
 </address>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Konrad Kohbrok</span></div>
-<div dir="auto" class="left"><span class="org">Aalto University</span></div>
+<div dir="auto" class="left"><span class="org">Phoenix R&amp;D</span></div>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:konrad.kohbrok@datashrine.de" class="email">konrad.kohbrok@datashrine.de</a>
@@ -9091,6 +9092,7 @@ class Tree:
 </address>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Raphael Robert</span></div>
+<div dir="auto" class="left"><span class="org">Phoenix R&amp;D</span></div>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:ietf@raphaelrobert.com" class="email">ietf@raphaelrobert.com</a>
