@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-04T01:35:53.233964+00:00",
+  "timestamp": "2022-12-06T01:26:59.493986+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -54324,6 +54324,48 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 761,
+      "id": "PR_kwDOBoyH6c5EXbYN",
+      "title": "Change of affiliation",
+      "url": "https://github.com/mlswg/mls-protocol/pull/761",
+      "state": "MERGED",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR changes the affiliation of @raphaelrobert and myself.",
+      "createdAt": "2022-12-05T16:55:15Z",
+      "updatedAt": "2022-12-05T17:06:36Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "231aaa2c1da88d121d7aa871befe954fea41a8e3",
+      "headRepository": "kkohbrok/mls-protocol",
+      "headRefName": "konrad/change-affiliation",
+      "headRefOid": "091aed0ea29049aa444fab9b09845338dc870686",
+      "closedAt": "2022-12-05T17:06:36Z",
+      "mergedAt": "2022-12-05T17:06:36Z",
+      "mergedBy": "beurdouche",
+      "mergeCommit": {
+        "oid": "01a20d330a15fdb45ba2d7fd7701465bf19c544d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5H0ZGI",
+          "commit": {
+            "abbreviatedOid": "091aed0"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-05T16:56:15Z",
+          "updatedAt": "2022-12-05T16:56:15Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
