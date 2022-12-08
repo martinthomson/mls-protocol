@@ -6573,10 +6573,13 @@ for the current epoch and the path secret (if present).<a href="#section-12.4.1-
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-12.4.1-3.12">Construct a Welcome message from the encrypted GroupInfo object, the encrypted
-key packages, and any PSKs for which a proposal was included in the Commit. The
-order of the <code>psks</code> MUST be the same as the order of PreSharedKey proposals in the
-<code>proposals</code> vector.<a href="#section-12.4.1-3.12" class="pilcrow">¶</a>
+            <li class="normal" id="section-12.4.1-3.12">Construct one or more Welcome messages from the encrypted GroupInfo object,
+the encrypted key packages, and any PSKs for which a proposal was included in
+the Commit. The order of the <code>psks</code> MUST be the same as the order of
+PreSharedKey proposals in the <code>proposals</code> vector.  As discussed on
+<a href="#joining-via-welcome-message" class="auto internal xref">Section 12.4.3.1</a>, the committer is free to choose how many
+Welcome messages to construct.  However, the set of Welcome messages produced
+in this step MUST cover every new member added in the Commit.<a href="#section-12.4.1-3.12" class="pilcrow">¶</a>
 </li>
             <li class="normal" id="section-12.4.1-3.13">
               <p id="section-12.4.1-3.13.1">If a ReInit proposal was part of the Commit, the committer MUST create a new
@@ -6760,13 +6763,22 @@ struct {
             <h5 id="name-joining-via-welcome-message">
 <a href="#section-12.4.3.1" class="section-number selfRef">12.4.3.1. </a><a href="#name-joining-via-welcome-message" class="section-name selfRef">Joining via Welcome Message</a>
             </h5>
-<p id="section-12.4.3.1-1">The sender of a Commit message is responsible for sending a single Welcome message to
-all the new members added via Add proposals.  The Welcome message provides the new
+<p id="section-12.4.3.1-1">The sender of a Commit message is responsible for sending a Welcome message to
+each new member added via Add proposals.  The format of the Welcome message
+allows a single Welcome message to be encrypted for multiple new members.  It is
+up to the committer to decide how many Welcome messages to create for a given
+Commit. The committer could create one Welcome that is encrypted for all new
+members, a different Welcome for each new member, or Welcome messages for
+batches of new members (according to some batching scheme that works well for
+the application).  The processes for creating and processing the Welcome are the
+same in all cases, aside from the set of new members for whom a given Welcome is
+encrypted.<a href="#section-12.4.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-12.4.3.1-2">The Welcome message provides the new
 members with the current state of the group after the application of the Commit
 message.  The new members will not be able to decrypt or verify the Commit
 message, but will have the secrets they need to participate in the epoch
-initiated by the Commit message.<a href="#section-12.4.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-12.4.3.1-2">In order to allow the same Welcome message to be sent to all new members,
+initiated by the Commit message.<a href="#section-12.4.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-12.4.3.1-3">In order to allow the same Welcome message to be sent to multiple new members,
 information describing the group is encrypted with a symmetric key and nonce
 derived from the <code>joiner_secret</code> for the new epoch.  The <code>joiner_secret</code> is
 then encrypted to each new member using HPKE.  In the same encrypted package,
@@ -6774,11 +6786,11 @@ the committer transmits the path secret for the lowest (closest to the leaf) nod
 which is contained in the direct paths of both the committer and the new member.
 This allows the new
 member to compute private keys for nodes in its direct path that are being
-reset by the corresponding Commit.<a href="#section-12.4.3.1-2" class="pilcrow">¶</a></p>
-<p id="section-12.4.3.1-3">If the sender of the Welcome message wants the receiving member to include a PSK
+reset by the corresponding Commit.<a href="#section-12.4.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-12.4.3.1-4">If the sender of the Welcome message wants the receiving member to include a PSK
 in the derivation of the <code>epoch_secret</code>, they can populate the <code>psks</code> field
-indicating which PSK to use.<a href="#section-12.4.3.1-3" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-12.4.3.1-4">
+indicating which PSK to use.<a href="#section-12.4.3.1-4" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-12.4.3.1-5">
 <pre>
 struct {
   opaque path_secret&lt;V&gt;;
@@ -6800,126 +6812,126 @@ struct {
   EncryptedGroupSecrets secrets&lt;V&gt;;
   opaque encrypted_group_info&lt;V&gt;;
 } Welcome;
-</pre><a href="#section-12.4.3.1-4" class="pilcrow">¶</a>
+</pre><a href="#section-12.4.3.1-5" class="pilcrow">¶</a>
 </div>
-<p id="section-12.4.3.1-5">The client processing a Welcome message will need to have a copy of the group's
+<p id="section-12.4.3.1-6">The client processing a Welcome message will need to have a copy of the group's
 ratchet tree.  The tree can be provided in the Welcome message, in an extension
 of type <code>ratchet_tree</code>.  If it is sent otherwise (e.g., provided by a caching
 service on the Delivery Service), then the client MUST download the tree before
-processing the Welcome.<a href="#section-12.4.3.1-5" class="pilcrow">¶</a></p>
-<p id="section-12.4.3.1-6">On receiving a Welcome message, a client processes it using the following steps:<a href="#section-12.4.3.1-6" class="pilcrow">¶</a></p>
+processing the Welcome.<a href="#section-12.4.3.1-6" class="pilcrow">¶</a></p>
+<p id="section-12.4.3.1-7">On receiving a Welcome message, a client processes it using the following steps:<a href="#section-12.4.3.1-7" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-7.1">Identify an entry in the <code>secrets</code> array where the <code>new_member</code>
+<li class="normal" id="section-12.4.3.1-8.1">Identify an entry in the <code>secrets</code> array where the <code>new_member</code>
 value corresponds to one of this client's KeyPackages, using the hash
 indicated by the <code>cipher_suite</code> field. If no such field exists, or if the
 ciphersuite indicated in the KeyPackage does not match the one in the
-Welcome message, return an error.<a href="#section-12.4.3.1-7.1" class="pilcrow">¶</a>
+Welcome message, return an error.<a href="#section-12.4.3.1-8.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-7.2">Decrypt the <code>encrypted_group_secrets</code> value with the algorithms indicated
+              <li class="normal" id="section-12.4.3.1-8.2">Decrypt the <code>encrypted_group_secrets</code> value with the algorithms indicated
 by the ciphersuite and the private key corresponding to <code>init_key</code> in the
-referenced KeyPackage.<a href="#section-12.4.3.1-7.2" class="pilcrow">¶</a>
+referenced KeyPackage.<a href="#section-12.4.3.1-8.2" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-7.3">If a <code>PreSharedKeyID</code> is part of the GroupSecrets and the client is not in
+              <li class="normal" id="section-12.4.3.1-8.3">If a <code>PreSharedKeyID</code> is part of the GroupSecrets and the client is not in
 possession of the corresponding PSK, return an error. Additionally, if a
 <code>PreSharedKeyID</code> has type <code>resumption</code> with usage <code>reinit</code> or <code>branch</code>, verify
-that it is the only such PSK.<a href="#section-12.4.3.1-7.3" class="pilcrow">¶</a>
+that it is the only such PSK.<a href="#section-12.4.3.1-8.3" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-7.4">From the <code>joiner_secret</code> in the decrypted GroupSecrets object and the PSKs
+              <li class="normal" id="section-12.4.3.1-8.4">From the <code>joiner_secret</code> in the decrypted GroupSecrets object and the PSKs
 specified in the <code>GroupSecrets</code>, derive the <code>welcome_secret</code> and using that
 the <code>welcome_key</code> and <code>welcome_nonce</code>. Use the key and nonce to decrypt the
-<code>encrypted_group_info</code> field.<a href="#section-12.4.3.1-7.4" class="pilcrow">¶</a>
+<code>encrypted_group_info</code> field.<a href="#section-12.4.3.1-8.4" class="pilcrow">¶</a>
 </li>
             </ul>
-<div class="lang-pseudocode sourcecode" id="section-12.4.3.1-8">
+<div class="lang-pseudocode sourcecode" id="section-12.4.3.1-9">
 <pre>
 welcome_nonce = KDF.Expand(welcome_secret, "nonce", AEAD.Nn)
 welcome_key = KDF.Expand(welcome_secret, "key", AEAD.Nk)
-</pre><a href="#section-12.4.3.1-8" class="pilcrow">¶</a>
+</pre><a href="#section-12.4.3.1-9" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-9.1">Verify the signature on the GroupInfo object. The signature input comprises
+<li class="normal" id="section-12.4.3.1-10.1">Verify the signature on the GroupInfo object. The signature input comprises
 all of the fields in the GroupInfo object except the signature field. The
 public key is taken from the LeafNode of the
 ratchet tree with leaf index <code>signer</code>. If the node is blank or if
-signature verification fails, return an error.<a href="#section-12.4.3.1-9.1" class="pilcrow">¶</a>
+signature verification fails, return an error.<a href="#section-12.4.3.1-10.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.2">Verify that the <code>group_id</code> is unique among the groups that the client is
-currently participating in.<a href="#section-12.4.3.1-9.2" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-10.2">Verify that the <code>group_id</code> is unique among the groups that the client is
+currently participating in.<a href="#section-12.4.3.1-10.2" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.3">Verify that the <code>cipher_suite</code> in the GroupInfo matches the <code>cipher_suite</code> in
-the KeyPackage.<a href="#section-12.4.3.1-9.3" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-10.3">Verify that the <code>cipher_suite</code> in the GroupInfo matches the <code>cipher_suite</code> in
+the KeyPackage.<a href="#section-12.4.3.1-10.3" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.4">
-                <p id="section-12.4.3.1-9.4.1">Verify the integrity of the ratchet tree.<a href="#section-12.4.3.1-9.4.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-12.4.3.1-10.4">
+                <p id="section-12.4.3.1-10.4.1">Verify the integrity of the ratchet tree.<a href="#section-12.4.3.1-10.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-9.4.2.1">Verify that the tree hash of the ratchet tree matches the <code>tree_hash</code> field
-in GroupInfo.<a href="#section-12.4.3.1-9.4.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-12.4.3.1-10.4.2.1">Verify that the tree hash of the ratchet tree matches the <code>tree_hash</code> field
+in GroupInfo.<a href="#section-12.4.3.1-10.4.2.1" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-9.4.2.2">For each non-empty parent node, verify that it is "parent-hash valid",
-as described in <a href="#verifying-parent-hashes" class="auto internal xref">Section 7.9.2</a>.<a href="#section-12.4.3.1-9.4.2.2" class="pilcrow">¶</a>
+                  <li class="normal" id="section-12.4.3.1-10.4.2.2">For each non-empty parent node, verify that it is "parent-hash valid",
+as described in <a href="#verifying-parent-hashes" class="auto internal xref">Section 7.9.2</a>.<a href="#section-12.4.3.1-10.4.2.2" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-9.4.2.3">For each non-empty leaf node, validate the LeafNode as described in
-<a href="#leaf-node-validation" class="auto internal xref">Section 7.3</a>.<a href="#section-12.4.3.1-9.4.2.3" class="pilcrow">¶</a>
+                  <li class="normal" id="section-12.4.3.1-10.4.2.3">For each non-empty leaf node, validate the LeafNode as described in
+<a href="#leaf-node-validation" class="auto internal xref">Section 7.3</a>.<a href="#section-12.4.3.1-10.4.2.3" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-9.4.2.4">For each non-empty parent node, verify that each entry in the node's
+                  <li class="normal" id="section-12.4.3.1-10.4.2.4">For each non-empty parent node, verify that each entry in the node's
 <code>unmerged_leaves</code> represents a non-blank leaf node that is a descendant of
-the parent node.<a href="#section-12.4.3.1-9.4.2.4" class="pilcrow">¶</a>
+the parent node.<a href="#section-12.4.3.1-10.4.2.4" class="pilcrow">¶</a>
 </li>
                 </ul>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.5">Identify a leaf whose LeafNode is
+              <li class="normal" id="section-12.4.3.1-10.5">Identify a leaf whose LeafNode is
 identical to the one in the KeyPackage.  If no such field exists, return an
-error.  Let <code>my_leaf</code> represent this leaf in the tree.<a href="#section-12.4.3.1-9.5" class="pilcrow">¶</a>
+error.  Let <code>my_leaf</code> represent this leaf in the tree.<a href="#section-12.4.3.1-10.5" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.6">
-                <p id="section-12.4.3.1-9.6.1">Construct a new group state using the information in the GroupInfo object.<a href="#section-12.4.3.1-9.6.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-12.4.3.1-10.6">
+                <p id="section-12.4.3.1-10.6.1">Construct a new group state using the information in the GroupInfo object.<a href="#section-12.4.3.1-10.6.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-9.6.2.1">The GroupContext is the <code>group_context</code> field from the GroupInfo object.<a href="#section-12.4.3.1-9.6.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-12.4.3.1-10.6.2.1">The GroupContext is the <code>group_context</code> field from the GroupInfo object.<a href="#section-12.4.3.1-10.6.2.1" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-9.6.2.2">The new member's position in the tree is at the leaf <code>my_leaf</code>, as defined
-above.<a href="#section-12.4.3.1-9.6.2.2" class="pilcrow">¶</a>
+                  <li class="normal" id="section-12.4.3.1-10.6.2.2">The new member's position in the tree is at the leaf <code>my_leaf</code>, as defined
+above.<a href="#section-12.4.3.1-10.6.2.2" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-9.6.2.3">Update the leaf <code>my_leaf</code> with the private key corresponding to the
-public key in the node.<a href="#section-12.4.3.1-9.6.2.3" class="pilcrow">¶</a>
+                  <li class="normal" id="section-12.4.3.1-10.6.2.3">Update the leaf <code>my_leaf</code> with the private key corresponding to the
+public key in the node.<a href="#section-12.4.3.1-10.6.2.3" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-9.6.2.4">If the <code>path_secret</code> value is set in the GroupSecrets object: Identify the
+                  <li class="normal" id="section-12.4.3.1-10.6.2.4">If the <code>path_secret</code> value is set in the GroupSecrets object: Identify the
 lowest common ancestor of the leaf node <code>my_leaf</code> and of the node of
 the member with leaf index <code>GroupInfo.signer</code>. Set the private key for
-this node to the private key derived from the <code>path_secret</code>.<a href="#section-12.4.3.1-9.6.2.4" class="pilcrow">¶</a>
+this node to the private key derived from the <code>path_secret</code>.<a href="#section-12.4.3.1-10.6.2.4" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-9.6.2.5">For each parent of the common ancestor, up to the root of the tree, derive
+                  <li class="normal" id="section-12.4.3.1-10.6.2.5">For each parent of the common ancestor, up to the root of the tree, derive
 a new path secret and set the private key for the node to the private key
 derived from the path secret.  The private key MUST be the private key
-that corresponds to the public key in the node.<a href="#section-12.4.3.1-9.6.2.5" class="pilcrow">¶</a>
+that corresponds to the public key in the node.<a href="#section-12.4.3.1-10.6.2.5" class="pilcrow">¶</a>
 </li>
                 </ul>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.7">Use the <code>joiner_secret</code> from the GroupSecrets object to generate the epoch secret
-and other derived secrets for the current epoch.<a href="#section-12.4.3.1-9.7" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-10.7">Use the <code>joiner_secret</code> from the GroupSecrets object to generate the epoch secret
+and other derived secrets for the current epoch.<a href="#section-12.4.3.1-10.7" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.8">Set the confirmed transcript hash in the new state to the value of the
-<code>confirmed_transcript_hash</code> in the GroupInfo.<a href="#section-12.4.3.1-9.8" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-10.8">Set the confirmed transcript hash in the new state to the value of the
+<code>confirmed_transcript_hash</code> in the GroupInfo.<a href="#section-12.4.3.1-10.8" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.9">Verify the confirmation tag in the GroupInfo using the derived confirmation
-key and the <code>confirmed_transcript_hash</code> from the GroupInfo.<a href="#section-12.4.3.1-9.9" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-10.9">Verify the confirmation tag in the GroupInfo using the derived confirmation
+key and the <code>confirmed_transcript_hash</code> from the GroupInfo.<a href="#section-12.4.3.1-10.9" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.10">Use the confirmed transcript hash and confirmation tag to compute the interim
-transcript hash in the new state.<a href="#section-12.4.3.1-9.10" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-10.10">Use the confirmed transcript hash and confirmation tag to compute the interim
+transcript hash in the new state.<a href="#section-12.4.3.1-10.10" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-9.11">
-                <p id="section-12.4.3.1-9.11.1">If a <code>PreSharedKeyID</code> was used that has type <code>resumption</code> with usage <code>reinit</code>
-or <code>branch</code>, verify that the <code>epoch</code> field in the GroupInfo is equal to 1.<a href="#section-12.4.3.1-9.11.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-12.4.3.1-10.11">
+                <p id="section-12.4.3.1-10.11.1">If a <code>PreSharedKeyID</code> was used that has type <code>resumption</code> with usage <code>reinit</code>
+or <code>branch</code>, verify that the <code>epoch</code> field in the GroupInfo is equal to 1.<a href="#section-12.4.3.1-10.11.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-9.11.2.1">For usage <code>reinit</code>, verify that the last Commit to the referenced group
+<li class="normal" id="section-12.4.3.1-10.11.2.1">For usage <code>reinit</code>, verify that the last Commit to the referenced group
 contains a ReInit proposal and that the <code>group_id</code>, <code>version</code>,
 <code>cipher_suite</code>, and <code>group_context.extensions</code> fields of the GroupInfo match
 the ReInit proposal. Additionally, verify that all the members of the old
-group are also members of the new group, according to the application.<a href="#section-12.4.3.1-9.11.2.1" class="pilcrow">¶</a>
+group are also members of the new group, according to the application.<a href="#section-12.4.3.1-10.11.2.1" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-9.11.2.2">For usage <code>branch</code>, verify that the <code>version</code> and <code>cipher_suite</code> of the new
+                  <li class="normal" id="section-12.4.3.1-10.11.2.2">For usage <code>branch</code>, verify that the <code>version</code> and <code>cipher_suite</code> of the new
 group match those of the old group, and that the members of the new group
 compose a subset of the members of the old group, according to the
-application.<a href="#section-12.4.3.1-9.11.2.2" class="pilcrow">¶</a>
+application.<a href="#section-12.4.3.1-10.11.2.2" class="pilcrow">¶</a>
 </li>
                 </ul>
 </li>
