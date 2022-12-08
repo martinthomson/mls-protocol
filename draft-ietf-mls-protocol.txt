@@ -5434,7 +5434,7 @@ psk_secret (or 0) --> KDF.Extract
    | 0x0007 |MLS_256_DHKEMP384_AES256GCM_SHA384_P384.           |Y|RFC |
    |        |                                                   | |XXXX|
    +--------+---------------------------------------------------+-+----+
-   | 0xff00 |Reserved for Private Use                           |-|RFC |
+   | 0xf000 |Reserved for Private Use                           |-|RFC |
    | -      |                                                   | |XXXX|
    | 0xffff |                                                   | |    |
    +--------+---------------------------------------------------+-+----+
@@ -5490,9 +5490,6 @@ psk_secret (or 0) --> KDF.Extract
    for key exchange, AES-128-GCM for HPKE, HKDF over SHA2-256, and
    Ed25519 for signatures.
 
-   Values with the first byte 255 (decimal) are reserved for Private
-   Use.
-
    New ciphersuite values are assigned by IANA as described in
    Section 16.
 
@@ -5545,7 +5542,7 @@ psk_secret (or 0) --> KDF.Extract
    +--------+-----------------------+----------+-------------+---------+
    | 0x0005 | external_senders      |GC        | Y           |RFC XXXX |
    +--------+-----------------------+----------+-------------+---------+
-   | 0xff00 | Reserved for Private  |N/A       | N/A         |RFC XXXX |
+   | 0xf000 | Reserved for Private  |N/A       | N/A         |RFC XXXX |
    | -      | Use                   |          |             |         |
    | 0xffff |                       |          |             |         |
    +--------+-----------------------+----------+-------------+---------+
@@ -5599,7 +5596,7 @@ psk_secret (or 0) --> KDF.Extract
    +------+--------------------------+-------------+--------+---------+
    |0x0007| group_context_extensions | Y           |Y       |RFC XXXX |
    +------+--------------------------+-------------+--------+---------+
-   |0xff00| Reserved for Private Use | N/A         |N/A     |RFC XXXX |
+   |0xf000| Reserved for Private Use | N/A         |N/A     |RFC XXXX |
    |-     |                          |             |        |         |
    |0xffff|                          |             |        |         |
    +------+--------------------------+-------------+--------+---------+
@@ -5639,7 +5636,7 @@ psk_secret (or 0) --> KDF.Extract
        +-----------------+--------------+-------------+-----------+
        | 0x0002          | x509         | Y           | RFC XXXX  |
        +-----------------+--------------+-------------+-----------+
-       | 0xff00 - 0xffff | Reserved for | N/A         | RFC XXXX  |
+       | 0xf000 - 0xffff | Reserved for | N/A         | RFC XXXX  |
        |                 | Private Use  |             |           |
        +-----------------+--------------+-------------+-----------+
 
