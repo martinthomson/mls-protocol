@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 10 June 2023                                    Inria & Mozilla
+Expires: 11 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                                         
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 10 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                         7 December 2022
+                                                         8 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 June 2023.
+   This Internet-Draft will expire on 11 June 2023.
 
 Copyright Notice
 
@@ -938,8 +938,8 @@ Table of Contents
    Commit message adding that member, and broadcasts them to the group.
    It also generates a Welcome message and sends this directly to the
    new member (there's no need to send it to the group).  Only after A
-   has received its Commit message back from the group channel does it
-   update its state to reflect the new member's addition.
+   has received its Commit message back from the Delivery Service does
+   it update its state to reflect the new member's addition.
 
    Once A has updated its state, the new member has processed the
    Welcome, and any other group members have processed the Commit, they
@@ -5125,7 +5125,7 @@ psk_secret (or 0) --> KDF.Extract
    Applications SHOULD define a policy on how long to keep unused nonce
    and key pairs for a sender, and the maximum number to keep.  This is
    in addition to ensuring that these secrets are deleted according to
-   the deletion schedule defined in Section 10.2 Applications SHOULD
+   the deletion schedule defined in Section 10.2.  Applications SHOULD
    also define a policy limiting the maximum number of steps that
    clients will move the ratchet forward in response to a new message.
    Messages received with a generation counter that's too much higher
