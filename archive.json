@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-06T01:26:59.493986+00:00",
+  "timestamp": "2022-12-08T01:27:46.466945+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -142,6 +142,31 @@
       "name": "ready for PR",
       "description": "",
       "color": "1C8340"
+    },
+    {
+      "name": "discuss",
+      "description": "",
+      "color": "B60205"
+    },
+    {
+      "name": "comment",
+      "description": "",
+      "color": "FBCA04"
+    },
+    {
+      "name": "nit",
+      "description": "",
+      "color": "CCCCCC"
+    },
+    {
+      "name": "review",
+      "description": "",
+      "color": "C5DEF5"
+    },
+    {
+      "name": "to close",
+      "description": "",
+      "color": "333333"
     }
   ],
   "issues": [
@@ -8013,7 +8038,7 @@
       "labels": [],
       "body": "We ran into this case, which does not seem to have a defined solution within the RFC and I'm wondering if this ambiguity should be resolved at the RFC level, or be left up to the application.\r\n\r\nExisting group with Alice, and Bob.\r\n\r\n1. Bob had a valid certificate upon being added to the group by Alice.\r\n2. Bob's certificate expires .\r\n3. Alice does a commit to add Charlie to the group.\r\n4. Bob accepts the valid commit to add Charlie.\r\n5. Charlie follows 8.3 and validates the tree. In this process if certificate expiration is enforced, then Charlie would drop the Welcome, which would not be optimal.\r\n\r\nSolution 1: Leave this behavior up to the application, consider it part of the AS. \r\n\r\nSolution 2: Add an explicit mention that credentials that expire should be considered valid after expiration once they are a member of the group.\r\n\r\nSolution 3: A committer MUST validate that all existing credentials in the tree are still considered valid at the time a commit is made. If an existing credential is no longer considered valid, then the resulting commit MUST contain a Remove proposal for the leaf containing that credential.\r\n\r\n",
       "createdAt": "2022-11-16T16:28:31Z",
-      "updatedAt": "2022-11-30T17:17:21Z",
+      "updatedAt": "2022-12-07T15:40:50Z",
       "closedAt": null,
       "comments": [
         {
@@ -8106,6 +8131,13 @@
           "body": "> @rohan-wire I think the core of the discussion at this point is more around the fact that the base protocol does not have any concept of \"expiration\" of credentials, so their behavior is undefined. Either we put an opinionated statement around it in the core protocol, or just punt to applications / another RFC. Thoughts on that?\r\n\r\nHi @tomleavy ,\r\nMy opinion is that whatever credentials you have in an MLS group should be valid (including not expired, not revoked, not too early, etc.). Therefore it would logically follow:\r\n\r\n- It is the responsibility of each member to make sure their LeafNode credentials are valid and consistent with the group policy at all times. \r\n- Any member of the group that detects another member is out of policy or invalid can remove the offending member. \r\n- To the extent possible a DS that detects that a member is out of compliance with group policy or no longer has valid credentials, can try to remove the member (ex: via an external proposal).\r\n\r\nThe definition of \"valid\" could be done per-credential type or per profile.",
           "createdAt": "2022-11-30T17:17:21Z",
           "updatedAt": "2022-11-30T17:17:21Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Side note: under the general rubric of \"validity changes over time\", revocation is also an issue!\r\n\r\nOverall, my thinking aligns with what @rohan-wire says here.  Saying that the credentials presented by group members should be valid at all times is a concise, clear standard.  It is arguably implied by the current requirement to validate credentials on joining (if you also assume that the group should be joinable at any time).  The more difficult question is how it is implemented in practical reality.\r\n\r\nI don't think we can really write hard requirements around this. The only remediation is Remove, and we don't have other situations where we say a client MUST send a specific proposal.  In part because this might conflict with application-level policies about who is allowed to send Proposals/Commits.  And it seems like there are valid situations where availability might trump authenticity (cf. browsers' click-through on expired certs).  Overall, this seems like more of an operational question than a core protocol question here.\r\n\r\nIn terms of how to reflect all this in documents: The details of how to manage credential freshness seem better suited for an implementation guidance document. (I believe @kkohbrok is gathering ideas for one?)  In the MLS protocol spec, we could add some high-level guidance, something like the following:\r\n\r\n```\r\n### Expiring Credentials\r\n\r\nIn some credential schemes, the validity status of a credential can change over\r\ntime.  For example, X.509 certificates can expire or be revoked by their issuer.\r\nTo avoid operational problems such as new joiners rejecting expired credentials\r\nin a group, applications that use such credentials should ensure that all of the\r\ncredentials in use in a group are valid.\r\n\r\nIf a member finds that its credential is invalid (or will be soon), it should\r\nissue an Update or Commit that replaces it with a valid credential.  For this\r\nreason, members SHOULD accept Update proposals and Commits issued by members\r\nwith invalid credentials, if the credential in the Update or Commit is valid.\r\n\r\nIf a member finds that another member's credential is invalid, they may issue a\r\nRemove that removes that member.  For example, an application could require a\r\nmember preparing to issue a Commit to check the tree for invalid credentials and\r\ninclude Remove proposals for those members in its Commit.  In situations where\r\nthe group tree is known to the DS, the DS could also monitor the tree for\r\ninvalid credentials and issue external Remove proposals.\r\n```\r\n\r\nI think that would fit well either in the Credentials section (between \"Credential Validation\" and \"Uniquely Idenitfying Clients\") or in the security considerations.",
+          "createdAt": "2022-12-07T15:40:50Z",
+          "updatedAt": "2022-12-07T15:40:50Z"
         }
       ]
     },
@@ -8121,7 +8153,7 @@
       "labels": [],
       "body": "Does anyone know why the MLS draft uses the \"MLS\" prefix for some structs, e.g., `MLSMessage` and not just `Message`? Is there (still) some logic behind this? None of the explanations I could come up with hold for all structs.\r\n\r\nMaybe this is something that just evolved over the years? If so, I would be happy to make an editorial PR to remove all of those :-)",
       "createdAt": "2022-11-21T15:12:48Z",
-      "updatedAt": "2022-11-22T17:18:05Z",
+      "updatedAt": "2022-12-07T15:12:51Z",
       "closedAt": null,
       "comments": [
         {
@@ -8158,6 +8190,20 @@
           "body": "> When I started to work with MLS a few weeks ago, I got confused by the term MLSPlaintext. In TLS, a TLSPlaintext is not protected and only used as a stepping stone. This is different in MLS because an MLSPlaintext is always signed and not \"converted\" into an MLSCiphertext afterwards.\u00b9 It seems close to TLS but isn't.\r\n> \u00b9 This was the case in the past, see #706.\r\n\r\nFor correctness, this was done in #523.\r\nBefore this PR, the procedure was to generate an MLSPlaintext and convert it to an MLSCiphertext. I this this is an heritage of TLS 1.3 which does the same thing ([RFC 8446, section 5.2](https://datatracker.ietf.org/doc/html/rfc8446#section-5.2)).\r\nAfter this PR, the procedure is to generate a MLSContent and convert it to MLSPlaintext or MLSCiphertext.\r\n\r\nOtherwise I agree, it would be nice to have consistent names in the document!",
           "createdAt": "2022-11-22T17:18:05Z",
           "updatedAt": "2022-11-22T17:18:05Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I agree that the current use of \"MLS\" in struct names is inconsistent, and MLSPlaintext / MLSCiphertext aren't accurate for what those messages do now.  This will be a large-ish change, but probably worth doing to increase clarity.\r\n\r\nI did an audit of `MLS` struct names in the document and tried to think through what else they could be called.  Here's a proposal:\r\n\r\n| Before                      | After                     | Notes                                                    |\r\n|:----------------------------|:--------------------------|:---------------------------------------------------------|\r\n| MLSMessage                  | MLSMessage                | \"MLS\" because it's the thing that goes on the wire       |\r\n| MLSContent                  | GroupContent              | Content targeted to a group                              |\r\n| MLSContentTBS               | GroupContentTBS           |                                                          |\r\n| MLSContentAuthData          | GroupContentAuthData      |                                                          |\r\n| MLSAuthenticatedContent     | AuthenticatedContent      | Signed content (for a group)                             |\r\n| MLSContentTBM               | AuthenticatedContentTBM   |                                                          |\r\n| MLSSenderData               | SenderData                |                                                          |\r\n| MLSSenderDataAAD            | SenderDataAAD             |                                                          |\r\n| MLSCiphertextContent        | ContentPlaintext          | Content prepared to be a \"plaintext\" input to encryption |\r\n| MLSCiphertextContentAAD     | ContentAAD                |                                                          |\r\n| MLSPlaintext                | PublicMessage             | An auth+integrity-protected group message                |\r\n| MLSCiphertext               | PrivateMessage            | A auth+confidentiality-protected group message           |\r\n\r\nThe latter two are the most challenging.  It's difficult to get across precisely what they're about without getting super verbose.  Another route would be to use something like SignedMessage and EncryptedMessage.\r\n",
+          "createdAt": "2022-12-07T14:59:29Z",
+          "updatedAt": "2022-12-07T14:59:29Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks for bringing this up @duesee and thanks for the proposal @bifurcation! I like the proposed changes, although might I suggest the prefix \"Message\" instead of \"Group\" for -Content -ContentTBS and -ContentAuthData? It is targeted to a group, but it's really the core content of a message.",
+          "createdAt": "2022-12-07T15:12:51Z",
+          "updatedAt": "2022-12-07T15:12:51Z"
         }
       ]
     },
@@ -8189,6 +8235,1704 @@
           "body": "Understand. Thanks for the insight.",
           "createdAt": "2022-11-30T06:37:56Z",
           "updatedAt": "2022-11-30T06:37:56Z"
+        }
+      ]
+    },
+    {
+      "number": 762,
+      "id": "I_kwDOBoyH6c5YLmS5",
+      "title": "Interaction of MLS and application",
+      "url": "https://github.com/mlswg/mls-protocol/issues/762",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nI find the interaction with the application layer not clear. Not much is mentioned in this document. How can a group have an administrator? How is that enforced at the MLS layer? How do ACLs interact with MLS? (How are DoS attacks mitigated (eg spam attempts to join any group). What hooks would be in the authentication service and/or delivery server? How would clients know the properties of these two services?\n\nThis includes how it is not clear to me how race conditions are handled. What if two members try to expel each other at the same time? What if the group is so large, members always get their epoch wrong for things like Commit messages?\n\n",
+      "createdAt": "2022-12-06T15:46:57Z",
+      "updatedAt": "2022-12-07T00:43:49Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think the intent was to have these issues mostly dealt with in the architecture document.  Broadly speaking, it is the DS's job to solve these problems.  For example, the DS we use in Webex chooses which member makes which commit.\r\n\r\nThis is why we have Section 3, [Operating Context](https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#name-operating-context).  There are also some brief notes in Section 14, \"[Sequencing of State Changes](https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#name-sequencing-of-state-changes).\r\n\r\nUnless we need to make this division of labor clearer, I'm inclined to close this issue with no action.\r\n",
+          "createdAt": "2022-12-06T18:19:03Z",
+          "updatedAt": "2022-12-06T18:19:03Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "While instant messaging was one of the big motivators for MLS, it is not the only one to be implemented in the same timeframe. \r\n\r\nIn MIMI for example we are planning to have a whole work item that specifies many more constraints on how the DS would be expected to work in an *instant messaging* context. Whereas we have implementors of MLS who are planning to do things very differently for an IoT communication application. ",
+          "createdAt": "2022-12-06T23:29:53Z",
+          "updatedAt": "2022-12-06T23:29:53Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "I'll reread the architecture bit again about the DS, but it still feels to me it could be made more clear.",
+          "createdAt": "2022-12-07T00:43:49Z",
+          "updatedAt": "2022-12-07T00:43:49Z"
+        }
+      ]
+    },
+    {
+      "number": 763,
+      "id": "I_kwDOBoyH6c5YLmTu",
+      "title": "Security against malicious members?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/763",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nThere seems to be no group \"owner\", so inviting one member X, could that member than delete members from the group until the group is empty?\n\nApparently, there is ACLs for this, but the document doesn't describe how ACLS would work or how these would be implemented.\n\n",
+      "createdAt": "2022-12-06T15:46:58Z",
+      "updatedAt": "2022-12-06T18:22:33Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "You are correct that MLS is \"egalitarian\" by default, in that any member can perform any action.  This capability can be limited by policy, enforced either at the endpoints or at the DS (the latter requiring handshake messages to be unencrypted).  This is discussed in the MLS architecture document, e.g., in the [Access Control](https://messaginglayersecurity.rocks/mls-architecture/draft-ietf-mls-architecture.html#name-access-control) section.\r\n\r\nI would be open to adding some security considerations noting this.  But seeing as it's already in the architecture, I would be inclined to close this issue with no action.",
+          "createdAt": "2022-12-06T18:22:33Z",
+          "updatedAt": "2022-12-06T18:22:33Z"
+        }
+      ]
+    },
+    {
+      "number": 764,
+      "id": "I_kwDOBoyH6c5YLmUk",
+      "title": "Should B receive its own Commit back?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/764",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\nFigure 4 shows:\n\n~~~ \n\n                                                             Group\n   A              B     ...      Z          Directory        Channel\n   |              |              |              |              |\n   |              | Update(B)    |              |              |\n   |              +------------------------------------------->|\n   |              |              |              | Update(B)    |\n   |<----------------------------------------------------------+\n   |              |<-------------------------------------------+\n   |              |              |<----------------------------+\n~~~\nDoes the Group channel really send Update(B) back to B ? Same for the following \"Commit(Upd)\" from A that is sent back to A?\n\n",
+      "createdAt": "2022-12-06T15:46:59Z",
+      "updatedAt": "2022-12-07T13:57:21Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "B *definitely* needs to receive Commit(Upd), since that contains fresh entropy from A that B needs to advance to the next epoch.  B doesn't need to receive Update(B), but can cleanly ignore it if it does.  Since we've described the group channel as a broadcast channel, it seems clearer to just show a straight broadcast.",
+          "createdAt": "2022-12-06T18:27:08Z",
+          "updatedAt": "2022-12-06T18:27:08Z"
+        }
+      ]
+    },
+    {
+      "number": 765,
+      "id": "I_kwDOBoyH6c5YLmVh",
+      "title": "Section 6.3 use of \"member\"",
+      "url": "https://github.com/mlswg/mls-protocol/issues/765",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   Each member of a group presents a credential that provides one or\n   more identities for the member,\n~~~\nI am unsure if \"one or more identities for the member\" refers to identies for a single client or was meant as \"a user can have multiple clients\". The way it reads now is that it would be a single client that can have multiple identities. But then could a user have multiple identities on one client that do not match multiple identities on other clients.\n\n",
+      "createdAt": "2022-12-06T15:47:00Z",
+      "updatedAt": "2022-12-07T13:57:36Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Your interpretation is correct.   Each credential can present multiple identities, for example, a certificate with dNSName and sRVName entries.  And each member's credential is independent (MLS doesn't have a notion of devices belonging to the same user).  So my laptop could present `(rFC822Name=rlb@ipv.sx, dNSName=rlb.ipv.sx)` and my phone could present `(rFC822Name=rlb@ipv.sx, SRVName=_xmpp.ipv.sx)`.  Just like in principle a TLS connection could have the server present a certificate with a pile of DNS names in it, and the client could present a different certificate with a different, possibly overlapping, pile of DNS names in it.  It's up to the application to have a sensible identifier and credential scheme, with the cites to RFC 6125 as guidance.\r\n\r\nSo I think the text is correct as it stands.",
+          "createdAt": "2022-12-06T18:37:33Z",
+          "updatedAt": "2022-12-06T18:37:33Z"
+        }
+      ]
+    },
+    {
+      "number": 766,
+      "id": "I_kwDOBoyH6c5YLmWN",
+      "title": "ENUMs limited to 1 octet?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/766",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n\u00a0enum {\n       reserved(0),\n       mls10(1),\n       (255)\n   } ProtocolVersion;\n~~~\nWould it really do harm to turn this into two octets? I don't think message size is a real concern here. Same for ContentType and SenderType. Note: thank you for skipping 0 as a valid entry!! Implementers applaud you :)\n\n",
+      "createdAt": "2022-12-06T15:47:01Z",
+      "updatedAt": "2022-12-07T00:39:07Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yep, we have tried to reserve 0 in all the enums, precisely because I was a grumpy implementor!",
+          "createdAt": "2022-12-06T18:38:23Z",
+          "updatedAt": "2022-12-06T18:38:23Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "On the one hand, yes, one octet is not that much more, and it saves worrying about space.  On the other hand, in its long life, TLS has only exhausted 4 of its 65k versions, and its HandshakeType and ContentType enums are both still comfortable at 1 byte (the analogous to the other ProposalType and ContentType here).\r\n\r\nAmong the identifiers we have, we should be most worried about the intended extension points, namely ExtensionType and ProposalType.  Both of those are `uint16` already.  There's no mechanism for adding new values to ContentType and SenderType, so I would leave them at `uint8`.  (Technically they could be updated by an extension -- but an extension could also make them 16 bits!)\r\n\r\nI can live with expanding ProtocolVersion, in case we decide to do some of the GREASE-like stuff that QUIC is doing.\r\n",
+          "createdAt": "2022-12-06T18:49:34Z",
+          "updatedAt": "2022-12-06T18:49:34Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "I don't have a strong opinion about this either, but if we make this 16-bit wide, we should do the same for consistency for ContentType, SenderType & WireFormat (the MLS extension document does introduce a new WireFormat for example).",
+          "createdAt": "2022-12-06T21:16:03Z",
+          "updatedAt": "2022-12-06T21:16:03Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi,\r\nI don't think there is any expectation that we are going to exhaust the version space (and we could do an extension later to fix that in the event we are wildly successful).\r\n\r\nAs for the idea that implementations will be easier if things are aligned on 16-bit or 32-bit boundaries, that doesn't help us because the Vector lengths are variable.\r\n\r\nI would leave this as is.",
+          "createdAt": "2022-12-06T23:37:33Z",
+          "updatedAt": "2022-12-06T23:37:33Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "I can agree with the reasoning here",
+          "createdAt": "2022-12-07T00:39:07Z",
+          "updatedAt": "2022-12-07T00:39:07Z"
+        }
+      ]
+    },
+    {
+      "number": 767,
+      "id": "I_kwDOBoyH6c5YLmW6",
+      "title": "Epoch rollover?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/767",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\nWhat happens if members maliciously create huge amounts of epochs and it hits 2^64 ?\n\n",
+      "createdAt": "2022-12-06T15:47:02Z",
+      "updatedAt": "2022-12-07T13:59:27Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Creating an epoch requires at least a signature operation (in addition to a bunch of other stuff).  On my M1 Pro MacBook, `openssl speed` reports 584,846 ~= 2^19 ECDSA P-256 signatures per second.  At that rate, it would take more than a million years to overflow the epoch field.  Even with a couple more generations of Moore's law, we've got a pretty good margin!  And PQ signatures will make us even safer.\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T18:54:18Z",
+          "updatedAt": "2022-12-06T18:54:18Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "Fair :)\r\n\r\n though doing 2^19 epoch increments per second does seem to lock out real clients, but I guess you wil say the DS has to rate limit those from clients and the DS isn't further specified in the arch or protocol doc :P",
+          "createdAt": "2022-12-06T18:58:16Z",
+          "updatedAt": "2022-12-06T18:58:16Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "feel free to close with no action",
+          "createdAt": "2022-12-06T19:39:05Z",
+          "updatedAt": "2022-12-06T19:39:05Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "For context, rate-limiting is something that is part of any production-grade messaging system. I don't think MLS should have to introduce that notion.",
+          "createdAt": "2022-12-06T21:17:58Z",
+          "updatedAt": "2022-12-06T21:17:58Z"
+        }
+      ]
+    },
+    {
+      "number": 768,
+      "id": "I_kwDOBoyH6c5YLmX8",
+      "title": "Padding with zeros",
+      "url": "https://github.com/mlswg/mls-protocol/issues/768",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\nWhile I appreciate the zeros only for padding to avoid side channel communications, wouldn't it be too late if the if there were non-zeros in the padding? Since this message could be encrypted to multiple parties in the part of the tree, wouldn't it make sense to send a kind of alert message to everyone? That way, at least two people in the tree couldn't work together ? So instead of \"MUST be rejected as malformed\" do something that MUST send a message to everyone with \"some content warning\" ?\n\n",
+      "createdAt": "2022-12-06T15:47:04Z",
+      "updatedAt": "2022-12-07T13:59:53Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "To be clear, the padding scheme only applies to messages that are encrypted once to the whole group.  Every recipient decrypts with the same key.  So every member who correctly checks the padding will fail.  That seems to me to imply there's no need for an explicit alert, since everyone should reach the same conclusion independently.  Of course, if an application wanted to freak out in some way in response to this error, it is free to do so.\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T19:03:33Z",
+          "updatedAt": "2022-12-06T19:03:33Z"
+        }
+      ]
+    },
+    {
+      "number": 769,
+      "id": "I_kwDOBoyH6c5YLmZD",
+      "title": "XOR guard",
+      "url": "https://github.com/mlswg/mls-protocol/issues/769",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nShould there be text saying that if the \"reuse guard\" random returns four zero bytes, it should be run again? Maybe add this to 7.3.2 where MLSSenderData has additional constrains.\n\n",
+      "createdAt": "2022-12-06T15:47:05Z",
+      "updatedAt": "2022-12-06T19:06:29Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Having four zero bytes isn't inherently harmful, since the nonce itself is already randomized.  The problem would be if the reuse guard producer produced repeated values (*and* the generation failed to advance).  Maybe all-zeros is indicative of this, maybe it's just bad luck.\r\n\r\nThat said, this change seems harmless, so I'm open to it if people want it.  But I would be incline to close with no action.\r\n\r\ncc @Bren2010 since this was his addition",
+          "createdAt": "2022-12-06T19:06:29Z",
+          "updatedAt": "2022-12-06T19:06:29Z"
+        }
+      ]
+    },
+    {
+      "number": 770,
+      "id": "I_kwDOBoyH6c5YLmag",
+      "title": "KDF.Nh",
+      "url": "https://github.com/mlswg/mls-protocol/issues/770",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   The key and nonce provided to the AEAD are computed as the KDF of the\n   first KDF.Nh bytes of the ciphertext generated in the previous\n   section.\n~~~\nI don't think I understand the security model here? What happens if the previous ciphertext has 00's for the first KDF.Nh bytes?\n\n",
+      "createdAt": "2022-12-06T15:47:06Z",
+      "updatedAt": "2022-12-06T19:26:01Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The ciphertext sample here is just acting as a salt to produce several distinct key/nonce pairs from a single `sender_data_secret`.  So as with #769, all-zeros isn't inherently harmful here, unless it happens repeatedly.\r\n\r\n(Note that this scheme was inspired by [the QUIC header protection scheme](https://www.rfc-editor.org/rfc/rfc9001#name-header-protection-sample), except the latter only uses 16 bytes of sample and XOR instead of AEAD.)\r\n\r\nIf the content encryption is done properly, then the probability of any particular value is vanishingly small, due to the ciphertext looking like random data.\r\n\r\nSomeone could construct a ciphertext that results in nonce reuse, e.g., having the same `KDF.Nh` bytes as a previous message.  However, note that the harm here is done when the reused key/nonce is used to *encrypt* and the encrypted sender info is published to the attacker.  This means that the attack cannot be mounted from *outside* the group.  Even if the attacker can cause a sender to encrypt a given plaintext, the attacker would not know the key with which it would be encrypted.  So the best attack is for an *insider* to the group to leak the sender info.\r\n\r\ncc @TWal who did some analysis on this IIRC",
+          "createdAt": "2022-12-06T19:26:01Z",
+          "updatedAt": "2022-12-06T19:26:01Z"
+        }
+      ]
+    },
+    {
+      "number": 771,
+      "id": "I_kwDOBoyH6c5YLmbw",
+      "title": "Time is not on our side?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/771",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \nmeasured in seconds since the Unix epoch (1970-01-01T00:00:00Z)\n~~~\nWhy use a time format that dies in 2038 already? IRC is older than the time given to MLS to survive :P\n\n",
+      "createdAt": "2022-12-06T15:47:07Z",
+      "updatedAt": "2022-12-07T14:00:38Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This would be true for int32. But the lifetime struct is uint64.",
+          "createdAt": "2022-12-06T18:33:38Z",
+          "updatedAt": "2022-12-06T18:33:38Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yep, what @Bren2010 said.  We're good until the year 584,942,419,325. (More or less.  I didn't account for leap days.)\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T19:28:12Z",
+          "updatedAt": "2022-12-06T19:28:12Z"
+        }
+      ]
+    },
+    {
+      "number": 772,
+      "id": "I_kwDOBoyH6c5YLmcd",
+      "title": "lifetime field",
+      "url": "https://github.com/mlswg/mls-protocol/issues/772",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   it is RECOMMENDED that the\n   client verifies that the current time is within the range of\n   the lifetime field.\n~~~\nWhy RECOMMENDED and not MUST ?\n\n",
+      "createdAt": "2022-12-06T15:47:09Z",
+      "updatedAt": "2022-12-07T14:04:18Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Because the protocol is designed to be asynchronous, there may be some time between when a new member is added and when another member sees the Commit adding the member.  In the interim, the KeyPackage may have expired.\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T19:29:43Z",
+          "updatedAt": "2022-12-06T19:29:43Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think making this a MUST is reasonable. We just need to make it clear to clients adding KeyPackages that they are responsible for making sure their uploaded KeyPackages have a reasonable lifetime. Likewise another client using a KeyPackage has no business sending an Add proposal with a KeyPackage which is expired or about to expire.  ",
+          "createdAt": "2022-12-06T23:45:49Z",
+          "updatedAt": "2022-12-06T23:45:49Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "That logic seems really fraught @rohan-wire.  That would mean that in addition to checking that the KP is valid now, the Proposer/Committer has to check make an estimate of how long it will take the Commit to get to everyone.  That doesn't seem very feasible.",
+          "createdAt": "2022-12-07T14:04:17Z",
+          "updatedAt": "2022-12-07T14:04:17Z"
+        }
+      ]
+    },
+    {
+      "number": 773,
+      "id": "I_kwDOBoyH6c5YLmdS",
+      "title": "Section 8.4",
+      "url": "https://github.com/mlswg/mls-protocol/issues/773",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   path_secret[0] is sampled at random\n~~~\nWhat does this mean? What is sampling? What is the sample used for ?\n\nSimilar in [Section 8.5](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-8.5):\n\n~~~ \nSet the encryption_key to the public key of a freshly sampled key pair\n~~~\n",
+      "createdAt": "2022-12-06T15:47:10Z",
+      "updatedAt": "2022-12-07T14:04:44Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "\"Sampling\" just means \"pulling random bytes from the [CSP]RNG.  Do you have a way you would prefer to phrase it?",
+          "createdAt": "2022-12-06T19:32:10Z",
+          "updatedAt": "2022-12-06T19:32:10Z"
+        }
+      ]
+    },
+    {
+      "number": 774,
+      "id": "I_kwDOBoyH6c5YLmeH",
+      "title": "Section 13/14 Race conditions ?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/774",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\nIn [Section 13.4.3.2](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-13.4.3.2), but also elsewhere, I am confused how race conditions are handled. In this section, if two clients try to each add a a new member for an External Commit join, one of them will fail on the epoch being wrong.\n\nIsn't there a similar race with removing? And any other operation that changes the epoch? How are all these race conditions handled?\n\n[Section 14](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-14) does not really clarify this to me.\n\n",
+      "createdAt": "2022-12-06T15:47:11Z",
+      "updatedAt": "2022-12-07T14:05:06Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Race conditions are discussed in section 4.2 of the arch document.",
+          "createdAt": "2022-12-06T18:35:45Z",
+          "updatedAt": "2022-12-06T18:35:45Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "In addition to what @Bren2010 says, in the non-external Commit case, the [proposal list validation rules](https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#name-proposal-list-validation) mean that the Committer needs to resolve any races among proposals.  For example, if two members add the same new member, then it's up to the committer to choose one according to its local policy.",
+          "createdAt": "2022-12-06T19:35:20Z",
+          "updatedAt": "2022-12-06T19:35:20Z"
+        }
+      ]
+    },
+    {
+      "number": 775,
+      "id": "I_kwDOBoyH6c5YLmfF",
+      "title": "Section 15.1",
+      "url": "https://github.com/mlswg/mls-protocol/issues/775",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\nWhy not at least always pad to a length of like 1000 bytes to avoid some of the very obvious information leaks by length? It would cover most \"single line\" conversation sentences. Maybe a SHOULD pad to a minimum of X ?\n\n",
+      "createdAt": "2022-12-06T15:47:12Z",
+      "updatedAt": "2022-12-07T14:06:02Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I would be disinclined to do this.  The meaningful boundaries are highly application-specific.",
+          "createdAt": "2022-12-06T19:36:30Z",
+          "updatedAt": "2022-12-06T19:36:30Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "I agree with @bifurcation on this, there is no telling what padding size makes sense in general. In some scenarios, MLS could be used to encrypt rather short messages, in which case a substantially larger padding size would be unnecessary.",
+          "createdAt": "2022-12-06T21:30:32Z",
+          "updatedAt": "2022-12-06T21:30:32Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This is actually mentioned in the MLS architecture document how this is an [operational decision](https://www.ietf.org/archive/id/draft-ietf-mls-architecture-09.html#section-6-12.1)\r\n\"If there's any policy on how or when to pad messages\"\r\n",
+          "createdAt": "2022-12-06T23:53:32Z",
+          "updatedAt": "2022-12-06T23:53:32Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "I guess there is padding at the application level, and padding at the MLS message level. I guess I agree it makes little sense at the MLS layer",
+          "createdAt": "2022-12-07T00:33:54Z",
+          "updatedAt": "2022-12-07T00:33:54Z"
+        }
+      ]
+    },
+    {
+      "number": 776,
+      "id": "I_kwDOBoyH6c5YLmgE",
+      "title": "NOOPs ?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/776",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\nAs stated before, I miss a defined NOOP command that allows for a continuous IPTFS like constant stream of data that would hide better when a member is conversing at all or not.\n\n",
+      "createdAt": "2022-12-06T15:47:13Z",
+      "updatedAt": "2022-12-07T14:06:44Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "To save folks a search, I assume IPTFS is this: https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-iptfs\r\n\r\nThis is a question for the application layer protocol.  MLS doesn't define what goes in application payloads, so an application could certainly implement something like this.  The analogy to IPsec is that MLS is almost all IKE, and the application messages are ESP, so just like IPTFS goes within ESP, what you're proposing would be some new thing that would go on inside of MLS application messages.\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T19:40:48Z",
+          "updatedAt": "2022-12-06T19:40:48Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "That's a good point, thanks. So for application messages it is out of scope. But would one want to be able to hide the fact that member change operations happened?  eg do this at the MLS layer to avoid people gaining information based on whether there were or were not MLS (non-application) messages ?",
+          "createdAt": "2022-12-06T19:45:01Z",
+          "updatedAt": "2022-12-06T19:45:01Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "The best protection against this kind of eavesdropping would be to use `MLSCiphertext` for handshake messages as well (i.e. Commits and Proposals).\r\nWe had quite a bit of discussion about hiding as much metadata as possible, and the result is that the only leaked metadata in the payload is the header of `MLSCiphertext`:\r\n\r\n```\r\nstruct {\r\n    opaque group_id<V>;\r\n    uint64 epoch;\r\n    ContentType content_type;\r\n    ...\r\n} MLSCiphertext;\r\n```\r\n\r\nYou'll note that the content type is a part of it, we deemed that to be a reasonable tradeoff at the time given that its sensitivity is not typically high. Having a NOOP operation would mandate a specific new content type, rendering the NOOP ineffective as a mechanism to confuse an observer.",
+          "createdAt": "2022-12-06T21:39:24Z",
+          "updatedAt": "2022-12-06T21:39:24Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "ok, thanks for the explanation. I guess this will be up to the application layer.",
+          "createdAt": "2022-12-07T00:55:55Z",
+          "updatedAt": "2022-12-07T00:55:55Z"
+        }
+      ]
+    },
+    {
+      "number": 777,
+      "id": "I_kwDOBoyH6c5YLmhI",
+      "title": "Section 17",
+      "url": "https://github.com/mlswg/mls-protocol/issues/777",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nAlgorithm entries use two octets (65535) but only allow 255 Private Use entries. I think that might be a little low. Maybe allow 0xf000 - 0xffff or something ?\n\n",
+      "createdAt": "2022-12-06T15:47:14Z",
+      "updatedAt": "2022-12-06T21:41:12Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "I agree this should be changed. CCing @seanturner, who I believe initially proposed this.",
+          "createdAt": "2022-12-06T21:41:11Z",
+          "updatedAt": "2022-12-06T21:41:11Z"
+        }
+      ]
+    },
+    {
+      "number": 778,
+      "id": "I_kwDOBoyH6c5YLmhz",
+      "title": "Section 17.6",
+      "url": "https://github.com/mlswg/mls-protocol/issues/778",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "discuss",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \nThis document registers the \"message/mls\"\n~~~\nWhy not use \"mls/message\" and keep everything within one namespace?\n\n",
+      "createdAt": "2022-12-06T15:47:15Z",
+      "updatedAt": "2022-12-07T14:07:07Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Recall that [the way a media type is structured](https://www.rfc-editor.org/rfc/rfc6838) is `<top level type>/<subtype>`.  The intent here is to describe \"a message carrying MLS data\", not \"MLS data carrying a message\".  This deliberately leaves the type of any data carried within the MLS message unspecified, possibly to be described by [some framing layer within the application data](https://datatracker.ietf.org/doc/draft-mahy-mimi-content/).\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T19:50:17Z",
+          "updatedAt": "2022-12-06T19:50:17Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The envisioned use of the `message/mls` media type is to allow another protocol (for example HTTP) to carry an MLS-encoded message (for example a `GroupInfo` object, some `MlsCiphertext`, or a `KeyPackage`). This is quite a popular implementation model.\r\n\r\nFor details of how an `MlsCiphertext` can express the format of an application message it carries, please see [Content Type Advertisement for MLS](https://www.ietf.org/id/draft-mahy-mls-content-adv-00.html).",
+          "createdAt": "2022-12-06T23:20:47Z",
+          "updatedAt": "2022-12-06T23:20:47Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "Thanks for the clarification. No action needed.",
+          "createdAt": "2022-12-07T00:46:45Z",
+          "updatedAt": "2022-12-07T00:46:45Z"
+        }
+      ]
+    },
+    {
+      "number": 779,
+      "id": "I_kwDOBoyH6c5YLmix",
+      "title": "memberlist unavailble before joining",
+      "url": "https://github.com/mlswg/mls-protocol/issues/779",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   When a client A wants to establish a group with B and C, it first\n   initializes a group state containing only itself and downloads\n   KeyPackages for B and C.  For each member, A generates an Add and\n   Commit message adding that member, and broadcasts them to the group.\n~~~\nSo if A joins before B, A cannot tell B will become a group member ? eg the fact that A invited B and C is not visible to C or B and might come as a surprise.\n\n",
+      "createdAt": "2022-12-06T15:47:17Z",
+      "updatedAt": "2022-12-07T14:08:05Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'm not sure what you're seeing as missing here.  Everyone has full visibility.  A starts the group and initiates the Adds of B and C.  (Let's assume this is done in two commits, and not one.)  When B joins, they're told that A is in the group, then they learn that A added C via the Commit.  When C joins, they're told that A and B are already here.  If B disagrees with C being in the group (say), they're free to remove C.\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T22:32:32Z",
+          "updatedAt": "2022-12-06T22:32:32Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Also, at the application layer, if you wanted to publish (for example) a moderation policy or a \"list of authorized domains\" policy, or a credential policy and a set of trusted root certificates for validating members of the group, you could do that in a GroupContextExtension so everyone in the group could see it and agree that it was the same. Leaving this out of the base protocol, but having the tools to do this is one of my favorite features of MLS.",
+          "createdAt": "2022-12-06T23:59:09Z",
+          "updatedAt": "2022-12-06T23:59:09Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "fine with me. thanks",
+          "createdAt": "2022-12-07T00:28:34Z",
+          "updatedAt": "2022-12-07T00:28:34Z"
+        }
+      ]
+    },
+    {
+      "number": 780,
+      "id": "I_kwDOBoyH6c5YLmjk",
+      "title": "Prospective member or member ?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/780",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   It also generates a Welcome message and sends this directly to the\n  new member\n~~~\nShould this be \"prospective member\" or \"invitee\" ? They haven't joined yet, have they?\n\n",
+      "createdAt": "2022-12-06T15:47:18Z",
+      "updatedAt": "2022-12-07T00:26:52Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "From the perspective of the group, they are joined.  Once the Commit adding the new member is processed and the new epoch starts, that member is able to access the group's secrets.  The only thing \"provisional\" about the membership is that the new member hasn't initialized their local state.  We use \"new member\" consistently to mean the subject of an Add proposal, and I don't think this is a big enough distinction to merit more terminology.",
+          "createdAt": "2022-12-06T22:34:58Z",
+          "updatedAt": "2022-12-06T22:34:58Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Another way to look at it is that keying information from the new member is already incorporated into the group, therefore they are a member and not a provisional member.",
+          "createdAt": "2022-12-07T00:02:04Z",
+          "updatedAt": "2022-12-07T00:02:04Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "Ah yes. Perhaps a single line explaining this at the quoted location could be useful, but is not required",
+          "createdAt": "2022-12-07T00:26:52Z",
+          "updatedAt": "2022-12-07T00:26:52Z"
+        }
+      ]
+    },
+    {
+      "number": 781,
+      "id": "I_kwDOBoyH6c5YLmkU",
+      "title": "\"server\" is ambiguous here",
+      "url": "https://github.com/mlswg/mls-protocol/issues/781",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   Only after A\n   has received its Commit message back from the server\n~~~\nWhat server? The Delivery Service ?\n\n",
+      "createdAt": "2022-12-06T15:47:19Z",
+      "updatedAt": "2022-12-06T15:47:20Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 782,
+      "id": "I_kwDOBoyH6c5YL0CN",
+      "title": "Section 6.3 use of \"member\"",
+      "url": "https://github.com/mlswg/mls-protocol/issues/782",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   Each member of a group presents a credential that provides one or\n   more identities for the member,\n~~~\nI am unsure if \"one or more identities for the member\" refers to identies for a single client or was meant as \"a user can have multiple clients\". The way it reads now is that it would be a single client that can have multiple identities. But then could a user have multiple identities on one client that do not match multiple identities on other clients.\n\n",
+      "createdAt": "2022-12-06T16:07:42Z",
+      "updatedAt": "2022-12-06T16:38:25Z",
+      "closedAt": "2022-12-06T16:38:25Z",
+      "comments": []
+    },
+    {
+      "number": 783,
+      "id": "I_kwDOBoyH6c5YL0DF",
+      "title": "ENUMs limited to 1 octet?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/783",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n\u00a0enum {\n       reserved(0),\n       mls10(1),\n       (255)\n   } ProtocolVersion;\n~~~\nWould it really do harm to turn this into two octets? I don't think message size is a real concern here. Same for ContentType and SenderType. Note: thank you for skipping 0 as a valid entry!! Implementers applaud you :)\n\n",
+      "createdAt": "2022-12-06T16:07:43Z",
+      "updatedAt": "2022-12-06T16:38:26Z",
+      "closedAt": "2022-12-06T16:38:26Z",
+      "comments": []
+    },
+    {
+      "number": 784,
+      "id": "I_kwDOBoyH6c5YL0Dr",
+      "title": "Epoch rollover?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/784",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nWhat happens if members maliciously create huge amounts of epochs and it hits 2^64 ?\n\n",
+      "createdAt": "2022-12-06T16:07:44Z",
+      "updatedAt": "2022-12-06T16:38:26Z",
+      "closedAt": "2022-12-06T16:38:26Z",
+      "comments": []
+    },
+    {
+      "number": 785,
+      "id": "I_kwDOBoyH6c5YL0EL",
+      "title": "Padding with zeros",
+      "url": "https://github.com/mlswg/mls-protocol/issues/785",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nWhile I appreciate the zeros only for padding to avoid side channel communications, wouldn't it be too late if the if there were non-zeros in the padding? Since this message could be encrypted to multiple parties in the part of the tree, wouldn't it make sense to send a kind of alert message to everyone? That way, at least two people in the tree couldn't work together ? So instead of \"MUST be rejected as malformed\" do something that MUST send a message to everyone with \"some content warning\" ?\n\n",
+      "createdAt": "2022-12-06T16:07:46Z",
+      "updatedAt": "2022-12-06T16:38:26Z",
+      "closedAt": "2022-12-06T16:38:26Z",
+      "comments": []
+    },
+    {
+      "number": 786,
+      "id": "I_kwDOBoyH6c5YL0Ew",
+      "title": "XOR guard",
+      "url": "https://github.com/mlswg/mls-protocol/issues/786",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nShould there be text saying that if the \"reuse guard\" random returns four zero bytes, it should be run again? Maybe add this to 7.3.2 where MLSSenderData has additional constrains.\n\n",
+      "createdAt": "2022-12-06T16:07:47Z",
+      "updatedAt": "2022-12-06T16:38:27Z",
+      "closedAt": "2022-12-06T16:38:27Z",
+      "comments": []
+    },
+    {
+      "number": 787,
+      "id": "I_kwDOBoyH6c5YL0FO",
+      "title": "KDF.Nh",
+      "url": "https://github.com/mlswg/mls-protocol/issues/787",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   The key and nonce provided to the AEAD are computed as the KDF of the\n   first KDF.Nh bytes of the ciphertext generated in the previous\n   section.\n~~~\nI don't think I understand the security model here? What happens if the previous ciphertext has 00's for the first KDF.Nh bytes?\n\n",
+      "createdAt": "2022-12-06T16:07:48Z",
+      "updatedAt": "2022-12-06T16:38:27Z",
+      "closedAt": "2022-12-06T16:38:27Z",
+      "comments": []
+    },
+    {
+      "number": 788,
+      "id": "I_kwDOBoyH6c5YL0F5",
+      "title": "Time is not on our side?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/788",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \nmeasured in seconds since the Unix epoch (1970-01-01T00:00:00Z)\n~~~\nWhy use a time format that dies in 2038 already? IRC is older than the time given to MLS to survive :P\n\n",
+      "createdAt": "2022-12-06T16:07:49Z",
+      "updatedAt": "2022-12-06T16:38:27Z",
+      "closedAt": "2022-12-06T16:38:27Z",
+      "comments": []
+    },
+    {
+      "number": 789,
+      "id": "I_kwDOBoyH6c5YL0Gf",
+      "title": "lifetime field",
+      "url": "https://github.com/mlswg/mls-protocol/issues/789",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   it is RECOMMENDED that the\n   client verifies that the current time is within the range of\n   the lifetime field.\n~~~\nWhy RECOMMENDED and not MUST ?\n\n",
+      "createdAt": "2022-12-06T16:07:50Z",
+      "updatedAt": "2022-12-06T16:38:28Z",
+      "closedAt": "2022-12-06T16:38:28Z",
+      "comments": []
+    },
+    {
+      "number": 790,
+      "id": "I_kwDOBoyH6c5YL0HJ",
+      "title": "Section 8.4",
+      "url": "https://github.com/mlswg/mls-protocol/issues/790",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   path_secret[0] is sampled at random\n~~~\nWhat does this mean? What is sampling? What is the sample used for ?\n\nSimilar in [Section 8.5](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-8.5):\n\n~~~ \nSet the encryption_key to the public key of a freshly sampled key pair\n~~~\n",
+      "createdAt": "2022-12-06T16:07:52Z",
+      "updatedAt": "2022-12-06T16:38:28Z",
+      "closedAt": "2022-12-06T16:38:28Z",
+      "comments": []
+    },
+    {
+      "number": 791,
+      "id": "I_kwDOBoyH6c5YL0Ht",
+      "title": "Section 13/14 Race conditions ?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/791",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nIn [Section 13.4.3.2](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-13.4.3.2), but also elsewhere, I am confused how race conditions are handled. In this section, if two clients try to each add a a new member for an External Commit join, one of them will fail on the epoch being wrong.\n\nIsn't there a similar race with removing? And any other operation that changes the epoch? How are all these race conditions handled?\n\n[Section 14](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-14) does not really clarify this to me.\n\n",
+      "createdAt": "2022-12-06T16:07:53Z",
+      "updatedAt": "2022-12-06T16:38:28Z",
+      "closedAt": "2022-12-06T16:38:28Z",
+      "comments": []
+    },
+    {
+      "number": 792,
+      "id": "I_kwDOBoyH6c5YL0IX",
+      "title": "Section 15.1",
+      "url": "https://github.com/mlswg/mls-protocol/issues/792",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nWhy not at least always pad to a length of like 1000 bytes to avoid some of the very obvious information leaks by length? It would cover most \"single line\" conversation sentences. Maybe a SHOULD pad to a minimum of X ?\n\n",
+      "createdAt": "2022-12-06T16:07:54Z",
+      "updatedAt": "2022-12-06T16:38:29Z",
+      "closedAt": "2022-12-06T16:38:29Z",
+      "comments": []
+    },
+    {
+      "number": 793,
+      "id": "I_kwDOBoyH6c5YL0I2",
+      "title": "NOOPs ?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/793",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nAs stated before, I miss a defined NOOP command that allows for a continuous IPTFS like constant stream of data that would hide better when a member is conversing at all or not.\n\n",
+      "createdAt": "2022-12-06T16:07:55Z",
+      "updatedAt": "2022-12-06T16:38:29Z",
+      "closedAt": "2022-12-06T16:38:29Z",
+      "comments": []
+    },
+    {
+      "number": 794,
+      "id": "I_kwDOBoyH6c5YL0JU",
+      "title": "Section 17",
+      "url": "https://github.com/mlswg/mls-protocol/issues/794",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nAlgorithm entries use two octets (65535) but only allow 255 Private Use entries. I think that might be a little low. Maybe allow 0xf000 - 0xffff or something ?\n\n",
+      "createdAt": "2022-12-06T16:07:57Z",
+      "updatedAt": "2022-12-06T16:38:29Z",
+      "closedAt": "2022-12-06T16:38:29Z",
+      "comments": []
+    },
+    {
+      "number": 795,
+      "id": "I_kwDOBoyH6c5YL0J6",
+      "title": "Section 17.6",
+      "url": "https://github.com/mlswg/mls-protocol/issues/795",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \nThis document registers the \"message/mls\"\n~~~\nWhy not use \"mls/message\" and keep everything within one namespace?\n\n",
+      "createdAt": "2022-12-06T16:07:58Z",
+      "updatedAt": "2022-12-06T16:38:30Z",
+      "closedAt": "2022-12-06T16:38:30Z",
+      "comments": []
+    },
+    {
+      "number": 796,
+      "id": "I_kwDOBoyH6c5YL0Ka",
+      "title": "Can?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/796",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   The set of members\n   involved in the group can change from one epoch to the next\n~~~\nIsn't it the definition of epoch that there is a change in members? Paul: i think members refreshing their keys also means a new epoch?\n\n",
+      "createdAt": "2022-12-06T16:07:59Z",
+      "updatedAt": "2022-12-07T14:13:49Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Right, if there are no Add or Remove proposals, then the membership does not change.   So you could have say Update or PSK proposals, or no proposals at all (just refresh the committer's leaf).\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T22:38:03Z",
+          "updatedAt": "2022-12-06T22:38:03Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "thanks. yes you can close this one",
+          "createdAt": "2022-12-07T00:52:57Z",
+          "updatedAt": "2022-12-07T00:52:57Z"
+        }
+      ]
+    },
+    {
+      "number": 797,
+      "id": "I_kwDOBoyH6c5YL0Kz",
+      "title": "May implement correctly :-)",
+      "url": "https://github.com/mlswg/mls-protocol/issues/797",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   An implementation MAY use\n   any tree representation and associated algorithms, as long as they\n   produce correct protocol messages.\n~~~\nThis MAY is super weird. Is it allowed to implement in such a way that they to NOT produce correct protocol messages? :-)\n\nRemove the entire sentence or lowercase the MAY?\n\n",
+      "createdAt": "2022-12-06T16:08:00Z",
+      "updatedAt": "2022-12-06T16:08:01Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 798,
+      "id": "I_kwDOBoyH6c5YL0Ld",
+      "title": "7 or 8 members",
+      "url": "https://github.com/mlswg/mls-protocol/issues/798",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nFigure 10 claims to have seven members, but I count 8, namely Y,T,X,A,B,E,F and G  (not counting W, the root)\n\n",
+      "createdAt": "2022-12-06T16:08:01Z",
+      "updatedAt": "2022-12-07T00:52:01Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Actually, it only has five!  A, B, E, F, and G.  Recall that members are at the leaves of the tree.",
+          "createdAt": "2022-12-06T22:54:55Z",
+          "updatedAt": "2022-12-06T22:54:55Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "Ah right :)",
+          "createdAt": "2022-12-07T00:52:00Z",
+          "updatedAt": "2022-12-07T00:52:00Z"
+        }
+      ]
+    },
+    {
+      "number": 799,
+      "id": "I_kwDOBoyH6c5YL0MC",
+      "title": "Setion 8.7 MAY",
+      "url": "https://github.com/mlswg/mls-protocol/issues/799",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   An implementation MAY use any\n   algorithm that produces the correct tree in its internal\n   representation.\n~~~\nAnother weird MAY here. Again, I would just lowercase it as this is just a pointer to a human decision, not a 2119 based protocol enforcement.\n\n",
+      "createdAt": "2022-12-06T16:08:02Z",
+      "updatedAt": "2022-12-06T16:08:03Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 800,
+      "id": "I_kwDOBoyH6c5YL0Mq",
+      "title": "Section 9.5 MLS Exporter",
+      "url": "https://github.com/mlswg/mls-protocol/issues/800",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\nI assume the export is always available to ALL members of the group ? For example for use as PSK to authenticated a TLS video stream?\n\n",
+      "createdAt": "2022-12-06T16:08:04Z",
+      "updatedAt": "2022-12-07T14:14:04Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, everyone in the group has the `epoch_secret` (by definition), so everyone can compute the `exporter_secret` and any exported values.  For example, this is how the proposed [MLS integration with SFrame](https://datatracker.ietf.org/doc/draft-barnes-sframe-mls/) works.\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T23:01:14Z",
+          "updatedAt": "2022-12-06T23:01:14Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "thanks for the clarification.",
+          "createdAt": "2022-12-07T00:49:50Z",
+          "updatedAt": "2022-12-07T00:49:50Z"
+        }
+      ]
+    },
+    {
+      "number": 801,
+      "id": "I_kwDOBoyH6c5YL0NN",
+      "title": "Section 10.1 encryption size",
+      "url": "https://github.com/mlswg/mls-protocol/issues/801",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \nEach key/nonce pair MUST NOT be used to encrypt more than one message.\n~~~\nIsn't there technically also limits to how much one AEAD key and one nonce can be used to encrypt a (very very) large message? I guess this could not happen, but is there some formal message size limit in MLS ? (looking at the vectors at the start, limits could be higher than 2^64 ?)\n\n",
+      "createdAt": "2022-12-06T16:08:05Z",
+      "updatedAt": "2022-12-06T16:08:05Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 802,
+      "id": "I_kwDOBoyH6c5YL_wG",
+      "title": "Time is not on our side?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/802",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \nmeasured in seconds since the Unix epoch (1970-01-01T00:00:00Z)\n~~~\nWhy use a time format that dies in 2038 already? IRC is older than the time given to MLS to survive :P\n\n",
+      "createdAt": "2022-12-06T16:26:15Z",
+      "updatedAt": "2022-12-06T16:38:30Z",
+      "closedAt": "2022-12-06T16:38:30Z",
+      "comments": []
+    },
+    {
+      "number": 803,
+      "id": "I_kwDOBoyH6c5YL_xN",
+      "title": "lifetime field",
+      "url": "https://github.com/mlswg/mls-protocol/issues/803",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   it is RECOMMENDED that the\n   client verifies that the current time is within the range of\n   the lifetime field.\n~~~\nWhy RECOMMENDED and not MUST ?\n\n",
+      "createdAt": "2022-12-06T16:26:16Z",
+      "updatedAt": "2022-12-06T16:38:30Z",
+      "closedAt": "2022-12-06T16:38:30Z",
+      "comments": []
+    },
+    {
+      "number": 804,
+      "id": "I_kwDOBoyH6c5YL_yF",
+      "title": "Section 8.4",
+      "url": "https://github.com/mlswg/mls-protocol/issues/804",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   path_secret[0] is sampled at random\n~~~\nWhat does this mean? What is sampling? What is the sample used for ?\n\nSimilar in [Section 8.5](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-8.5):\n\n~~~ \nSet the encryption_key to the public key of a freshly sampled key pair\n~~~\n",
+      "createdAt": "2022-12-06T16:26:18Z",
+      "updatedAt": "2022-12-06T16:38:31Z",
+      "closedAt": "2022-12-06T16:38:31Z",
+      "comments": []
+    },
+    {
+      "number": 805,
+      "id": "I_kwDOBoyH6c5YL_yx",
+      "title": "Section 13/14 Race conditions ?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/805",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nIn [Section 13.4.3.2](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-13.4.3.2), but also elsewhere, I am confused how race conditions are handled. In this section, if two clients try to each add a a new member for an External Commit join, one of them will fail on the epoch being wrong.\n\nIsn't there a similar race with removing? And any other operation that changes the epoch? How are all these race conditions handled?\n\n[Section 14](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-14) does not really clarify this to me.\n\n",
+      "createdAt": "2022-12-06T16:26:19Z",
+      "updatedAt": "2022-12-06T16:38:31Z",
+      "closedAt": "2022-12-06T16:38:31Z",
+      "comments": []
+    },
+    {
+      "number": 806,
+      "id": "I_kwDOBoyH6c5YL_zr",
+      "title": "Section 15.1",
+      "url": "https://github.com/mlswg/mls-protocol/issues/806",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nWhy not at least always pad to a length of like 1000 bytes to avoid some of the very obvious information leaks by length? It would cover most \"single line\" conversation sentences. Maybe a SHOULD pad to a minimum of X ?\n\n",
+      "createdAt": "2022-12-06T16:26:20Z",
+      "updatedAt": "2022-12-06T16:38:32Z",
+      "closedAt": "2022-12-06T16:38:32Z",
+      "comments": []
+    },
+    {
+      "number": 807,
+      "id": "I_kwDOBoyH6c5YL_0q",
+      "title": "NOOPs ?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/807",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nAs stated before, I miss a defined NOOP command that allows for a continuous IPTFS like constant stream of data that would hide better when a member is conversing at all or not.\n\n",
+      "createdAt": "2022-12-06T16:26:21Z",
+      "updatedAt": "2022-12-06T16:38:32Z",
+      "closedAt": "2022-12-06T16:38:32Z",
+      "comments": []
+    },
+    {
+      "number": 808,
+      "id": "I_kwDOBoyH6c5YL_1v",
+      "title": "Section 17",
+      "url": "https://github.com/mlswg/mls-protocol/issues/808",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nAlgorithm entries use two octets (65535) but only allow 255 Private Use entries. I think that might be a little low. Maybe allow 0xf000 - 0xffff or something ?\n\n",
+      "createdAt": "2022-12-06T16:26:23Z",
+      "updatedAt": "2022-12-06T16:38:32Z",
+      "closedAt": "2022-12-06T16:38:32Z",
+      "comments": []
+    },
+    {
+      "number": 809,
+      "id": "I_kwDOBoyH6c5YL_2t",
+      "title": "Section 17.6",
+      "url": "https://github.com/mlswg/mls-protocol/issues/809",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "duplicate",
+        "discuss",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \nThis document registers the \"message/mls\"\n~~~\nWhy not use \"mls/message\" and keep everything within one namespace?\n\n",
+      "createdAt": "2022-12-06T16:26:24Z",
+      "updatedAt": "2022-12-06T16:38:33Z",
+      "closedAt": "2022-12-06T16:38:33Z",
+      "comments": []
+    },
+    {
+      "number": 810,
+      "id": "I_kwDOBoyH6c5YL_3v",
+      "title": "Section 10.2",
+      "url": "https://github.com/mlswg/mls-protocol/issues/810",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   Members MAY keep\n   unconsumed values around for some reasonable amount of time to handle\n   out-of-order message delivery.\n~~~\nWhy is this MAY and not SHOULD?\n\n",
+      "createdAt": "2022-12-06T16:26:25Z",
+      "updatedAt": "2022-12-07T14:14:35Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It's not an interoperability requirement, it's purely an application consideration.  If the application ensures that there's never a situation where you need old state from MLS, then you don't need to keep old MLS state.  For example, in an application using the proposed [MLS SFrame integration](https://datatracker.ietf.org/doc/draft-barnes-sframe-mls/), the SFrame layer handles out-of-order delivery, and the MLS layer doesn't have to.  And of course, you should delete secrets as quickly as practical.\r\n\r\nPropose closing with no action.",
+          "createdAt": "2022-12-06T23:08:26Z",
+          "updatedAt": "2022-12-06T23:08:26Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "Ok, but it reads a bit as you \"MAY be reasonable\" instead of you \"SHOULD be reasonable\" :)\r\n\r\nBut it is fine to leave as is if that is the preference.",
+          "createdAt": "2022-12-07T00:49:05Z",
+          "updatedAt": "2022-12-07T00:49:05Z"
+        }
+      ]
+    },
+    {
+      "number": 811,
+      "id": "I_kwDOBoyH6c5YL_4p",
+      "title": "Section 12",
+      "url": "https://github.com/mlswg/mls-protocol/issues/811",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nWhat happens if on the same Delivery Service, two groups with the same group id are created? Why doesn't the protocol split the group id, so one part (prefix) is always created by the DS ?\n\n",
+      "createdAt": "2022-12-06T16:26:26Z",
+      "updatedAt": "2022-12-07T00:11:13Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "To be clear, just because the specification says \"set by the creator\", that doesn't mean that it is necessarily set by the MLS library.  The creator (including its application logic) can use whatever process they want to to choose the group ID, say asking the DS for one.  I think most applications expect to use group IDs that align with some other application identifier, e.g., a GUID for the application context that the MLS group serves.\r\n\r\nAll that said, the impact of a Group ID collision should be minimal.  The key schedule incorporates all sorts of other things, so even if the groups have the same ID and same membership (even the same leaves in the tree), they will have different epoch secrets.  So the risk of some application-layer confusion would be the main concern, but it's up to the application to sort that out.\r\n\r\nI don't think the requires any action, but cc @TWal for thoughts on how this is reflected in the formal models.",
+          "createdAt": "2022-12-06T23:15:32Z",
+          "updatedAt": "2022-12-06T23:15:32Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Indeed, in our implementation the (MLS and) Wire client has to create a conversation object with a bunch of application-layer parameters before creating an MLS group. It gets back an MLS Group ID (among other things) which the DS will forward messages to.",
+          "createdAt": "2022-12-07T00:11:13Z",
+          "updatedAt": "2022-12-07T00:11:13Z"
+        }
+      ]
+    },
+    {
+      "number": 812,
+      "id": "I_kwDOBoyH6c5YL_50",
+      "title": "Section 13.2",
+      "url": "https://github.com/mlswg/mls-protocol/issues/812",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   For a regular, i.e. not external, commit the list is invalid if any\n   of the following occurs:\n\n   [...]\n~~~\nWhy not list the requirements instead of what makes it invalid ?\n\n",
+      "createdAt": "2022-12-06T16:26:28Z",
+      "updatedAt": "2022-12-07T14:15:27Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The overall vibe here is that the committer has a free hand in choosing which proposals go into a Commit, but there are certain things they can't do.  Thus the negative framing.  But obviously given DeMorgan's law, the two formulations are equivalent.\r\n\r\nIn the spirit of minimizing changes at this late stage, I would propose closing without action.",
+          "createdAt": "2022-12-06T23:20:27Z",
+          "updatedAt": "2022-12-06T23:20:27Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I got some feedback from our implementors that this language was quite useful. When you are implementing a specific feature set for a deadline, what you are going to send is a small subset of the things that you might receive in the future. Having a negative list like this makes the validation logic clear.\r\n\r\nAlso, the amount of text required to write the corresponding positive list probably runs more than twice as long.",
+          "createdAt": "2022-12-07T00:15:44Z",
+          "updatedAt": "2022-12-07T00:15:44Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "that's fine with me",
+          "createdAt": "2022-12-07T00:20:54Z",
+          "updatedAt": "2022-12-07T00:20:54Z"
+        }
+      ]
+    },
+    {
+      "number": 813,
+      "id": "I_kwDOBoyH6c5YL_6t",
+      "title": "Section 13.4.3.2",
+      "url": "https://github.com/mlswg/mls-protocol/issues/813",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nThat is quite some information that must be publicly available to allow external Add requests. This leaks information, eg same epoch means the group membership did not change, etc etc. I hope this will appear in the Security Considerations later :)\n\n",
+      "createdAt": "2022-12-06T16:26:29Z",
+      "updatedAt": "2022-12-07T22:51:40Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I suppose between this and #779, we should add a subsection to the Security Considerations on metadata privacy.",
+          "createdAt": "2022-12-06T23:21:56Z",
+          "updatedAt": "2022-12-06T23:21:56Z"
+        },
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'm not sure #823 actually resolves this?",
+          "createdAt": "2022-12-07T22:51:40Z",
+          "updatedAt": "2022-12-07T22:51:40Z"
+        }
+      ]
+    },
+    {
+      "number": 814,
+      "id": "I_kwDOBoyH6c5YL_7p",
+      "title": "Section 15.3",
+      "url": "https://github.com/mlswg/mls-protocol/issues/814",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \nThis is in addition to ensuring that these nonce and key pairs are promptly\n   deleted when the epoch ends.\n~~~\nThis sentence with a hidden MUST is stuck between a sentence with MAY and a sentence with SHOULD. Perhaps make the MUST explicit ?\n\n",
+      "createdAt": "2022-12-06T16:26:30Z",
+      "updatedAt": "2022-12-07T00:45:05Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This is already well covered in the [deletion schedule](https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#name-deletion-schedule) discussion, but I can add a cross-reference.",
+          "createdAt": "2022-12-06T23:23:31Z",
+          "updatedAt": "2022-12-06T23:23:31Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "I meant just rephase the sentence so it contains \"MUST delete when the epoch ends\"",
+          "createdAt": "2022-12-07T00:45:05Z",
+          "updatedAt": "2022-12-07T00:45:05Z"
+        }
+      ]
+    },
+    {
+      "number": 815,
+      "id": "I_kwDOBoyH6c5YL_8d",
+      "title": "Section 16",
+      "url": "https://github.com/mlswg/mls-protocol/issues/815",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \nthough a complete security analysis is outside of the scope of this document.\n~~~\nHmmm :P\n\n",
+      "createdAt": "2022-12-06T16:26:31Z",
+      "updatedAt": "2022-12-07T14:16:48Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Cf. RFC 8446\r\n\r\n> Appendix E. Overview of Security Properties\r\n> \r\n>   A complete security analysis of TLS is outside the scope of this document.\r\n\r\nWe could provide some more citations to the analyses that are now in the literature if you think that would help.",
+          "createdAt": "2022-12-06T23:26:49Z",
+          "updatedAt": "2022-12-06T23:26:49Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "CC @psyoptix @TWal @mulmarta for citations",
+          "createdAt": "2022-12-06T23:27:07Z",
+          "updatedAt": "2022-12-06T23:27:07Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Cf. RFC 8446\r\n> \r\n> > Appendix E. Overview of Security Properties\r\n> > A complete security analysis of TLS is outside the scope of this document.\r\n> \r\n> We could provide some more citations to the analyses that are now in the literature if you think that would help.\r\n\r\nThey are also in this architecture document PR:\r\nhttps://github.com/mlswg/mls-architecture/pull/119/files",
+          "createdAt": "2022-12-07T00:18:39Z",
+          "updatedAt": "2022-12-07T00:18:39Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Oh good, I'll just add a citation over to mls-architecture.",
+          "createdAt": "2022-12-07T14:16:47Z",
+          "updatedAt": "2022-12-07T14:16:47Z"
+        }
+      ]
+    },
+    {
+      "number": 816,
+      "id": "I_kwDOBoyH6c5YL_9T",
+      "title": "Section 16.2",
+      "url": "https://github.com/mlswg/mls-protocol/issues/816",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   The second form of authentication is that group members can verify a\n   message originated from a particular member of the group.  This is\n   guaranteed by a digital signature on each message from the sender's\n   signature key.\n~~~\nMaybe add a sentence saying this means there is no repudiation of messages?\n\n",
+      "createdAt": "2022-12-06T16:26:32Z",
+      "updatedAt": "2022-12-07T14:17:30Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I would prefer not to say anything like that here, because the degree to which signature implies non-repudiation depends on a bunch of context for how the signature keys are managed.  Clearly if you have long term or certified keys, then yes, there's a pretty high degree of non-repudiation.  But people are also interested in configuring MLS to be deniable, e.g., by exchanging signature keys over a deniable channel.\r\n\r\nSo I would propose closing this with no action.",
+          "createdAt": "2022-12-06T23:32:06Z",
+          "updatedAt": "2022-12-06T23:32:06Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "Ah, that is a very good point. In my head I was thinking signature means proof of key and key is proven to person. But that might certainly not be the case here.",
+          "createdAt": "2022-12-07T00:41:31Z",
+          "updatedAt": "2022-12-07T00:41:31Z"
+        }
+      ]
+    },
+    {
+      "number": 817,
+      "id": "I_kwDOBoyH6c5YL_-T",
+      "title": "Section 17.1",
+      "url": "https://github.com/mlswg/mls-protocol/issues/817",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\n~~~ \n   Additionally clients that run predominantly on mobile\n   processors can choose ChaCha20Poly1305 over AES-GCM for performance\n   reasons.\n~~~\nCitation needed? I think most phones have AES(_GCM) in hardware too ? Also compared to HPKE operations and the times for epoch/group reinit, does this performance really matter? (eg waking up from sleep to increment the epoch would make the symmetric encryption cost pretty irrelevant. I would remove this sentence.\n\n",
+      "createdAt": "2022-12-06T16:26:34Z",
+      "updatedAt": "2022-12-07T00:40:15Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'll remove the \"mobile processors\" bit and phrase it a little more evenhandedly (\"can choose ChaCha or GCM\"), but I think it's fair to say that there might be environments where ChaCha/Poly is more performant than AES-GCM.",
+          "createdAt": "2022-12-06T23:34:12Z",
+          "updatedAt": "2022-12-06T23:34:12Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "Thanks. I do think you might be right that \"there are\", but I also do not think \"mobile\" is that :)",
+          "createdAt": "2022-12-07T00:40:15Z",
+          "updatedAt": "2022-12-07T00:40:15Z"
+        }
+      ]
+    },
+    {
+      "number": 818,
+      "id": "I_kwDOBoyH6c5YL__J",
+      "title": "Section 17.2",
+      "url": "https://github.com/mlswg/mls-protocol/issues/818",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review",
+        "to close"
+      ],
+      "body": "_Comment by @paulwouters_\n\nWhat is the logic to make MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519 the only MTI? It contains both FIPS and not FIPS items, pleasing no one.\n\n",
+      "createdAt": "2022-12-06T16:26:35Z",
+      "updatedAt": "2022-12-07T14:18:02Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I remember arguing that the FIPS suite should be MTI at one of the interims. The argument (iirc) was that people that need FIPS are going to implement FIPS anyways, so the MTI should be the one that's subjectively / widely-considered best. \"But then wouldn't a FIPS-only client not conform to the RFC?\" Yes, but the people that require FIPS will not care.",
+          "createdAt": "2022-12-06T18:39:48Z",
+          "updatedAt": "2022-12-06T18:39:48Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "Well I know from IKEv2/IPsec, that we do take this into account and do ensure there is only FIPS MITM.\r\nI also know we are discussing this in openpgp and also for that reason are adding AES_GCM there.\r\n\r\nSo if the only reasoning is \"FIPS will force people to break RFCs anyway\", that's kinda weak :P",
+          "createdAt": "2022-12-06T19:41:26Z",
+          "updatedAt": "2022-12-06T19:41:26Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> ... do ensure there is only FIPS MITM\r\n\r\nYou mean \"MTI\"?  I don't think the MITM folks care about FIPS :)\r\n\r\nI think @Bren2010's summary captures the state of the art pretty well.  Note as well that [X25519 and Ed25519 are slated for inclusion in the relevant FIPS standards](https://csrc.nist.gov/News/2017/Transition-Plans-for-Key-Establishment-Schemes), so this will soon be moot anyway.  (For some government-speed definition of \"soon\".)  So yes, some FIPS folks might be sad in the short run, but things will even out.\r\n\r\nThe working group had a robust discussion on this, and landed on this as a compromise that could get consensus.  I don't think these FIPS concerns are worth upsetting that consensus.",
+          "createdAt": "2022-12-06T23:51:16Z",
+          "updatedAt": "2022-12-06T23:51:16Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Realistically, most folks using end-to-end encrypted instant messaging today are already using a variation of the DoubleRatchet protocol, using Ed25519. Many of our largest customers normally use FIPS, but have exceptions to use Ed25519 in this context and have no problem using Ed25519 for MLS.",
+          "createdAt": "2022-12-07T00:28:41Z",
+          "updatedAt": "2022-12-07T00:28:41Z"
+        },
+        {
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "body": "(yes MTI :)\r\n\r\nThat NIST doc is from 2017, so I\"m not sure what you mean with \"soon\" :)\r\n\r\nI personally think it should be fixed but won't block it. Let's see what the IESG says though :)",
+          "createdAt": "2022-12-07T00:36:16Z",
+          "updatedAt": "2022-12-07T00:36:16Z"
+        }
+      ]
+    },
+    {
+      "number": 819,
+      "id": "I_kwDOBoyH6c5YMAAE",
+      "title": "Nits",
+      "url": "https://github.com/mlswg/mls-protocol/issues/819",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "comment",
+        "review"
+      ],
+      "body": "_Comment by @paulwouters_\n\nI personally don't like the _underscored_ words in the html rendering of the document\n\nIt \"blank\" the new American spelling of \"blanc\" ?\n\n~~~ \nhas a corresponding _hash_ that summarizes the contents\n~~~\nI find \"summarizes\" a strange word here. It is not the hash contains a summary one can read.\n\n[SECG] has no IETF equivalent? Should it?\n\nproposaland -> proposal and\n\n~~~ \n           Figure 13: Cleaning up after removing the third member\n~~~\nI would say \"after removing member C\"  (avoid ambiguity about \"every third\")\n\n~~~ \n   This section defines _tree\n   hashes_, and _parent hashes_ are defined in [Section 8.9](https://www.ietf.org/archive/id/draft-ietf-mls-protocol-15.html#section-8.9)\n~~~\nI read this wrong the first way, the \",\" vanishes due to the _unscores_. Maybe: This section defines _tree hashes_, the next section defines _parent hashes_. Or alternatively, leave onlthe the first sentence in 8.8, then put the remainder and next section in two subsections (so 8.8.1 and 8.8.2)\n\n~~~ \nFor example, a malicious group member could send\n~~~\nMaybe: For example, a malicious group member could otherwise send\n\n~~~ \nto previously compromised public keys.\n~~~\nMaybe: to public keys whose private key was previously compromised.\n\n~~~ \nPost-compromise security is also provided for new groups\n~~~\nThis reads a little odd as \"new groups\" would have no history and thus no previous compromise.\n\n",
+      "createdAt": "2022-12-06T16:26:36Z",
+      "updatedAt": "2022-12-06T18:09:42Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Filed #820 \r\n\r\n> I personally don't like the underscored words in the html rendering of the document\r\n\r\nI think it's important to emphasize the terms being defined, and this seems more readable than a definition list.\r\n\r\n\r\n> > has a corresponding _hash_ that summarizes the contents\r\n>\r\n> I find \"summarizes\" a strange word here. It is not the hash contains a summary one can read.\r\n\r\nNote that a hash function is often called a \"message digest\", in the same sense as the \"Weekly github digest\" that goes to the mailing list.\r\n\r\n\r\n> [SECG] has no IETF equivalent? Should it?\r\n\r\nI think referring to SECG is still pretty state-of-the-art.  But apparently RFC 8446 moved on from that, so I updated to use that representation.\r\n",
+          "createdAt": "2022-12-06T18:09:42Z",
+          "updatedAt": "2022-12-06T18:09:42Z"
         }
       ]
     }
@@ -54366,6 +56110,225 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 820,
+      "id": "PR_kwDOBoyH6c5EhVhl",
+      "title": "Address nits",
+      "url": "https://github.com/mlswg/mls-protocol/pull/820",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #819",
+      "createdAt": "2022-12-06T18:09:07Z",
+      "updatedAt": "2022-12-07T22:18:40Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "01a20d330a15fdb45ba2d7fd7701465bf19c544d",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "nits",
+      "headRefOid": "b8b2183b3f11ba6434b5e161003196d64898fa94",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5IEvCs",
+          "commit": {
+            "abbreviatedOid": "b8b2183"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-07T22:18:40Z",
+          "updatedAt": "2022-12-07T22:18:40Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 821,
+      "id": "PR_kwDOBoyH6c5EhrR9",
+      "title": "Make ProtocolVersion two bytes",
+      "url": "https://github.com/mlswg/mls-protocol/pull/821",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #766 ",
+      "createdAt": "2022-12-06T18:49:26Z",
+      "updatedAt": "2022-12-06T18:49:26Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "01a20d330a15fdb45ba2d7fd7701465bf19c544d",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "enum16",
+      "headRefOid": "6c1a1ff596c6cf2b9f1328e2eccfacdb8e63057e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 822,
+      "id": "PR_kwDOBoyH6c5EiIsq",
+      "title": "Make more vendor code points available",
+      "url": "https://github.com/mlswg/mls-protocol/pull/822",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #777 ",
+      "createdAt": "2022-12-06T19:44:11Z",
+      "updatedAt": "2022-12-07T22:26:19Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "01a20d330a15fdb45ba2d7fd7701465bf19c544d",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "more-vendor-space",
+      "headRefOid": "07536d96683ef1494620edfefc14b53e99ae3a0e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@Bren2010 thanks, good catch.  should be fixed now.",
+          "createdAt": "2022-12-07T22:25:23Z",
+          "updatedAt": "2022-12-07T22:25:23Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5IEviZ",
+          "commit": {
+            "abbreviatedOid": "d910300"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-07T22:20:47Z",
+          "updatedAt": "2022-12-07T22:20:47Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IEv3M",
+          "commit": {
+            "abbreviatedOid": "d910300"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "Missed text mention on line 5042",
+          "createdAt": "2022-12-07T22:22:10Z",
+          "updatedAt": "2022-12-07T22:22:10Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IEwzm",
+          "commit": {
+            "abbreviatedOid": "07536d9"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-07T22:26:19Z",
+          "updatedAt": "2022-12-07T22:26:19Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 823,
+      "id": "PR_kwDOBoyH6c5Ej5an",
+      "title": "Minor edits for AD comments",
+      "url": "https://github.com/mlswg/mls-protocol/pull/823",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #780 \r\nFixes #781\r\nFixes #797\r\nFixes #798\r\nFixes #799\r\nFixes #801\r\nFixes #813\r\nFixes #814\r\nFixes #817",
+      "createdAt": "2022-12-07T00:02:10Z",
+      "updatedAt": "2022-12-07T22:28:31Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "01a20d330a15fdb45ba2d7fd7701465bf19c544d",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "minor-ad-review",
+      "headRefOid": "b451e2a1d46983187f632bacdb27c1ed4f3df45b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5IEwEL",
+          "commit": {
+            "abbreviatedOid": "b451e2a"
+          },
+          "author": "Bren2010",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-07T22:23:04Z",
+          "updatedAt": "2022-12-07T22:28:31Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\nA has received its Commit message back from the Delivery Service does it update its\r\n```",
+              "createdAt": "2022-12-07T22:23:04Z",
+              "updatedAt": "2022-12-07T22:28:31Z"
+            },
+            {
+              "originalPosition": 74,
+              "body": "```suggestion\r\ndefined in {{deletion-schedule}}. Applications SHOULD also define a policy\r\n```",
+              "createdAt": "2022-12-07T22:27:11Z",
+              "updatedAt": "2022-12-07T22:28:31Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 824,
+      "id": "PR_kwDOBoyH6c5Esqar",
+      "title": "Credentials should be replaced before expiring",
+      "url": "https://github.com/mlswg/mls-protocol/pull/824",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #758 ",
+      "createdAt": "2022-12-07T22:27:44Z",
+      "updatedAt": "2022-12-07T22:44:12Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "01a20d330a15fdb45ba2d7fd7701465bf19c544d",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "expiry",
+      "headRefOid": "af18608e4eedb25d6e086ccb87ef399cce11982f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
