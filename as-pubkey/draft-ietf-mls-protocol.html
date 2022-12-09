@@ -3252,8 +3252,8 @@ authenticated by those presented identifiers.<a href="#section-5.3.1-1" class="p
 to as the Authentication Service (AS) <span>[<a href="#I-D.ietf-mls-architecture" class="cite xref">I-D.ietf-mls-architecture</a>]</span>.  A
 member's credential is said to be <em>validated with the AS</em> when the AS verifies
 that the credential's presented identifiers are correctly associated with the
-<code>signature_key</code> field in the LeafNode containing the credential, and verifies
-that those identifiers match the reference identifiers for the member.<a href="#section-5.3.1-2" class="pilcrow">¶</a></p>
+<code>signature_key</code> field in the member's LeafNode, and verifies that those
+identifiers match the reference identifiers for the member.<a href="#section-5.3.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.3.1-3">Whenever a new credential is introduced in the group, it MUST be validated with
 the AS.  In particular, at the following events in the protocol:<a href="#section-5.3.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
