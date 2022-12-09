@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 10 June 2023                                    Inria & Mozilla
+Expires: 12 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                                         
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 10 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                         7 December 2022
+                                                         9 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 June 2023.
+   This Internet-Draft will expire on 12 June 2023.
 
 Copyright Notice
 
@@ -95,7 +95,7 @@ Table of Contents
      6.2.  Hash-Based Identifiers
      6.3.  Credentials
        6.3.1.  Credential Validation
-       6.3.2.  Expiring Credentials
+       6.3.2.  Credential Expiry and Revocation
        6.3.3.  Uniquely Identifying Clients
    7.  Message Framing
      7.1.  Content Authentication
@@ -1562,20 +1562,37 @@ Table of Contents
    successor to the set of presented identifiers in the old credential,
    according to the application's policy.
 
-6.3.2.  Expiring Credentials
+6.3.2.  Credential Expiry and Revocation
 
    In some credential schemes, the validity status of a credential can
    change over time.  For example, X.509 certificates can expire or be
-   revoked by their issuer.  To avoid operational problems such as new
-   joiners rejecting expired credentials in a group, applications that
-   use such credentials should ensure that all of the credentials in use
-   in a group are valid.
+   revoked by their issuer.  These changes can cause operational
+   problems in light of the validation requirements of Section 6.3.1.
+   Applications can apply some operational practices and adaptations to
+   Authentication Service policies to moderate these impacts.
+
+   It can sometimes be important to distinguish this type of invalidity
+   from other types; we call a credential "time-invalid" that is invalid
+   for some time-based reason but otherwise valid.  An expired
+   certificate issued by a trusted certificate authority would be time-
+   invalid.
+
+   In general, To avoid operational problems such as new joiners
+   rejecting expired credentials in a group, applications that use such
+   credentials should ensure that all of the credentials in use in a
+   group are valid.
 
    If a member finds that its credential is invalid (or will be soon),
    it should issue an Update or Commit that replaces it with a valid
    credential.  For this reason, members SHOULD accept Update proposals
-   and Commits issued by members with invalid credentials, if the
+   and Commits issued by members with time-invalid credentials, if the
    credential in the Update or Commit is valid.
+
+   Similarly, when a client is processing messages sent some time in the
+   past (e.g., syncing up with a group after being offline), the client
+   SHOULD accept signatures from members with time-invalid credentials,
+   since the credential may have been valid at the time the message was
+   sent.
 
    If a member finds that another member's credential is invalid, they
    may issue a Remove that removes that member.  For example, an
