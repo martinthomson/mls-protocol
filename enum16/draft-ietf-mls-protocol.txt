@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 9 June 2023                                     Inria & Mozilla
+Expires: 12 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                                         
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 9 June 2023                                     Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                         6 December 2022
+                                                         9 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 June 2023.
+   This Internet-Draft will expire on 12 June 2023.
 
 Copyright Notice
 
@@ -164,11 +164,12 @@ Table of Contents
      16.5.  Group Fragmentation by Malicious Insiders
    17. IANA Considerations
      17.1.  MLS Ciphersuites
-     17.2.  MLS Extension Types
-     17.3.  MLS Proposal Types
-     17.4.  MLS Credential Types
-     17.5.  MLS Designated Expert Pool
-     17.6.  The "message/mls" MIME Type
+     17.2.  MLS Wire Formats
+     17.3.  MLS Extension Types
+     17.4.  MLS Proposal Types
+     17.5.  MLS Credential Types
+     17.6.  MLS Designated Expert Pool
+     17.7.  The "message/mls" MIME Type
    18. References
      18.1.  Normative References
      18.2.  Informative References
@@ -1655,15 +1656,8 @@ Table of Contents
        }
    } Sender;
 
-   enum {
-     reserved(0),
-     mls_plaintext(1),
-     mls_ciphertext(2),
-     mls_welcome(3),
-     mls_group_info(4),
-     mls_key_package(5),
-     (255)
-   } WireFormat;
+   // See IANA registry for registered values
+   uint16 WireFormat;
 
    struct {
        opaque group_id<V>;
@@ -4167,7 +4161,7 @@ psk_secret (or 0) --> KDF.Extract
    instance of a proposal type requires a path, then the proposal type
    requires a path.  This attribute of a proposal type is reflected in
    the "Path Required" field of the proposal type registry defined in
-   Section 17.3.
+   Section 17.4.
 
    Update and Remove proposals are the clearest examples of proposals
    that require a path.  An UpdatePath is required to evict the removed
@@ -4930,7 +4924,7 @@ psk_secret (or 0) --> KDF.Extract
    what all members of the group support, as specified by the
    capabilities field of each LeafNode in the ratchet tree.  An
    application can introduce new credential types by choosing an
-   unallocated identifier from the registry in Section 17.4 and
+   unallocated identifier from the registry in Section 17.5 and
    indicating support for the credential type in published LeafNodes,
    whether in Update proposals to existing groups or KeyPackages that
    are added to new groups.  Once all members in a group indicate
@@ -5267,15 +5261,17 @@ psk_secret (or 0) --> KDF.Extract
 
    *  MLS Ciphersuites (Section 17.1)
 
-   *  MLS Extension Types (Section 17.2)
+   *  MLS Wire Formats (Section 17.2)
 
-   *  MLS Proposal Types (Section 17.3)
+   *  MLS Extension Types (Section 17.3)
 
-   *  MLS Credential Types (Section 17.4)
+   *  MLS Proposal Types (Section 17.4)
+
+   *  MLS Credential Types (Section 17.5)
 
    All of these registries should be under a heading of "Messaging Layer
    Security", and assignments are made via the Specification Required
-   policy [RFC8126].  See Section 17.5 for additional information about
+   policy [RFC8126].  See Section 17.6 for additional information about
    the MLS Designated Experts (DEs).
 
    RFC EDITOR: Please replace XXXX throughout with the RFC number
@@ -5447,7 +5443,51 @@ psk_secret (or 0) --> KDF.Extract
    New ciphersuite values are assigned by IANA as described in
    Section 17.
 
-17.2.  MLS Extension Types
+17.2.  MLS Wire Formats
+
+   This registry lists identifiers for the types of messages that can be
+   sent in MLS.  The wire format field is two bytes wide, so the valid
+   wire format values are in the range 0x0000 to 0xffff.
+
+   Template:
+
+   *  Value: The numeric value of the wire format
+
+   *  Name: The name of the wire format
+
+   *  Recommended: Whether support for this wire format is recommended
+      by the IETF MLS WG.  Valid values are "Y" and "N".  The
+      "Recommended" column is assigned a value of "N" unless explicitly
+      requested, and adding a value with a "Recommended" value of "Y"
+      requires Standards Action [RFC8126].  IESG Approval is REQUIRED
+      for a Y->N transition.
+
+   *  Reference: The document where this wire format is defined
+
+   Initial contents:
+
+      +=================+=================+=============+===========+
+      | Value           | Name            | Recommended | Reference |
+      +=================+=================+=============+===========+
+      | 0x0000          | RESERVED        | N/A         | RFC XXXX  |
+      +-----------------+-----------------+-------------+-----------+
+      | 0x0001          | mls_plaintext   | Y           | RFC XXXX  |
+      +-----------------+-----------------+-------------+-----------+
+      | 0x0002          | mls_ciphertext  | Y           | RFC XXXX  |
+      +-----------------+-----------------+-------------+-----------+
+      | 0x0003          | mls_welcome     | Y           | RFC XXXX  |
+      +-----------------+-----------------+-------------+-----------+
+      | 0x0004          | mls_group_info  | Y           | RFC XXXX  |
+      +-----------------+-----------------+-------------+-----------+
+      | 0x0005          | mls_key_package | Y           | RFC XXXX  |
+      +-----------------+-----------------+-------------+-----------+
+      | 0xff00 - 0xffff | Reserved for    | N/A         | RFC XXXX  |
+      |                 | Private Use     |             |           |
+      +-----------------+-----------------+-------------+-----------+
+
+                                  Table 8
+
+17.3.  MLS Extension Types
 
    This registry lists identifiers for extensions to the MLS protocol.
    The extension type field is two bytes wide, so valid extension type
@@ -5501,9 +5541,9 @@ psk_secret (or 0) --> KDF.Extract
    | 0xffff |                       |          |             |         |
    +--------+-----------------------+----------+-------------+---------+
 
-                                  Table 8
+                                  Table 9
 
-17.3.  MLS Proposal Types
+17.4.  MLS Proposal Types
 
    This registry lists identifiers for types of proposals that can be
    made for changes to an MLS group.  The extension type field is two
@@ -5555,9 +5595,9 @@ psk_secret (or 0) --> KDF.Extract
    |0xffff|                          |             |        |         |
    +------+--------------------------+-------------+--------+---------+
 
-                                 Table 9
+                                 Table 10
 
-17.4.  MLS Credential Types
+17.5.  MLS Credential Types
 
    This registry lists identifiers for types of credentials that can be
    used for authentication in the MLS protocol.  The credential type
@@ -5594,9 +5634,9 @@ psk_secret (or 0) --> KDF.Extract
        |                 | Private Use  |             |           |
        +-----------------+--------------+-------------+-----------+
 
-                                 Table 10
+                                 Table 11
 
-17.5.  MLS Designated Expert Pool
+17.6.  MLS Designated Expert Pool
 
    Specification Required [RFC8126] registry requests are registered
    after a three-week review period on the MLS DEs' mailing list: mls-
@@ -5634,7 +5674,7 @@ psk_secret (or 0) --> KDF.Extract
    be perceived as creating a conflict of interest for a particular MLS
    DE, that MLS DE SHOULD defer to the judgment of the other MLS DEs.
 
-17.6.  The "message/mls" MIME Type
+17.7.  The "message/mls" MIME Type
 
    This document registers the "message/mls" MIME media type in order to
    allow other protocols (e.g., HTTP [RFC7540]) to convey MLS messages.
@@ -5942,7 +5982,7 @@ Appendix B.  Evolution of Parent Hashes
    | Z'   | H(Y', ph="", osth=th(X'))            | Yes                 |
    +------+--------------------------------------+---------------------+
 
-                                  Table 11
+                                  Table 12
 
    In other words, the joiner will find the following path-hash links in
    the tree:
