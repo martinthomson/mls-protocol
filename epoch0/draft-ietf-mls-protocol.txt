@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 11 June 2023                                    Inria & Mozilla
+Expires: 12 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                              Phoenix R&D
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 11 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                         8 December 2022
+                                                         9 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 June 2023.
+   This Internet-Draft will expire on 12 June 2023.
 
 Copyright Notice
 
@@ -3071,15 +3071,21 @@ psk_secret (or 0) --> KDF.Extract
        MAC confirmation_tag;
    } InterimTranscriptHashInput;
 
-   confirmed_transcript_hash_[0] = ""; /* zero-length octet string */
+   confirmed_transcript_hash_[epoch] = ""; /* zero-length octet string */
 
-   confirmed_transcript_hash_[n] =
-       Hash(interim_transcript_hash_[n] ||
-           ConfirmedTranscriptHashInput_[n]);
+   interim_transcript_hash_[epoch] =
+       Hash(confirmed_transcript_hash_[epoch] ||
+           InterimTranscriptHashInput_[epoch]);
 
-   interim_transcript_hash_[n+1] =
-       Hash(confirmed_transcript_hash_[n] ||
-           InterimTranscriptHashInput_[n]);
+   confirmed_transcript_hash_[epoch+1] =
+       Hash(interim_transcript_hash_[epoch] ||
+           ConfirmedTranscriptHashInput_[epoch+1]);
+
+   In this notation, InterimTranscriptHashInput_[epoch] and
+   ConfirmedTranscriptHashInput_[epoch+1] are based on the Commit that
+   initiated the epoch with epoch number epoch.  (Note that the epoch
+   field in this Commit will be set to epoch - 1, since it is sent
+   within the previous epoch.)
 
 8.3.  External Initialization
 
@@ -3565,10 +3571,10 @@ psk_secret (or 0) --> KDF.Extract
    The creator of a group is responsible for setting the group ID,
    ciphersuite, and initial extensions for the group.  If the creator
    intends to add other members at the time of creation, then it SHOULD
-   Fetch KeyPackages for the members to be added, and select a version
-   and ciphersuite according to the capabilities of the members.  To
-   protect against downgrade attacks, the creator MUST use the
-   capabilities information in these KeyPackages to verify that the
+   Fetch KeyPackages for the members to be added, and select a
+   ciphersuite and extensions according to the capabilities of the
+   members.  To protect against downgrade attacks, the creator MUST use
+   the capabilities information in these KeyPackages to verify that the
    chosen version and ciphersuite is the best option supported by all
    members.
 
@@ -3596,13 +3602,11 @@ psk_secret (or 0) --> KDF.Extract
 
       -  Confirmed transcript hash: The zero-length octet string
 
-      -  Interim transcript hash: The zero-length octet string
-
       -  Epoch secret: A fresh random value of size KDF.Nh
 
       -  Extensions: Any values of the creator's choosing
 
-   *  Update the interim transcript hash:
+   *  Calculate the interim transcript hash:
 
       -  Derive the confirmation_key for the epoch as described in
          Section 8.
