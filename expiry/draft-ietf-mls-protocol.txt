@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 12 June 2023                                    Inria & Mozilla
+Expires: 15 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                                         
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 12 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                         9 December 2022
+                                                        12 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 June 2023.
+   This Internet-Draft will expire on 15 June 2023.
 
 Copyright Notice
 
@@ -1577,7 +1577,7 @@ Table of Contents
    certificate issued by a trusted certificate authority would be time-
    invalid.
 
-   In general, To avoid operational problems such as new joiners
+   In general, to avoid operational problems such as new joiners
    rejecting expired credentials in a group, applications that use such
    credentials should ensure that all of the credentials in use in a
    group are valid.
