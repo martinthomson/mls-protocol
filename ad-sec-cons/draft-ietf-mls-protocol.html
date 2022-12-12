@@ -1053,7 +1053,7 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Barnes, et al.</td>
-<td class="center">Expires 12 June 2023</td>
+<td class="center">Expires 15 June 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-protocol-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-12-09" class="published">9 December 2022</time>
+<time datetime="2022-12-12" class="published">12 December 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-06-12">12 June 2023</time></dd>
+<dd class="expires"><time datetime="2023-06-15">15 June 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1465,6 +1465,17 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
                 <p id="section-toc.1-1.15.2.2.1"><a href="#section-15.2" class="auto internal xref">15.2</a>.  <a href="#name-confidentiality-of-group-me" class="internal xref">Confidentiality of Group Metadata</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2.2.1">
+                    <p id="section-toc.1-1.15.2.2.2.1.1"><a href="#section-15.2.1" class="auto internal xref">15.2.1</a>.  <a href="#name-groupid-epoch-and-message-f" class="internal xref">GroupID, Epoch, and Message Frequency</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2.2.2">
+                    <p id="section-toc.1-1.15.2.2.2.2.1"><a href="#section-15.2.2" class="auto internal xref">15.2.2</a>.  <a href="#name-group-extensions" class="internal xref">Group Extensions</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2.2.3">
+                    <p id="section-toc.1-1.15.2.2.2.3.1"><a href="#section-15.2.3" class="auto internal xref">15.2.3</a>.  <a href="#name-group-membership" class="internal xref">Group Membership</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3">
                 <p id="section-toc.1-1.15.2.3.1"><a href="#section-15.3" class="auto internal xref">15.3</a>.  <a href="#name-authentication" class="internal xref">Authentication</a></p>
@@ -7517,51 +7528,112 @@ messages.<a href="#section-15.1-2" class="pilcrow">¶</a></p>
         <h3 id="name-confidentiality-of-group-me">
 <a href="#section-15.2" class="section-number selfRef">15.2. </a><a href="#name-confidentiality-of-group-me" class="section-name selfRef">Confidentiality of Group Metadata</a>
         </h3>
-<p id="section-15.2-1">MLS handles certain metadata about a group that is sometimes exposed to parties
-outside the group:<a href="#section-15.2-1" class="pilcrow">¶</a></p>
+<p id="section-15.2-1">MLS does not provide confidentiality protection to some messages and fields
+within messages:<a href="#section-15.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-15.2-2.1">Group ID<a href="#section-15.2-2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-15.2-2.1">KeyPackage messages<a href="#section-15.2-2.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-2.2">Group membership<a href="#section-15.2-2.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.2-2.2">GroupInfo messages<a href="#section-15.2-2.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-2.3">Group extensions<a href="#section-15.2-2.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.2-2.3">The unencrypted portion of a Welcome message<a href="#section-15.2-2.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-2.4">Frequency of epoch changes<a href="#section-15.2-2.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.2-2.4">Any Proposal or Commit messages sent as MLSPlaintext messages<a href="#section-15.2-2.4" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-2.5">Frequency of application messages within an epoch<a href="#section-15.2-2.5" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.2-2.5">The unencrypted header fields in MLSCiphertext messages<a href="#section-15.2-2.5" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-15.2-2.6">The lengths of encrypted Welcome and MLSCiphertext messages<a href="#section-15.2-2.6" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-15.2-3">This information is typically protected from parties other than the DS by
-applying "hop by hop" transport encryption on communications with the DS (in
-contrast to the "end to end" protections provided by MLS). The protection this
-information receives with regard to the DS depends on how MLS is operated.
-Overall, MLS does not provide robust protections against the DS observing the
-group's metadata.<a href="#section-15.2-3" class="pilcrow">¶</a></p>
-<p id="section-15.2-4">MLS provides no mechanism to protect the group ID and epoch of a message from
-the DS, so group ID and the frequency of messages and epoch changes are not
-protected against inspection by the DS.<a href="#section-15.2-4" class="pilcrow">¶</a></p>
-<p id="section-15.2-5">If a group can be joined by external commits (see
-<a href="#joining-via-external-commits" class="auto internal xref">Section 12.4.3.2</a>), then a group member will need to publish a
-GroupInfo object that states the group's extensions and a commitment to the
-group's membership.  This generally results in the group's membership and
-extensions being known to the DS and prospective new joiners.<a href="#section-15.2-5" class="pilcrow">¶</a></p>
-<p id="section-15.2-6">Aside from published GroupInfo objects, the only ways that a groups extensions
-are transmitted are Welcome messages and GroupContextExtensions proposals.
-Welcome messages encrypt extensions, so they do not expose them to the DS.
-Whether a GroupContextExtensions proposal exposes the group's extensions depends
-on whether it is sent as an MLSPlaintext or MLSCiphertext message.  If a group
-always sends Proposals as MLSCiphertext and only adds members via Welcome
-messages, then its extensions will be private to the members of the group.<a href="#section-15.2-6" class="pilcrow">¶</a></p>
-<p id="section-15.2-7">If a group sends Proposal and Commit messages unencrypted (as MLSPlaintext),
-then the DS will be able to infer the group's membership from the set of Add and
-Remove proposals covered by Commits.  If Proposal and Commit messages are sent
-in encrypted form (as MLSCiphertext), then the DS will not be able to observe
-membership changes directly, but may be able to make some less direct
-inferences.  For example, the <code>new_member</code> field in a Welcome message indicates
-the KeyPackage to the Welcome is directed.  The Welcome message does not state
-which group it belongs to in plaintext, but if the DS is able to infer this
-(e.g., from timing signals), then the Welcome will tell the DS that a given
-client has joined the group.<a href="#section-15.2-7" class="pilcrow">¶</a></p>
+<p id="section-15.2-3">The only mechanism MLS provides for confidentially distributing a group's
+ratchet tree to new members is to send it in a Welcome message as a
+<code>ratchet_tree</code> extension.  If an application distributes the tree in some other
+way, its security will depend on that application mechanism.<a href="#section-15.2-3" class="pilcrow">¶</a></p>
+<p id="section-15.2-4">A party observing these fields might be able to infer certain metadata about the
+group:<a href="#section-15.2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-15.2-5.1">Group ID<a href="#section-15.2-5.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-15.2-5.2">Current epoch and frequency of epoch changes<a href="#section-15.2-5.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-15.2-5.3">Frequency of messages within an epoch<a href="#section-15.2-5.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-15.2-5.4">Group extensions<a href="#section-15.2-5.4" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-15.2-5.5">Group membership<a href="#section-15.2-5.5" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-15.2-6">These fields are typically protected from parties other than the DS by applying
+"hop by hop" transport encryption (in contrast to the "end to end" protections
+provided by MLS). Whether the DS is exposed to unencrypted fields depends on
+several aspects of the DS design, such as:<a href="#section-15.2-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-15.2-7.1">How KeyPackages are distributed<a href="#section-15.2-7.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-15.2-7.2">How the ratchet tree is distributed<a href="#section-15.2-7.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-15.2-7.3">How proespective external joiners get a GroupInfo object for the group<a href="#section-15.2-7.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-15.2-7.4">Whether MLSPlaintext or MLSCiphertext messages are used for Proposal and
+Commit messages<a href="#section-15.2-7.4" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-15.2-8">In the remainder of this section, we note the ways that the above properties of
+the group are reflected in unprotected group messages, as a guide to
+understanding how they might be exposed or protected in a given application.<a href="#section-15.2-8" class="pilcrow">¶</a></p>
+<div id="groupid-epoch-and-message-frequency">
+<section id="section-15.2.1">
+          <h4 id="name-groupid-epoch-and-message-f">
+<a href="#section-15.2.1" class="section-number selfRef">15.2.1. </a><a href="#name-groupid-epoch-and-message-f" class="section-name selfRef">GroupID, Epoch, and Message Frequency</a>
+          </h4>
+<p id="section-15.2.1-1">MLS provides no mechanism to protect the group ID and epoch of a message from
+the DS, so the group ID and the frequency of messages and epoch changes are not
+protected against inspection by the DS.<a href="#section-15.2.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="group-extensions">
+<section id="section-15.2.2">
+          <h4 id="name-group-extensions">
+<a href="#section-15.2.2" class="section-number selfRef">15.2.2. </a><a href="#name-group-extensions" class="section-name selfRef">Group Extensions</a>
+          </h4>
+<p id="section-15.2.2-1">A group's extensions are first set by the group's creator and then updated by
+GroupContextExtensions proposals.  A GroupContextExtension proposal sent as
+MLSPlaintext leaks the groups' extensions.<a href="#section-15.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-15.2.2-2">A new member learns the group's extensions via a GroupInfo object.  When the new
+member joins via a Welcome message, the Welcome message's encryption protects
+the GroupInfo message.  When the new member joins via an external join, they
+must be provided with a GroupInfo object.  Protection of this GroupInfo object
+is up to the application -- if it is transmitted over a channel that is not
+confidential to the group and the new joiner, then it will leak the group's
+extensions.<a href="#section-15.2.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="group-membership">
+<section id="section-15.2.3">
+          <h4 id="name-group-membership">
+<a href="#section-15.2.3" class="section-number selfRef">15.2.3. </a><a href="#name-group-membership" class="section-name selfRef">Group Membership</a>
+          </h4>
+<p id="section-15.2.3-1">The group's membership is represented directly by its ratchet tree, since each
+member's LeafNode contains members' cryptographic keys, a credential that
+contains information about the member's identity, and possibly other
+identifiers.  Applications that expose the group's ratchet tree outside the
+group also leak the group's membership.<a href="#section-15.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-15.2.3-2">Changes to the group's membership are made by means of Add and Remove proposals.
+If these proposals are sent as MLSPlaintext, then information will be leaked
+about the corresponding changes to the group's membership.  A party that sees
+all of these changes can reconstruct the group membership.<a href="#section-15.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-15.2.3-3">Welcome messages contain a hash of each KeyPackage for which the Welcome message
+is encrypted.  If a party has access to a pool of KeyPackages and observes a
+Welcome message, then they can identify the KeyPackage representing the new
+member.  If the party can also associate the Welcome with a group, then the
+party can infer that the identified new member was added to that group.<a href="#section-15.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-15.2.3-4">Note that these information leaks reveal the group's membership to the degree
+that that membership is revealed by the contents of a member's LeafNode in the
+ratchet tree.  In some cases, this may be quite direct, e.g., due to credentials
+attesting to identifiers such as email addresses.  An application could
+cosntruct a member's leaf node to be less identifying, e.g., by using a
+pseudonymous credential and frequently rotating encryption and signature keys.<a href="#section-15.2.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="authentication">
