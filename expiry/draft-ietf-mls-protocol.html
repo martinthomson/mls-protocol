@@ -3264,32 +3264,31 @@ policy.<a href="#section-6.3.1-5" class="pilcrow">¶</a></p>
           </h4>
 <p id="section-6.3.2-1">In some credential schemes, the validity status of a credential can change over
 time.  For example, X.509 certificates can expire or be revoked by their issuer.
-These changes can cause operational problems in light of the validation
+For brevity, in this section we use "expired" to describe any credential that
+was previously valid but has become invalid for a reason such as expiration or
+revocation.<a href="#section-6.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-2">Expired credentials can cause operational problems in light of the validation
 requirements of <a href="#credential-validation" class="auto internal xref">Section 6.3.1</a>.  Applications can apply some
 operational practices and adaptations to Authentication Service policies to
-moderate these impacts.<a href="#section-6.3.2-1" class="pilcrow">¶</a></p>
-<p id="section-6.3.2-2">It can sometimes be important to distinguish this type of invalidity from other
-types; we call a credential "time-invalid" that is invalid for some time-based
-reason but otherwise valid.  An expired certificate issued by a trusted
-certificate authority would be time-invalid.<a href="#section-6.3.2-2" class="pilcrow">¶</a></p>
+moderate these impacts.<a href="#section-6.3.2-2" class="pilcrow">¶</a></p>
 <p id="section-6.3.2-3">In general, to avoid operational problems such as new joiners rejecting expired
-credentials in a group, applications that use such credentials should ensure
-that all of the credentials in use in a group are valid.<a href="#section-6.3.2-3" class="pilcrow">¶</a></p>
-<p id="section-6.3.2-4">If a member finds that its credential is invalid (or will be soon), it should
+credentials in a group, applications that use such credentials should ensure to
+the extent practical that all of the credentials in use in a group are valid at
+all times.<a href="#section-6.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-4">If a member finds that its credential has expired (or will soon), it should
 issue an Update or Commit that replaces it with a valid credential.  For this
 reason, members SHOULD accept Update proposals and Commits issued by members
-with time-invalid credentials, if the credential in the Update or Commit is
-valid.<a href="#section-6.3.2-4" class="pilcrow">¶</a></p>
+with expired credentials, if the credential in the Update or Commit is valid.<a href="#section-6.3.2-4" class="pilcrow">¶</a></p>
 <p id="section-6.3.2-5">Similarly, when a client is processing messages sent some time in the past
 (e.g., syncing up with a group after being offline), the client SHOULD accept
-signatures from members with time-invalid credentials, since the credential may
+signatures from members with expired credentials, since the credential may
 have been valid at the time the message was sent.<a href="#section-6.3.2-5" class="pilcrow">¶</a></p>
-<p id="section-6.3.2-6">If a member finds that another member's credential is invalid, they may issue a
+<p id="section-6.3.2-6">If a member finds that another member's credential has expired, they may issue a
 Remove that removes that member.  For example, an application could require a
-member preparing to issue a Commit to check the tree for invalid credentials and
+member preparing to issue a Commit to check the tree for expired credentials and
 include Remove proposals for those members in its Commit.  In situations where
 the group tree is known to the DS, the DS could also monitor the tree for
-invalid credentials and issue external Remove proposals.<a href="#section-6.3.2-6" class="pilcrow">¶</a></p>
+expired credentials and issue external Remove proposals.<a href="#section-6.3.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="uniquely-identifying-clients">
