@@ -3262,11 +3262,9 @@ policy.<a href="#section-6.3.1-5" class="pilcrow">¶</a></p>
           <h4 id="name-credential-expiry-and-revoc">
 <a href="#section-6.3.2" class="section-number selfRef">6.3.2. </a><a href="#name-credential-expiry-and-revoc" class="section-name selfRef">Credential Expiry and Revocation</a>
           </h4>
-<p id="section-6.3.2-1">In some credential schemes, the validity status of a credential can change over
-time.  For example, X.509 certificates can expire or be revoked by their issuer.
-For brevity, in this section we use "expired" to describe any credential that
-was previously valid but has become invalid for a reason such as expiration or
-revocation.<a href="#section-6.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-1">In some credential schemes, a valid credential can "expire", or become invalid
+after a certain point in time. For example, each X.509 certificate has a
+<code>notAfter</code> field, expressing a time after which the certificate is not valid.<a href="#section-6.3.2-1" class="pilcrow">¶</a></p>
 <p id="section-6.3.2-2">Expired credentials can cause operational problems in light of the validation
 requirements of <a href="#credential-validation" class="auto internal xref">Section 6.3.1</a>.  Applications can apply some
 operational practices and adaptations to Authentication Service policies to
@@ -3289,6 +3287,12 @@ member preparing to issue a Commit to check the tree for expired credentials and
 include Remove proposals for those members in its Commit.  In situations where
 the group tree is known to the DS, the DS could also monitor the tree for
 expired credentials and issue external Remove proposals.<a href="#section-6.3.2-6" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-7">Some credential schemes also allow credentials to be revoked.  Revocation is
+similar to expiry, in that a previously valid credential becomes invalid.
+As such, most of the considerations above also apply to revoked credentials.
+However, applications may want to treat revoked credentials differently, e.g.,
+removing members with revoked credentials while allowing members with expired
+credentials time to update.<a href="#section-6.3.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="uniquely-identifying-clients">
