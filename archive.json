@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-11T01:41:49.547070+00:00",
+  "timestamp": "2022-12-13T01:39:32.061241+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -56590,13 +56590,13 @@
       "labels": [],
       "body": "Fixes #758 ",
       "createdAt": "2022-12-07T22:27:44Z",
-      "updatedAt": "2022-12-09T17:12:18Z",
+      "updatedAt": "2022-12-12T19:53:36Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "01a20d330a15fdb45ba2d7fd7701465bf19c544d",
       "headRepository": "mlswg/mls-protocol",
       "headRefName": "expiry",
-      "headRefOid": "29e4252ced5430bdded4a821e672fdd6d231dd84",
+      "headRefOid": "fd9d86c1e5c5de52e5062e8bd53b64d4f1a39b1b",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -56608,6 +56608,20 @@
           "body": "Interim 2022-12-08:\r\n* Distinguish \"time-invalid\" from \"invalid\"\r\n* There is a slightly more general issue: When catching up, there might be messages sent by members whose credentials were valid when the message was sent, but have since expired\r\n* Recommend accepting messages from members with time-invalid credentials when catching up",
           "createdAt": "2022-12-08T16:31:00Z",
           "updatedAt": "2022-12-08T16:31:00Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think a note on consistency would work a little better in the architecture document, especially because it applies in the general case as well as the time-varying case.  I filed https://github.com/mlswg/mls-architecture/issues/160",
+          "createdAt": "2022-12-12T16:11:42Z",
+          "updatedAt": "2022-12-12T16:11:42Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Latest change uses \"expired\" to refer generically to all time based reasons for a `valid -> invalid` transition.  (So, excluding `notBefore`, as @rohan-wire suggests.)",
+          "createdAt": "2022-12-12T19:27:51Z",
+          "updatedAt": "2022-12-12T19:27:51Z"
         }
       ],
       "reviews": [
@@ -56656,6 +56670,86 @@
           "createdAt": "2022-12-09T16:24:09Z",
           "updatedAt": "2022-12-09T16:24:09Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IT2_F",
+          "commit": {
+            "abbreviatedOid": "29e4252"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Looks good with one small nit. Should we also note that the application might want to ensure that however the SHOULDs are interpreted, validation should be consistent for all clients? Or is that too much complexity?",
+          "createdAt": "2022-12-12T09:27:43Z",
+          "updatedAt": "2022-12-12T09:30:23Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "```suggestion\r\nIn general, to avoid operational problems such as new joiners rejecting expired\r\n```",
+              "createdAt": "2022-12-12T09:27:43Z",
+              "updatedAt": "2022-12-12T09:30:23Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IXsjb",
+          "commit": {
+            "abbreviatedOid": "658f6ab"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2022-12-12T19:01:31Z",
+          "updatedAt": "2022-12-12T19:01:39Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "I still find \"time-invalid\" to be awkward.  I think \"recently expired\" is clearer, narrower, and a better fit. There is no reason for example to accept an Update with a credential which is not yet valid (which sounds time-invalid to me).",
+              "createdAt": "2022-12-12T19:01:31Z",
+              "updatedAt": "2022-12-12T19:01:40Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IXuAq",
+          "commit": {
+            "abbreviatedOid": "658f6ab"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-12T19:04:52Z",
+          "updatedAt": "2022-12-12T19:04:53Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "I had shied away from \"recently expired\" because a credential can also become invalid due to revocation.  I guess we could write \"expired or revoked\" (since you usually can't tell \"recently revoked\").",
+              "createdAt": "2022-12-12T19:04:52Z",
+              "updatedAt": "2022-12-12T19:04:53Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IX42e",
+          "commit": {
+            "abbreviatedOid": "658f6ab"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-12T19:37:44Z",
+          "updatedAt": "2022-12-12T19:37:44Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "I would argue that you do NOT want to accept revoked credentials. That client is dead to me.  (talk to the \u270b) ",
+              "createdAt": "2022-12-12T19:37:44Z",
+              "updatedAt": "2022-12-12T19:37:45Z"
+            }
+          ]
         }
       ]
     },
@@ -56671,7 +56765,7 @@
       "labels": [],
       "body": "This PR is an alternative to #757.\r\n\r\nThis PR updates the group creation process so that epoch 0 is a \"full-fledged\" epoch, with an epoch secret (and all the derivatives) instead of just an init secret.  One implication of that is that the interim transcript hash can now be computed in the usual way, by extending the confirmed transcript hash with a confirmation tag:\r\n\r\n```\r\n// creator sets epoch secret\r\nconfirmation_key = DeriveSecret(epoch_secret, \"confirm\")\r\nconfirmed_transcript_hash = \"\"\r\nconfirmation_tag = MAC(confirmation_key, confirmed_transcript_hash)\r\ninterim_transcript_hash = Hash(confirmed_transcript_hash || confirmation_tag)\r\n```\r\n\r\nThis has the nice side effect of immediately mixing the epoch secret into the transcript hash, helping the group diverge (a concern @kkohbrok raised on the call today).\r\n\r\nWhile I was editing the group creation section, I also rationalized the requirements a bit.  One reason that #757 came up is that the group creation section currently assumes you're always starting with multiple members.  So the MUST-level requirement to fetch key packages has been downgraded to a SHOULD.\r\n\r\n Finally, I updated the specification of GroupInfo to explain the fields, in particular explaining how you get the confirmation tag in epoch 0 or later epochs.",
       "createdAt": "2022-12-08T22:43:19Z",
-      "updatedAt": "2022-12-09T14:12:34Z",
+      "updatedAt": "2022-12-12T14:10:54Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "438f36e65e5ece3b699af6df1738e1393ee75d14",
@@ -56751,6 +56845,32 @@
               "updatedAt": "2022-12-09T10:42:31Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5ISHQo",
+          "commit": {
+            "abbreviatedOid": "afdbe25"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-11T14:44:06Z",
+          "updatedAt": "2022-12-11T14:44:06Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IVup6",
+          "commit": {
+            "abbreviatedOid": "afdbe25"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-12T14:10:54Z",
+          "updatedAt": "2022-12-12T14:10:54Z",
+          "comments": []
         }
       ]
     },
@@ -56850,19 +56970,67 @@
       "labels": [],
       "body": "Fixes #762\r\nFixes #763\r\nFixes #815\r\nFixes #813\r\n\r\n* Add a paragraph to Operational Context describing additional security services that the DS can provide\r\n* Add a citation to security analyses via the MLS Architecture\r\n* Add a section discussing metadata protection",
       "createdAt": "2022-12-09T15:40:39Z",
-      "updatedAt": "2022-12-09T15:40:39Z",
+      "updatedAt": "2022-12-12T19:13:59Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "d31d84c5687d64c3621b955792970bd54815cdc4",
       "headRepository": "mlswg/mls-protocol",
       "headRefName": "ad-sec-cons",
-      "headRefOid": "9f9e4d8fad3c514ecd462325859f38d69a68eb56",
+      "headRefOid": "3210c663aa0c164ec2bf57f40ab75b641445883e",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It also feels like the text assumes that the DS is a server as opposed to the abstract layer that we define it as in the architecture document. Maybe we should qualify the considerations accordingly?",
+          "createdAt": "2022-12-12T13:53:39Z",
+          "updatedAt": "2022-12-12T13:53:39Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@kkohbrok @raphaelrobert - Thanks for sending #833.  I didn't merge it directly, but rewrote the metadata section trying to hit the key points from your proposal.  LMK what you think.",
+          "createdAt": "2022-12-12T19:13:59Z",
+          "updatedAt": "2022-12-12T19:13:59Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5IVgjU",
+          "commit": {
+            "abbreviatedOid": "9f9e4d8"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Thanks for writing up the metadata considerations! Do they belong here or in the architecture doc?",
+          "createdAt": "2022-12-12T13:44:34Z",
+          "updatedAt": "2022-12-12T13:52:10Z",
+          "comments": [
+            {
+              "originalPosition": 51,
+              "body": "If we're using public handshake messages, it would also expose who is adding whom and when.",
+              "createdAt": "2022-12-12T13:44:34Z",
+              "updatedAt": "2022-12-12T13:52:10Z"
+            },
+            {
+              "originalPosition": 68,
+              "body": "No necessarily. The GroupInfo could be uploaded in encrypted form and then the key material could be passed to a prospective joiner.\r\n\r\nIt might also be worth mentioning here that the same goes if the tree is not sent as an extension via the Welcome.",
+              "createdAt": "2022-12-12T13:46:30Z",
+              "updatedAt": "2022-12-12T13:52:10Z"
+            },
+            {
+              "originalPosition": 87,
+              "body": "This is only true if the DS has actually seen the KeyPackage, e.g. when it was uploaded. KeyPackages could be distributed in other ways, though, that are not visible to the DS.\r\n\r\nAlso it might be worth mentioning here that (global or per-group) pseudonyms can be used in conjunction with MLSPlaintext messages to avoid or at least reduce leakage of Metadata.",
+              "createdAt": "2022-12-12T13:49:58Z",
+              "updatedAt": "2022-12-12T13:52:10Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 831,
@@ -56903,6 +57071,132 @@
           "createdAt": "2022-12-09T20:14:03Z",
           "updatedAt": "2022-12-09T20:14:03Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 832,
+      "id": "PR_kwDOBoyH6c5FFGx9",
+      "title": "editorial: Minor fixes in presentation language.",
+      "url": "https://github.com/mlswg/mls-protocol/pull/832",
+      "state": "OPEN",
+      "author": "duesee",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR fixes some minor issues with the presentation language. Moving `SignContent` and `RefHashInput` to their own `~~~ tls` block is required so that the `extract-tls.py` can now detect them.",
+      "createdAt": "2022-12-11T11:25:29Z",
+      "updatedAt": "2022-12-12T20:45:45Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "3b4e6b7632a1c0d3bb215f27d5c0c0211bf789bf",
+      "headRepository": "duesee/mls-protocol",
+      "headRefName": "duesee/fix_presentation_language",
+      "headRefOid": "360dbc7133c4923a4d7d29e921dc7587a013dfe3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5IXQ_R",
+          "commit": {
+            "abbreviatedOid": "4ab37dd"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "Separate pseudocode from genuine TLS Presentation Language please.\r\n",
+          "createdAt": "2022-12-12T18:03:22Z",
+          "updatedAt": "2022-12-12T18:58:03Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "Anytime there is an equal sign and something that looks like a function definition, that is no longer TLS Presentation Language, but pseudocode.\r\n\r\nI would move the definition of SignContent into a block like this before line 1334:\r\n`~~~ tls`\r\n`struct {`\r\n`    opaque label<V>;`\r\n`    opaque content<V>;`\r\n`} SignContent;`\r\n\r\nand then keep the content in the current block like this:\r\n\r\n`    label = \"MLS 1.0 \" + Label;`\r\n`    content = Content;`",
+              "createdAt": "2022-12-12T18:03:23Z",
+              "updatedAt": "2022-12-12T18:58:03Z"
+            },
+            {
+              "originalPosition": 20,
+              "body": "Same concept here. This is not TLS Presentation Language.",
+              "createdAt": "2022-12-12T18:57:26Z",
+              "updatedAt": "2022-12-12T18:58:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IYPl_",
+          "commit": {
+            "abbreviatedOid": "4ab37dd"
+          },
+          "author": "duesee",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-12T20:45:10Z",
+          "updatedAt": "2022-12-12T20:45:10Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "I see, thanks! I pushed a fixup in [360dbc7](https://github.com/mlswg/mls-protocol/pull/832/commits/360dbc7133c4923a4d7d29e921dc7587a013dfe3) and hope that I got your suggestion right.",
+              "createdAt": "2022-12-12T20:45:10Z",
+              "updatedAt": "2022-12-12T20:45:45Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 833,
+      "id": "PR_kwDOBoyH6c5FNnp_",
+      "title": "Proposal for changes to #830",
+      "url": "https://github.com/mlswg/mls-protocol/pull/833",
+      "state": "CLOSED",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2022-12-12T16:21:16Z",
+      "updatedAt": "2022-12-12T19:54:56Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "ad-sec-cons",
+      "baseRefOid": "9f9e4d8fad3c514ecd462325859f38d69a68eb56",
+      "headRepository": "kkohbrok/mls-protocol",
+      "headRefName": "ad-sec-cons-comments",
+      "headRefOid": "6af959f5549240258138f38e963fb81680519a09",
+      "closedAt": "2022-12-12T19:54:56Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5IWt4Q",
+          "commit": {
+            "abbreviatedOid": "6af959f"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-12T16:34:34Z",
+          "updatedAt": "2022-12-12T16:41:47Z",
+          "comments": [
+            {
+              "originalPosition": 11,
+              "body": "The DS is always less trusted than the members clients.  The whole point of MLS is to protect against the DS :)  If you're thinking of things like p2p environments, then the DS would be the p2p links and any overlay routing, which is still less trusted than the client itself.",
+              "createdAt": "2022-12-12T16:34:34Z",
+              "updatedAt": "2022-12-12T16:41:47Z"
+            },
+            {
+              "originalPosition": 34,
+              "body": "```suggestion\r\nto the DS. Extensions can also be exposed via GroupInfo objects (see {{groupinfo-objects}}).\r\n```\r\n\r\nOtherwise it will render as \"exposed via Section X.X.X\"\r\n\r\nThis will render as \"exposed via Section X.X.X\".",
+              "createdAt": "2022-12-12T16:37:25Z",
+              "updatedAt": "2022-12-12T16:41:47Z"
+            }
+          ]
         }
       ]
     }
