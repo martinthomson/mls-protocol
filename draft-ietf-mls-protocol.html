@@ -5104,17 +5104,21 @@ struct {
 </div>
 <div class="lang-pseudocode sourcecode" id="section-8.2-7">
 <pre>
-interim_transcript_hash_[0] = ""; /* zero-length octet string */
+confirmed_transcript_hash_[epoch] = ""; /* zero-length octet string */
 
-confirmed_transcript_hash_[n] =
-    Hash(interim_transcript_hash_[n] ||
-        ConfirmedTranscriptHashInput_[n]);
+interim_transcript_hash_[epoch] =
+    Hash(confirmed_transcript_hash_[epoch] ||
+        InterimTranscriptHashInput_[epoch]);
 
-interim_transcript_hash_[n+1] =
-    Hash(confirmed_transcript_hash_[n] ||
-        InterimTranscriptHashInput_[n]);
+confirmed_transcript_hash_[epoch+1] =
+    Hash(interim_transcript_hash_[epoch] ||
+        ConfirmedTranscriptHashInput_[epoch+1]);
 </pre><a href="#section-8.2-7" class="pilcrow">¶</a>
 </div>
+<p id="section-8.2-8">In this notation, <code>InterimTranscriptHashInput_[epoch]</code> and
+<code>ConfirmedTranscriptHashInput_[epoch+1]</code> are based on the Commit that initiated
+the epoch with epoch number <code>epoch</code>.  (Note that the <code>epoch</code> field in this
+Commit will be set to <code>epoch - 1</code>, since it is sent within the previous epoch.)<a href="#section-8.2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="external-initialization">
@@ -5745,67 +5749,73 @@ the <code>init_key</code> field.<a href="#section-10.1-4.4" class="pilcrow">¶</
       <h2 id="name-group-creation">
 <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-group-creation" class="section-name selfRef">Group Creation</a>
       </h2>
-<p id="section-11-1">A group is always created with a single member, the "creator".  The other
-members are added when the creator effectively sends itself Add proposals,
-commits them, and then sends the corresponding Welcome message to the new
-participants.  These processes are described in detail in <a href="#add" class="auto internal xref">Section 12.1.1</a>, <a href="#commit" class="auto internal xref">Section 12.4</a>,
-and <a href="#joining-via-welcome-message" class="auto internal xref">Section 12.4.3.1</a>.<a href="#section-11-1" class="pilcrow">¶</a></p>
-<p id="section-11-2">The creator of a group MUST take the following steps to initialize the group:<a href="#section-11-2" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-11-3.1">Fetch KeyPackages for the members to be added, and select a version and
-ciphersuite according to the capabilities of the members.  To protect against
-downgrade attacks, the creator MUST use the <code>capabilities</code> information
-in these KeyPackages to verify that the
-chosen version and ciphersuite is the best option supported by all members.<a href="#section-11-3.1" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-11-3.2">
-          <p id="section-11-3.2.1">Initialize a one-member group with the following initial values:<a href="#section-11-3.2.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-11-3.2.2.1">Ratchet tree: A tree with a single node, a leaf containing an HPKE public
-key and credential for the creator<a href="#section-11-3.2.2.1" class="pilcrow">¶</a>
-</li>
-            <li class="normal" id="section-11-3.2.2.2">Group ID: A value set by the creator<a href="#section-11-3.2.2.2" class="pilcrow">¶</a>
-</li>
-            <li class="normal" id="section-11-3.2.2.3">Epoch: 0<a href="#section-11-3.2.2.3" class="pilcrow">¶</a>
-</li>
-            <li class="normal" id="section-11-3.2.2.4">Tree hash: The root hash of the above ratchet tree<a href="#section-11-3.2.2.4" class="pilcrow">¶</a>
-</li>
-            <li class="normal" id="section-11-3.2.2.5">Confirmed transcript hash: The zero-length octet string<a href="#section-11-3.2.2.5" class="pilcrow">¶</a>
-</li>
-            <li class="normal" id="section-11-3.2.2.6">Interim transcript hash: The zero-length octet string<a href="#section-11-3.2.2.6" class="pilcrow">¶</a>
-</li>
-            <li class="normal" id="section-11-3.2.2.7">Init secret: A fresh random value of size <code>KDF.Nh</code><a href="#section-11-3.2.2.7" class="pilcrow">¶</a>
-</li>
-            <li class="normal" id="section-11-3.2.2.8">Extensions: Any values of the creator's choosing<a href="#section-11-3.2.2.8" class="pilcrow">¶</a>
-</li>
-          </ul>
-</li>
-        <li class="normal" id="section-11-3.3">For each member, construct an Add proposal from the KeyPackage for that
-member (see <a href="#add" class="auto internal xref">Section 12.1.1</a>)<a href="#section-11-3.3" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-11-3.4">Construct a Commit message that commits all of the Add proposals, in any order
-chosen by the creator (see <a href="#commit" class="auto internal xref">Section 12.4</a>)<a href="#section-11-3.4" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-11-3.5">Process the Commit message to obtain a new group state (for the epoch in which
-the new members are added) and a Welcome message<a href="#section-11-3.5" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-11-3.6">Transmit the Welcome message to the other new members<a href="#section-11-3.6" class="pilcrow">¶</a>
-</li>
-      </ul>
-<p id="section-11-4">Group IDs SHOULD be constructed in such a way that there's an overwhelmingly low
+<p id="section-11-1">A group is always created with a single member, the "creator".  Other members
+are then added to the group using the usual Add/Commit mechanism.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-2">The creator of a group is responsible for setting the group ID, ciphersuite, and
+initial extensions for the group.  If the creator intends to add other members
+at the time of creation, then it SHOULD Fetch KeyPackages for the members to be
+added, and select a ciphersuite and extensions according to the capabilities of
+the members.  To protect against downgrade attacks, the creator MUST use the
+<code>capabilities</code> information in these KeyPackages to verify that the chosen
+version and ciphersuite is the best option supported by all members.<a href="#section-11-2" class="pilcrow">¶</a></p>
+<p id="section-11-3">Group IDs SHOULD be constructed in such a way that there's an overwhelmingly low
 probability of honest group creators generating the same group ID, even without
 assistance from the Delivery Service. For example, by making the group ID a
 freshly generated random value of size <code>KDF.Nh</code>. The Delivery Service MAY
 attempt to ensure that group IDs are globally unique by rejecting the creation
-of new groups with a previously used ID.<a href="#section-11-4" class="pilcrow">¶</a></p>
-<p id="section-11-5">The recipient of a Welcome message processes it as described in
-<a href="#joining-via-welcome-message" class="auto internal xref">Section 12.4.3.1</a>.<a href="#section-11-5" class="pilcrow">¶</a></p>
-<p id="section-11-6">In principle, the above process could be streamlined by having the
+of new groups with a previously used ID.<a href="#section-11-3" class="pilcrow">¶</a></p>
+<p id="section-11-4">The creator of a group MUST take the following steps to initialize the group:<a href="#section-11-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-11-5.1">
+          <p id="section-11-5.1.1">Initialize a one-member group with the following initial values:<a href="#section-11-5.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-11-5.1.2.1">Ratchet tree: A tree with a single node, a leaf containing an HPKE public
+key and credential for the creator<a href="#section-11-5.1.2.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-11-5.1.2.2">Group ID: A value set by the creator<a href="#section-11-5.1.2.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-11-5.1.2.3">Epoch: 0<a href="#section-11-5.1.2.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-11-5.1.2.4">Tree hash: The root hash of the above ratchet tree<a href="#section-11-5.1.2.4" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-11-5.1.2.5">Confirmed transcript hash: The zero-length octet string<a href="#section-11-5.1.2.5" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-11-5.1.2.6">Epoch secret: A fresh random value of size <code>KDF.Nh</code><a href="#section-11-5.1.2.6" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-11-5.1.2.7">Extensions: Any values of the creator's choosing<a href="#section-11-5.1.2.7" class="pilcrow">¶</a>
+</li>
+          </ul>
+</li>
+        <li class="normal" id="section-11-5.2">
+          <p id="section-11-5.2.1">Calculate the interim transcript hash:<a href="#section-11-5.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-11-5.2.2.1">Derive the <code>confirmation_key</code> for the epoch as described in
+<a href="#key-schedule" class="auto internal xref">Section 8</a>.<a href="#section-11-5.2.2.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-11-5.2.2.2">Compute a <code>confirmation_tag</code> over the empty <code>confirmed_transcript_hash</code>
+using the <code>confirmation_key</code> as described in <a href="#content-authentication" class="auto internal xref">Section 6.1</a>.<a href="#section-11-5.2.2.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-11-5.2.2.3">Compute the updated <code>interim_transcript_hash</code> from the
+<code>confirmed_transcript_hash</code> and the <code>confirmation_tag</code> as described in
+<a href="#transcript-hashes" class="auto internal xref">Section 8.2</a><a href="#section-11-5.2.2.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+</li>
+      </ul>
+<p id="section-11-6">At this point, the creator's state represents a one-member group with a fully
+initialized key schedule, transcript hashes, etc.  Proposals and Commits can be
+generated for this group state just like any other state of the group, such as
+Add proposals and Commits to add other members to the group.  A GroupInfo object
+for this group state can also be published to facilitate external joins.<a href="#section-11-6" class="pilcrow">¶</a></p>
+<p id="section-11-7">Members other than the creator join either by being sent a Welcome message (as
+described in <a href="#joining-via-welcome-message" class="auto internal xref">Section 12.4.3.1</a>) or by sending an external Commit
+(see <a href="#joining-via-external-commits" class="auto internal xref">Section 12.4.3.2</a>).<a href="#section-11-7" class="pilcrow">¶</a></p>
+<p id="section-11-8">In principle, the above process could be streamlined by having the
 creator directly create a tree and choose a random value for first
 epoch's epoch secret.  We follow the steps above because it removes
 unnecessary choices, by which, for example, bad randomness could be
 introduced.  The only choices the creator makes here are its own
-KeyPackage and the leaf secret from which the Commit is built.<a href="#section-11-6" class="pilcrow">¶</a></p>
+KeyPackage and the leaf secret from which the Commit is built.<a href="#section-11-8" class="pilcrow">¶</a></p>
 <div id="required-capabilities">
 <section id="section-11.1">
         <h3 id="name-required-capabilities">
@@ -6763,13 +6773,20 @@ struct {
 } GroupInfo;
 </pre><a href="#section-12.4.3-2" class="pilcrow">¶</a>
 </div>
-<p id="section-12.4.3-3">New members MUST verify that <code>group_id</code> is unique among the groups they're
-currently participating in.<a href="#section-12.4.3-3" class="pilcrow">¶</a></p>
-<p id="section-12.4.3-4">New members also MUST verify the <code>signature</code> using the public key taken from the
+<p id="section-12.4.3-3">The <code>group_context</code> field represents the current state of the group.  The
+<code>extensions</code> field allows the sender to provide additional data that might be
+useful to new joiners.  The <code>confirmation_tag</code> represents the  confirmation tag
+from the Commit that initiated the current epoch, or for epoch 0, the
+confirmation tag computed in the creation of the group (see <a href="#group-creation" class="auto internal xref">Section 11</a>).
+(In either case, the creator of a GroupInfo may recompute the confirmation tag
+as <code>MAC(confirmation_key, confirmed_transcript_hash)</code>.)<a href="#section-12.4.3-3" class="pilcrow">¶</a></p>
+<p id="section-12.4.3-4">New members MUST verify that <code>group_id</code> is unique among the groups they're
+currently participating in.<a href="#section-12.4.3-4" class="pilcrow">¶</a></p>
+<p id="section-12.4.3-5">New members also MUST verify the <code>signature</code> using the public key taken from the
 leaf node of the ratchet tree with leaf index <code>signer</code>. The
 signature covers the following structure, comprising all the fields in the
-GroupInfo above <code>signature</code>:<a href="#section-12.4.3-4" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-12.4.3-5">
+GroupInfo above <code>signature</code>:<a href="#section-12.4.3-5" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-12.4.3-6">
 <pre>
 struct {
     GroupContext group_context;
@@ -6777,7 +6794,7 @@ struct {
     MAC confirmation_tag;
     uint32 signer;
 } GroupInfoTBS;
-</pre><a href="#section-12.4.3-5" class="pilcrow">¶</a>
+</pre><a href="#section-12.4.3-6" class="pilcrow">¶</a>
 </div>
 <div id="joining-via-welcome-message">
 <section id="section-12.4.3.1">

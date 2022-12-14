@@ -3086,15 +3086,21 @@ psk_secret (or 0) --> KDF.Extract
        MAC confirmation_tag;
    } InterimTranscriptHashInput;
 
-   interim_transcript_hash_[0] = ""; /* zero-length octet string */
+   confirmed_transcript_hash_[epoch] = ""; /* zero-length octet string */
 
-   confirmed_transcript_hash_[n] =
-       Hash(interim_transcript_hash_[n] ||
-           ConfirmedTranscriptHashInput_[n]);
+   interim_transcript_hash_[epoch] =
+       Hash(confirmed_transcript_hash_[epoch] ||
+           InterimTranscriptHashInput_[epoch]);
 
-   interim_transcript_hash_[n+1] =
-       Hash(confirmed_transcript_hash_[n] ||
-           InterimTranscriptHashInput_[n]);
+   confirmed_transcript_hash_[epoch+1] =
+       Hash(interim_transcript_hash_[epoch] ||
+           ConfirmedTranscriptHashInput_[epoch+1]);
+
+   In this notation, InterimTranscriptHashInput_[epoch] and
+   ConfirmedTranscriptHashInput_[epoch+1] are based on the Commit that
+   initiated the epoch with epoch number epoch.  (Note that the epoch
+   field in this Commit will be set to epoch - 1, since it is sent
+   within the previous epoch.)
 
 8.3.  External Initialization
 
@@ -3573,21 +3579,30 @@ psk_secret (or 0) --> KDF.Extract
 
 11.  Group Creation
 
-   A group is always created with a single member, the "creator".  The
-   other members are added when the creator effectively sends itself Add
-   proposals, commits them, and then sends the corresponding Welcome
-   message to the new participants.  These processes are described in
-   detail in Section 12.1.1, Section 12.4, and Section 12.4.3.1.
+   A group is always created with a single member, the "creator".  Other
+   members are then added to the group using the usual Add/Commit
+   mechanism.
+
+   The creator of a group is responsible for setting the group ID,
+   ciphersuite, and initial extensions for the group.  If the creator
+   intends to add other members at the time of creation, then it SHOULD
+   Fetch KeyPackages for the members to be added, and select a
+   ciphersuite and extensions according to the capabilities of the
+   members.  To protect against downgrade attacks, the creator MUST use
+   the capabilities information in these KeyPackages to verify that the
+   chosen version and ciphersuite is the best option supported by all
+   members.
+
+   Group IDs SHOULD be constructed in such a way that there's an
+   overwhelmingly low probability of honest group creators generating
+   the same group ID, even without assistance from the Delivery Service.
+   For example, by making the group ID a freshly generated random value
+   of size KDF.Nh.  The Delivery Service MAY attempt to ensure that
+   group IDs are globally unique by rejecting the creation of new groups
+   with a previously used ID.
 
    The creator of a group MUST take the following steps to initialize
    the group:
-
-   *  Fetch KeyPackages for the members to be added, and select a
-      version and ciphersuite according to the capabilities of the
-      members.  To protect against downgrade attacks, the creator MUST
-      use the capabilities information in these KeyPackages to verify
-      that the chosen version and ciphersuite is the best option
-      supported by all members.
 
    *  Initialize a one-member group with the following initial values:
 
@@ -3602,33 +3617,33 @@ psk_secret (or 0) --> KDF.Extract
 
       -  Confirmed transcript hash: The zero-length octet string
 
-      -  Interim transcript hash: The zero-length octet string
-
-      -  Init secret: A fresh random value of size KDF.Nh
+      -  Epoch secret: A fresh random value of size KDF.Nh
 
       -  Extensions: Any values of the creator's choosing
 
-   *  For each member, construct an Add proposal from the KeyPackage for
-      that member (see Section 12.1.1)
+   *  Calculate the interim transcript hash:
 
-   *  Construct a Commit message that commits all of the Add proposals,
-      in any order chosen by the creator (see Section 12.4)
+      -  Derive the confirmation_key for the epoch as described in
+         Section 8.
 
-   *  Process the Commit message to obtain a new group state (for the
-      epoch in which the new members are added) and a Welcome message
+      -  Compute a confirmation_tag over the empty
+         confirmed_transcript_hash using the confirmation_key as
+         described in Section 6.1.
 
-   *  Transmit the Welcome message to the other new members
+      -  Compute the updated interim_transcript_hash from the
+         confirmed_transcript_hash and the confirmation_tag as described
+         in Section 8.2
 
-   Group IDs SHOULD be constructed in such a way that there's an
-   overwhelmingly low probability of honest group creators generating
-   the same group ID, even without assistance from the Delivery Service.
-   For example, by making the group ID a freshly generated random value
-   of size KDF.Nh.  The Delivery Service MAY attempt to ensure that
-   group IDs are globally unique by rejecting the creation of new groups
-   with a previously used ID.
+   At this point, the creator's state represents a one-member group with
+   a fully initialized key schedule, transcript hashes, etc.  Proposals
+   and Commits can be generated for this group state just like any other
+   state of the group, such as Add proposals and Commits to add other
+   members to the group.  A GroupInfo object for this group state can
+   also be published to facilitate external joins.
 
-   The recipient of a Welcome message processes it as described in
-   Section 12.4.3.1.
+   Members other than the creator join either by being sent a Welcome
+   message (as described in Section 12.4.3.1) or by sending an external
+   Commit (see Section 12.4.3.2).
 
    In principle, the above process could be streamlined by having the
    creator directly create a tree and choose a random value for first
@@ -4520,6 +4535,15 @@ psk_secret (or 0) --> KDF.Extract
        /* SignWithLabel(., "GroupInfoTBS", GroupInfoTBS) */
        opaque signature<V>;
    } GroupInfo;
+
+   The group_context field represents the current state of the group.
+   The extensions field allows the sender to provide additional data
+   that might be useful to new joiners.  The confirmation_tag represents
+   the confirmation tag from the Commit that initiated the current
+   epoch, or for epoch 0, the confirmation tag computed in the creation
+   of the group (see Section 11).  (In either case, the creator of a
+   GroupInfo may recompute the confirmation tag as MAC(confirmation_key,
+   confirmed_transcript_hash).)
 
    New members MUST verify that group_id is unique among the groups
    they're currently participating in.
