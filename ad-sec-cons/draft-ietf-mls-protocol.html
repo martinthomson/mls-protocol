@@ -7570,7 +7570,7 @@ aspects of the DS design, such as:<a href="#section-15.2-6" class="pilcrow">¶</
 </li>
           <li class="normal" id="section-15.2-7.2">How the ratchet tree is distributed<a href="#section-15.2-7.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-7.3">How proespective external joiners get a GroupInfo object for the group<a href="#section-15.2-7.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.2-7.3">How prospective external joiners get a GroupInfo object for the group<a href="#section-15.2-7.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-15.2-7.4">Whether MLSPlaintext or MLSCiphertext messages are used for Proposal and
 Commit messages<a href="#section-15.2-7.4" class="pilcrow">¶</a>
@@ -7625,11 +7625,11 @@ is encrypted.  If a party has access to a pool of KeyPackages and observes a
 Welcome message, then they can identify the KeyPackage representing the new
 member.  If the party can also associate the Welcome with a group, then the
 party can infer that the identified new member was added to that group.<a href="#section-15.2.3-3" class="pilcrow">¶</a></p>
-<p id="section-15.2.3-4">Note that these information leaks reveal the group's membership to the degree
+<p id="section-15.2.3-4">Note that these information leaks reveal the group's membership only to the degree
 that that membership is revealed by the contents of a member's LeafNode in the
 ratchet tree.  In some cases, this may be quite direct, e.g., due to credentials
 attesting to identifiers such as email addresses.  An application could
-cosntruct a member's leaf node to be less identifying, e.g., by using a
+construct a member's leaf node to be less identifying, e.g., by using a
 pseudonymous credential and frequently rotating encryption and signature keys.<a href="#section-15.2.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
