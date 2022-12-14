@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 12 June 2023                                    Inria & Mozilla
+Expires: 17 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                              Phoenix R&D
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 12 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                         9 December 2022
+                                                        14 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 June 2023.
+   This Internet-Draft will expire on 17 June 2023.
 
 Copyright Notice
 
@@ -1445,9 +1445,14 @@ Table of Contents
    Where SignContent is specified as:
 
    struct {
-       opaque label<V> = "MLS 1.0 " + Label;
-       opaque content<V> = Content;
+       opaque label<V>;
+       opaque content<V>;
    } SignContent;
+
+   And its fields set to:
+
+   label = "MLS 1.0 " + Label;
+   content = Content;
 
    Here, the functions Signature.Sign and Signature.Verify are defined
    by the signature algorithm.
@@ -1474,9 +1479,14 @@ Table of Contents
    Where RefHashInput is defined as:
 
    struct {
-     opaque label<V> = label;
-     opaque value<V> = value;
+     opaque label<V>;
+     opaque value<V>;
    } RefHashInput;
+
+   And its fields set to:
+
+   label = label;
+   value = value;
 
    For a KeyPackageRef, the value input is the encoded KeyPackage, and
    the ciphersuite specified in the KeyPackage determines the KDF used.
@@ -1672,7 +1682,7 @@ Table of Contents
            case new_member_commit:
            case new_member_proposal:
                struct{};
-       }
+       };
    } Sender;
 
    // See IANA registry for registered values
@@ -1692,7 +1702,7 @@ Table of Contents
              Proposal proposal;
            case commit:
              Commit commit;
-       }
+       };
    } MLSContent;
 
    struct {
@@ -2638,7 +2648,7 @@ A   B       A   B   _   _                           A   B   C   _
      select (TreeHashInput.node_type) {
        case leaf:   LeafNodeHashInput leaf_node;
        case parent: ParentNodeHashInput parent_node;
-     }
+     };
    } TreeHashInput;
 
    struct {
@@ -4118,7 +4128,7 @@ psk_secret (or 0) --> KDF.Extract
 
    enum {
      reserved(0),
-     proposal(1)
+     proposal(1),
      reference(2),
      (255)
    } ProposalOrRefType;
