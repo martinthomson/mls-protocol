@@ -4819,6 +4819,12 @@ child S.<a href="#section-7.9.2-3.2" class="pilcrow">¶</a>
             <li class="normal" id="section-7.9.2-3.3">D is in the resolution of C, and the intersection of P's <code>unmerged_leaves</code>
 with the subtree under C is equal to the resolution of C with D removed.<a href="#section-7.9.2-3.3" class="pilcrow">¶</a>
 </li>
+            <li class="normal" id="section-7.9.2-3.4">If D is a parent node, the <code>unmerged_leaves</code> field of D is a subset of the
+<code>unmerged_leaves</code> field of P.<a href="#section-7.9.2-3.4" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-7.9.2-3.5">If D is a leaf node, then the leaf index of D does not appear in the
+<code>unmerged_leaves</code> field of P or any of its ancestors.<a href="#section-7.9.2-3.5" class="pilcrow">¶</a>
+</li>
           </ul>
 <p id="section-7.9.2-4">These checks verify that D and P were updated at the same time (in the same
 UpdatePath), and that they were neighbors in the UpdatePath because the nodes in
@@ -6952,17 +6958,9 @@ as described in <a href="#verifying-parent-hashes" class="auto internal xref">Se
                   <li class="normal" id="section-12.4.3.1-10.4.2.3">For each non-empty leaf node, validate the LeafNode as described in
 <a href="#leaf-node-validation" class="auto internal xref">Section 7.3</a>.<a href="#section-12.4.3.1-10.4.2.3" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.4.2.4">
-                    <p id="section-12.4.3.1-10.4.2.4.1">For each non-blank parent node and each entry in the node's <code>unmerge_leaves</code>
-field, verify that:<a href="#section-12.4.3.1-10.4.2.4.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-12.4.3.1-10.4.2.4.2.1">The entry represents a leaf node that is a descendant of the parent node.<a href="#section-12.4.3.1-10.4.2.4.2.1" class="pilcrow">¶</a>
-</li>
-                      <li class="normal" id="section-12.4.3.1-10.4.2.4.2.2">The leaf node is not blank.<a href="#section-12.4.3.1-10.4.2.4.2.2" class="pilcrow">¶</a>
-</li>
-                      <li class="normal" id="section-12.4.3.1-10.4.2.4.2.3">The <code>leaf_node_source</code> field of the leaf node is not <code>commit</code>.<a href="#section-12.4.3.1-10.4.2.4.2.3" class="pilcrow">¶</a>
-</li>
-                    </ul>
+                  <li class="normal" id="section-12.4.3.1-10.4.2.4">For each non-empty parent node, verify that each entry in the node's
+<code>unmerged_leaves</code> represents a non-blank leaf node that is a descendant of
+the parent node.<a href="#section-12.4.3.1-10.4.2.4" class="pilcrow">¶</a>
 </li>
                 </ul>
 </li>
