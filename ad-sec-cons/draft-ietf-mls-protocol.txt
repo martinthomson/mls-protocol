@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 15 June 2023                                    Inria & Mozilla
+Expires: 17 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                              Phoenix R&D
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 15 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                        12 December 2022
+                                                        14 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 June 2023.
+   This Internet-Draft will expire on 17 June 2023.
 
 Copyright Notice
 
@@ -5228,7 +5228,7 @@ psk_secret (or 0) --> KDF.Extract
    application mechanism.
 
    A party observing these fields might be able to infer certain
-   metadata about the group:
+   properties of the group:
 
    *  Group ID
 
@@ -5240,11 +5240,9 @@ psk_secret (or 0) --> KDF.Extract
 
    *  Group membership
 
-   These fields are typically protected from parties other than the DS
-   by applying "hop by hop" transport encryption (in contrast to the
-   "end to end" protections provided by MLS).  Whether the DS is exposed
-   to unencrypted fields depends on several aspects of the DS design,
-   such as:
+   The amount of metadata exposed to parties outside the group, and thus
+   the ability of these parties to infer the group's properties, depends
+   on several aspects of the DS design, such as:
 
    *  How KeyPackages are distributed
 
