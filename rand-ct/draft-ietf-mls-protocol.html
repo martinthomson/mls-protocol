@@ -429,7 +429,7 @@ a[href]:hover {
 a[href].selfRef:hover {
   background-color: var(--highlight-color);
 }
-a.xref {
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
 }
 
@@ -441,7 +441,9 @@ tt, code, pre {
 tt, code {
   /* changing the font for inline elements leads to different ascender
      and descender heights; as we want to retain baseline alignment,
-     remove leading to avoid altering the final height of lines */
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
   line-height: 0;
 }
 :is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
@@ -1053,7 +1055,7 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Barnes, et al.</td>
-<td class="center">Expires 17 June 2023</td>
+<td class="center">Expires 18 June 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1068,12 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-protocol-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-12-14" class="published">14 December 2022</time>
+<time datetime="2022-12-15" class="published">15 December 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-06-17">17 June 2023</time></dd>
+<dd class="expires"><time datetime="2023-06-18">18 June 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1144,7 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -7627,14 +7629,14 @@ in <span>[<a href="#NAN" class="cite xref">NAN</a>]</span>, and therefore guaran
 <p id="section-15.2-5">Use of the same <code>sender_data_secret</code> and ciphertext sample more than once risks
 compromising sender data protection by reusing an AEAD (key, nonce) pair.  For
 example, in many AEAD schemes, reusing a key and nonce reveals the exclusive OR
-of the two plaintexts.  Assuming that the AEAD acts as a PRF, if L bits are
-sampled, the odds of two ciphertext samples being identical is roughly
+of the two plaintexts. Assuming the ciphertext output of the AEAD algorithm is
+indistinguishable from random data (i.e., the AEAD is AE1-secure in the phrasing
+of <span>[<a href="#NAN" class="cite xref">NAN</a>]</span>), the odds of two ciphertext samples being identical is roughly
 2<sup>-L/2</sup>, i.e., the birthday bound.<a href="#section-15.2-5" class="pilcrow">¶</a></p>
-<p id="section-15.2-6">The AEAD algorithms for ciphersuites defined in this document provide this
-property; the size of the sample depends on the ciphersuite's hash function, but
+<p id="section-15.2-6">The AEAD algorithms for ciphersuites defined in this document all provide this
+property. The size of the sample depends on the ciphersuite's hash function, but
 in all cases, the probability of collision is no more than 2<sup>-128</sup>.
-Any future ciphersuite MUST use an AEAD algorithm is a PRF, especially with
-regard to the first <code>KDF.Nh</code> bytes of its ciphertext output.<a href="#section-15.2-6" class="pilcrow">¶</a></p>
+Any future ciphersuite MUST use an AE1-secure AEAD algorithm.<a href="#section-15.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="confidentiality-of-group-metadata">
@@ -8745,7 +8747,7 @@ security considerations in this document (RFC XXXX) also apply.<a href="#section
 <dd class="break"></dd>
 <dt id="HCJ16">[HCJ16]</dt>
         <dd>
-<span class="refAuthor">Husák, M.</span>, <span class="refAuthor">Čermák, M.</span>, <span class="refAuthor">Jirsík, T.</span>, and <span class="refAuthor">P. Čeleda</span>, <span class="refTitle">"HTTPS traffic analysis and client identification using passive SSL/TLS fingerprinting"</span>, <span class="seriesInfo">EURASIP Journal on Information Security vol. 2016, no. 1</span>, <span class="seriesInfo">DOI 10.1186/s13635-016-0030-7</span>, <time datetime="2016-02" class="refDate">February 2016</time>, <span>&lt;<a href="https://doi.org/10.1186/s13635-016-0030-7">https://doi.org/10.1186/s13635-016-0030-7</a>&gt;</span>. </dd>
+<span class="refTitle">"*** BROKEN REFERENCE ***"</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-mls-architecture">[I-D.ietf-mls-architecture]</dt>
         <dd>

@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 17 June 2023                                    Inria & Mozilla
+Expires: 18 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                              Phoenix R&D
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 17 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                        14 December 2022
+                                                        15 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 June 2023.
+   This Internet-Draft will expire on 18 June 2023.
 
 Copyright Notice
 
@@ -5312,16 +5312,16 @@ psk_secret (or 0) --> KDF.Extract
    once risks compromising sender data protection by reusing an AEAD
    (key, nonce) pair.  For example, in many AEAD schemes, reusing a key
    and nonce reveals the exclusive OR of the two plaintexts.  Assuming
-   that the AEAD acts as a PRF, if L bits are sampled, the odds of two
-   ciphertext samples being identical is roughly 2^(-L/2), i.e., the
-   birthday bound.
+   the ciphertext output of the AEAD algorithm is indistinguishable from
+   random data (i.e., the AEAD is AE1-secure in the phrasing of [NAN]),
+   the odds of two ciphertext samples being identical is roughly
+   2^(-L/2), i.e., the birthday bound.
 
-   The AEAD algorithms for ciphersuites defined in this document provide
-   this property; the size of the sample depends on the ciphersuite's
-   hash function, but in all cases, the probability of collision is no
-   more than 2^-128.  Any future ciphersuite MUST use an AEAD algorithm
-   is a PRF, especially with regard to the first KDF.Nh bytes of its
-   ciphertext output.
+   The AEAD algorithms for ciphersuites defined in this document all
+   provide this property.  The size of the sample depends on the
+   ciphersuite's hash function, but in all cases, the probability of
+   collision is no more than 2^-128.  Any future ciphersuite MUST use an
+   AE1-secure AEAD algorithm.
 
 15.3.  Confidentiality of Group Metadata
 
@@ -6091,12 +6091,7 @@ psk_secret (or 0) --> KDF.Extract
               DOI 10.1109/eurosp.2017.27, April 2017,
               <https://doi.org/10.1109/eurosp.2017.27>.
 
-   [HCJ16]    Husák, M., Čermák, M., Jirsík, T., and P. Čeleda, "HTTPS
-              traffic analysis and client identification using passive
-              SSL/TLS fingerprinting", EURASIP Journal on Information
-              Security vol. 2016, no. 1, DOI 10.1186/s13635-016-0030-7,
-              February 2016,
-              <https://doi.org/10.1186/s13635-016-0030-7>.
+   [HCJ16]    "*** BROKEN REFERENCE ***".
 
    [I-D.ietf-mls-architecture]
               Beurdouche, B., Rescorla, E., Omara, E., Inguva, S., Kwon,
