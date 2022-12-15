@@ -7613,7 +7613,7 @@ messages.<a href="#section-15.1-2" class="pilcrow">¶</a></p>
 <p id="section-15.2-1">The MLSCiphertext framing encrypts "sender data" that identifies which group
 member sent an encrypted message, as described in <a href="#sender-data-encryption" class="auto internal xref">Section 6.3.2</a>.
 As with the QUIC header protection scheme <span>[<a href="#RFC9001" class="cite xref">RFC9001</a>], <a href="https://rfc-editor.org/rfc/rfc9001#section-5.4" class="relref">Section 5.4</a></span>, this scheme
-is an instance of the HN1 construction analyzed in <span>[<a href="#NAN" class="cite xref">NAN</a>]</span>.  A sample of the
+is a variant of the HN1 construction analyzed in <span>[<a href="#NAN" class="cite xref">NAN</a>]</span>.  A sample of the
 ciphertext is combined with a <code>sender_data_secret</code> to derive a key and nonce
 that are used for AEAD encryption of the sender data.<a href="#section-15.2-1" class="pilcrow">¶</a></p>
 <p id="section-15.2-2"><code>pseudocode
@@ -7621,8 +7621,10 @@ that are used for AEAD encryption of the sender data.<a href="#section-15.2-1" c
 encrypted_sender_data =
   AEAD.Seal(key, nonce, sender_data_aad, sender_data)
 </code><a href="#section-15.2-2" class="pilcrow">¶</a></p>
-<p id="section-15.2-3">The only difference between this construction and HN1 as described in <span>[<a href="#NAN" class="cite xref">NAN</a>]</span> is
-that it uses authenticated encryption instead of unauthenticated encryption.<a href="#section-15.2-3" class="pilcrow">¶</a></p>
+<p id="section-15.2-3">The only differences between this construction and HN1 as described in <span>[<a href="#NAN" class="cite xref">NAN</a>]</span> are
+(1) that it uses authenticated encryption instead of unauthenticated encryption
+and (2) that it protects information used to derive a nonce instead of the nonce
+itself.<a href="#section-15.2-3" class="pilcrow">¶</a></p>
 <p id="section-15.2-4">Since the <code>sender_data_secret</code> is distinct from the content encryption key, it
 follows that the sender data encryption scheme achieves AE2 security as defined
 in <span>[<a href="#NAN" class="cite xref">NAN</a>]</span>, and therefore guarantees the confidentiality of the sender data.<a href="#section-15.2-4" class="pilcrow">¶</a></p>
@@ -8739,11 +8741,11 @@ security considerations in this document (RFC XXXX) also apply.<a href="#section
 <dd class="break"></dd>
 <dt id="CLINIC">[CLINIC]</dt>
         <dd>
-<span class="refAuthor">Miller, B.</span>, <span class="refAuthor">Huang, L.</span>, <span class="refAuthor">Joseph, A.</span>, and <span class="refAuthor">J. Tygar</span>, <span class="refTitle">"I Know Why You Went to the Clinic: Risks and Realization of HTTPS Traffic Analysis"</span>, <span class="seriesInfo">Privacy Enhancing Technologies pp. 143-163</span>, <span class="seriesInfo">DOI 10.1007/978-3-319-08506-7_8</span>, <time datetime="2014" class="refDate">2014</time>, <span>&lt;<a href="https://doi.org/10.1007/978-3-319-08506-7_8">https://doi.org/10.1007/978-3-319-08506-7_8</a>&gt;</span>. </dd>
+<span class="refTitle">"*** BROKEN REFERENCE ***"</span>. </dd>
 <dd class="break"></dd>
 <dt id="DoubleRatchet">[DoubleRatchet]</dt>
         <dd>
-<span class="refAuthor">Cohn-Gordon, K.</span>, <span class="refAuthor">Cremers, C.</span>, <span class="refAuthor">Dowling, B.</span>, <span class="refAuthor">Garratt, L.</span>, and <span class="refAuthor">D. Stebila</span>, <span class="refTitle">"A Formal Security Analysis of the Signal Messaging Protocol"</span>, <span class="seriesInfo">2017 IEEE European Symposium on Security and Privacy (EuroS&amp;P)</span>, <span class="seriesInfo">DOI 10.1109/eurosp.2017.27</span>, <time datetime="2017-04" class="refDate">April 2017</time>, <span>&lt;<a href="https://doi.org/10.1109/eurosp.2017.27">https://doi.org/10.1109/eurosp.2017.27</a>&gt;</span>. </dd>
+<span class="refTitle">"*** BROKEN REFERENCE ***"</span>. </dd>
 <dd class="break"></dd>
 <dt id="HCJ16">[HCJ16]</dt>
         <dd>
@@ -8759,7 +8761,7 @@ security considerations in this document (RFC XXXX) also apply.<a href="#section
 <dd class="break"></dd>
 <dt id="NAN">[NAN]</dt>
         <dd>
-<span class="refAuthor">Bellare, M.</span>, <span class="refAuthor">Ng, R.</span>, and <span class="refAuthor">B. Tackmann</span>, <span class="refTitle">"Nonces Are Noticed: AEAD Revisited"</span>, <span class="seriesInfo">Advances in Cryptology - CRYPTO 2019 pp. 235-265</span>, <span class="seriesInfo">DOI 10.1007/978-3-030-26948-7_9</span>, <time datetime="2019" class="refDate">2019</time>, <span>&lt;<a href="https://doi.org/10.1007/978-3-030-26948-7_9">https://doi.org/10.1007/978-3-030-26948-7_9</a>&gt;</span>. </dd>
+<span class="refTitle">"*** BROKEN REFERENCE ***"</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC5116">[RFC5116]</dt>
         <dd>
@@ -8791,7 +8793,7 @@ security considerations in this document (RFC XXXX) also apply.<a href="#section
 <dd class="break"></dd>
 <dt id="SHS">[SHS]</dt>
         <dd>
-<span class="refAuthor">Dang, Q.</span>, <span class="refTitle">"Secure Hash Standard"</span>, <span class="seriesInfo">National Institute of Standards and Technology report</span>, <span class="seriesInfo">DOI 10.6028/nist.fips.180-4</span>, <time datetime="2015-07" class="refDate">July 2015</time>, <span>&lt;<a href="https://doi.org/10.6028/nist.fips.180-4">https://doi.org/10.6028/nist.fips.180-4</a>&gt;</span>. </dd>
+<span class="refTitle">"*** BROKEN REFERENCE ***"</span>. </dd>
 <dd class="break"></dd>
 <dt id="Signal">[Signal]</dt>
       <dd>

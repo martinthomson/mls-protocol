@@ -5290,7 +5290,7 @@ psk_secret (or 0) --> KDF.Extract
    The MLSCiphertext framing encrypts "sender data" that identifies
    which group member sent an encrypted message, as described in
    Section 6.3.2.  As with the QUIC header protection scheme [RFC9001],
-   Section 5.4, this scheme is an instance of the HN1 construction
+   Section 5.4, this scheme is a variant of the HN1 construction
    analyzed in [NAN].  A sample of the ciphertext is combined with a
    sender_data_secret to derive a key and nonce that are used for AEAD
    encryption of the sender data.
@@ -5299,9 +5299,10 @@ psk_secret (or 0) --> KDF.Extract
    encrypted_sender_data = AEAD.Seal(key, nonce, sender_data_aad,
    sender_data)
 
-   The only difference between this construction and HN1 as described in
-   [NAN] is that it uses authenticated encryption instead of
-   unauthenticated encryption.
+   The only differences between this construction and HN1 as described
+   in [NAN] are (1) that it uses authenticated encryption instead of
+   unauthenticated encryption and (2) that it protects information used
+   to derive a nonce instead of the nonce itself.
 
    Since the sender_data_secret is distinct from the content encryption
    key, it follows that the sender data encryption scheme achieves AE2
@@ -6077,19 +6078,10 @@ psk_secret (or 0) --> KDF.Extract
               Group Messaging with Strong Security Guarantees", 18
               January 2018, <https://eprint.iacr.org/2017/666.pdf>.
 
-   [CLINIC]   Miller, B., Huang, L., Joseph, A., and J. Tygar, "I Know
-              Why You Went to the Clinic: Risks and Realization of HTTPS
-              Traffic Analysis", Privacy Enhancing Technologies pp.
-              143-163, DOI 10.1007/978-3-319-08506-7_8, 2014,
-              <https://doi.org/10.1007/978-3-319-08506-7_8>.
+   [CLINIC]   "*** BROKEN REFERENCE ***".
 
    [DoubleRatchet]
-              Cohn-Gordon, K., Cremers, C., Dowling, B., Garratt, L.,
-              and D. Stebila, "A Formal Security Analysis of the Signal
-              Messaging Protocol", 2017 IEEE European Symposium on
-              Security and Privacy (EuroS&P),
-              DOI 10.1109/eurosp.2017.27, April 2017,
-              <https://doi.org/10.1109/eurosp.2017.27>.
+              "*** BROKEN REFERENCE ***".
 
    [HCJ16]    "*** BROKEN REFERENCE ***".
 
@@ -6108,10 +6100,7 @@ psk_secret (or 0) --> KDF.Extract
               <https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-
               aead-limits-05>.
 
-   [NAN]      Bellare, M., Ng, R., and B. Tackmann, "Nonces Are Noticed:
-              AEAD Revisited", Advances in Cryptology - CRYPTO 2019 pp.
-              235-265, DOI 10.1007/978-3-030-26948-7_9, 2019,
-              <https://doi.org/10.1007/978-3-030-26948-7_9>.
+   [NAN]      "*** BROKEN REFERENCE ***".
 
    [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
@@ -6148,10 +6137,7 @@ psk_secret (or 0) --> KDF.Extract
               QUIC", RFC 9001, DOI 10.17487/RFC9001, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9001>.
 
-   [SHS]      Dang, Q., "Secure Hash Standard", National Institute of
-              Standards and Technology report,
-              DOI 10.6028/nist.fips.180-4, July 2015,
-              <https://doi.org/10.6028/nist.fips.180-4>.
+   [SHS]      "*** BROKEN REFERENCE ***".
 
    [Signal]   Perrin(ed), T. and M. Marlinspike, "The Double Ratchet
               Algorithm", 20 November 2016,
