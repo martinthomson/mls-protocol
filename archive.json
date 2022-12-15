@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-13T01:39:32.061241+00:00",
+  "timestamp": "2022-12-15T01:38:26.519878+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -8038,15 +8038,15 @@
       "id": "I_kwDOBoyH6c5WilkI",
       "title": "Certificate expiration and joining groups",
       "url": "https://github.com/mlswg/mls-protocol/issues/758",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "tomleavy",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "We ran into this case, which does not seem to have a defined solution within the RFC and I'm wondering if this ambiguity should be resolved at the RFC level, or be left up to the application.\r\n\r\nExisting group with Alice, and Bob.\r\n\r\n1. Bob had a valid certificate upon being added to the group by Alice.\r\n2. Bob's certificate expires .\r\n3. Alice does a commit to add Charlie to the group.\r\n4. Bob accepts the valid commit to add Charlie.\r\n5. Charlie follows 8.3 and validates the tree. In this process if certificate expiration is enforced, then Charlie would drop the Welcome, which would not be optimal.\r\n\r\nSolution 1: Leave this behavior up to the application, consider it part of the AS. \r\n\r\nSolution 2: Add an explicit mention that credentials that expire should be considered valid after expiration once they are a member of the group.\r\n\r\nSolution 3: A committer MUST validate that all existing credentials in the tree are still considered valid at the time a commit is made. If an existing credential is no longer considered valid, then the resulting commit MUST contain a Remove proposal for the leaf containing that credential.\r\n\r\n",
       "createdAt": "2022-11-16T16:28:31Z",
-      "updatedAt": "2022-12-07T15:40:50Z",
-      "closedAt": null,
+      "updatedAt": "2022-12-14T14:02:09Z",
+      "closedAt": "2022-12-14T14:02:09Z",
       "comments": [
         {
           "author": "beurdouche",
@@ -8257,7 +8257,7 @@
       "id": "I_kwDOBoyH6c5YLmS5",
       "title": "Interaction of MLS and application",
       "url": "https://github.com/mlswg/mls-protocol/issues/762",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -8267,8 +8267,8 @@
       ],
       "body": "_Comment by @paulwouters_\n\nI find the interaction with the application layer not clear. Not much is mentioned in this document. How can a group have an administrator? How is that enforced at the MLS layer? How do ACLs interact with MLS? (How are DoS attacks mitigated (eg spam attempts to join any group). What hooks would be in the authentication service and/or delivery server? How would clients know the properties of these two services?\n\nThis includes how it is not clear to me how race conditions are handled. What if two members try to expel each other at the same time? What if the group is so large, members always get their epoch wrong for things like Commit messages?\n\n",
       "createdAt": "2022-12-06T15:46:57Z",
-      "updatedAt": "2022-12-07T00:43:49Z",
-      "closedAt": null,
+      "updatedAt": "2022-12-14T16:02:10Z",
+      "closedAt": "2022-12-14T16:02:10Z",
       "comments": [
         {
           "author": "bifurcation",
@@ -8298,7 +8298,7 @@
       "id": "I_kwDOBoyH6c5YLmTu",
       "title": "Security against malicious members?",
       "url": "https://github.com/mlswg/mls-protocol/issues/763",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -8308,8 +8308,8 @@
       ],
       "body": "_Comment by @paulwouters_\n\nThere seems to be no group \"owner\", so inviting one member X, could that member than delete members from the group until the group is empty?\n\nApparently, there is ACLs for this, but the document doesn't describe how ACLS would work or how these would be implemented.\n\n",
       "createdAt": "2022-12-06T15:46:58Z",
-      "updatedAt": "2022-12-06T18:22:33Z",
-      "closedAt": null,
+      "updatedAt": "2022-12-14T16:02:10Z",
+      "closedAt": "2022-12-14T16:02:10Z",
       "comments": [
         {
           "author": "bifurcation",
@@ -8579,7 +8579,7 @@
       ],
       "body": "_Comment by @paulwouters_\n\n~~~ \n   The key and nonce provided to the AEAD are computed as the KDF of the\n   first KDF.Nh bytes of the ciphertext generated in the previous\n   section.\n~~~\nI don't think I understand the security model here? What happens if the previous ciphertext has 00's for the first KDF.Nh bytes?\n\n",
       "createdAt": "2022-12-06T15:47:06Z",
-      "updatedAt": "2022-12-08T12:47:42Z",
+      "updatedAt": "2022-12-14T16:48:24Z",
       "closedAt": null,
       "comments": [
         {
@@ -8609,6 +8609,20 @@
           "body": "It also occurs to me that `MLSSenderData` is only 12 bytes long (and 12 < 16), so we could change this to literally do what QUIC does:\r\n\r\n```\r\nciphertext_sample = ciphertext[0:16]\r\nmask = AES-ECB(sender_data, sample)[0:12]\r\nencrypted_sender_data = sender_data ^ mask;\r\n```\r\n\r\n(And there's a parallel for ChaCha)\r\n\r\nThat would more clearly benefit from any QUIC analysis, and would save an extra auth tag.  It would be a minor pain to implement, because you would need access to a raw cipher as well as an AEAD mode.",
           "createdAt": "2022-12-08T12:47:42Z",
           "updatedAt": "2022-12-08T12:47:42Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It looks like it also relies on the ciphertext prefix being random?\r\n\r\nI dislike this approach which is too low-level in my opinion, I would prefer staying with high-level cryptographic primitives.",
+          "createdAt": "2022-12-14T15:31:45Z",
+          "updatedAt": "2022-12-14T15:31:45Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I filed #770 to try to address this.  Basically, I argue that the same arguments from Bellare et al. that apply to QUIC header protection also apply here.  The PR also adds a requirement that AEADs act as PRFs, as discussed here.",
+          "createdAt": "2022-12-14T16:48:24Z",
+          "updatedAt": "2022-12-14T16:48:24Z"
         }
       ]
     },
@@ -9780,7 +9794,7 @@
       "id": "I_kwDOBoyH6c5YL_6t",
       "title": "Discuss metadata privacy",
       "url": "https://github.com/mlswg/mls-protocol/issues/813",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -9790,8 +9804,8 @@
       ],
       "body": "_Comment by @paulwouters_\n\nThat is quite some information that must be publicly available to allow external Add requests. This leaks information, eg same epoch means the group membership did not change, etc etc. I hope this will appear in the Security Considerations later :)\n\n",
       "createdAt": "2022-12-06T16:26:29Z",
-      "updatedAt": "2022-12-09T14:36:50Z",
-      "closedAt": null,
+      "updatedAt": "2022-12-14T16:02:11Z",
+      "closedAt": "2022-12-14T16:02:11Z",
       "comments": [
         {
           "author": "bifurcation",
@@ -9855,7 +9869,7 @@
       "id": "I_kwDOBoyH6c5YL_8d",
       "title": "Citations to security analysis",
       "url": "https://github.com/mlswg/mls-protocol/issues/815",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -9865,8 +9879,8 @@
       ],
       "body": "_Comment by @paulwouters_\n\n~~~ \nthough a complete security analysis is outside of the scope of this document.\n~~~\nHmmm :P\n\n",
       "createdAt": "2022-12-06T16:26:31Z",
-      "updatedAt": "2022-12-09T14:36:34Z",
-      "closedAt": null,
+      "updatedAt": "2022-12-14T16:02:11Z",
+      "closedAt": "2022-12-14T16:02:11Z",
       "comments": [
         {
           "author": "bifurcation",
@@ -10087,6 +10101,149 @@
           "body": "Fixed by #821 ",
           "createdAt": "2022-12-09T14:33:54Z",
           "updatedAt": "2022-12-09T14:33:54Z"
+        }
+      ]
+    },
+    {
+      "number": 834,
+      "id": "I_kwDOBoyH6c5ZMV9P",
+      "title": "Faster remove?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/834",
+      "state": "CLOSED",
+      "author": "TWal",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "When removing a participant, we blank its path up to the root because it might know the private key inside these nodes.\r\nWe actually know precisely which nodes contain private key that are known to this participant: it is nodes for which the participant is not an umerged leaf.\r\n\r\nFrom this remark, we could design an alternative Remove that produces less blank nodes:\r\n- blank all nodes on the path for which the participant is unmerged\r\n- remove the participant from the unmerged leaves list of other nodes\r\n\r\nI think this would preserve the parent-hash invariants, but would need to check more thoroughly.\r\n(the intuition might rely on an invariant that is not checked on unmerged leaves, which is that the set of nodes for which a node is unmerged forms a connected path from the leaf going up [note that this invariant would have been true for free with #752!])\r\n\r\nPros:\r\n- less blank nodes are produced\r\n- removing a participant just after adding it does not change the tree, it's not that useful but it's a pretty property!\r\n\r\nCons:\r\n- the remove definition is more complex\r\n- the optimization isn't great if the participant is merged for most nodes (e.g., it has issued an UpdatePath in the past)\r\n\r\nWhat do you think?",
+      "createdAt": "2022-12-14T11:26:43Z",
+      "updatedAt": "2022-12-14T21:27:17Z",
+      "closedAt": "2022-12-14T18:38:45Z",
+      "comments": [
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It sounds nice and it really sounds like it's secure enough, but I'm not sure it's not a bit too late for this.",
+          "createdAt": "2022-12-14T12:58:41Z",
+          "updatedAt": "2022-12-14T12:58:41Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "My personal analysis here:\r\n\r\n* If we do Remove like this, we should do Update as well.  It's the same, you just don't remove from `unmerged_leaves`\r\n* On the one hand, this gives some better symmetry to the `unmerged_leaves` calculations and might make things slightly faster\r\n* On the other hand, this is pretty late for a substantive change and I don't expect the performance gain to be huge.\r\n\r\nOverall, I'm more worried about the security analysis than the practicalities.  If @TWal can get his model updated and checked in a timely manner, I would probably take this change.\r\n\r\n(...more detailed notes below this line...)\r\n\r\nPractically speaking, it's a small spec diff.  (Note that we should cover Update here as well, which requires slightly different logic.)\r\n\r\n``` diff\r\n@@ -3599,7 +3599,9 @@ A member of the group applies an Update message by taking the following steps:\r\n \r\n * Replace the sender's LeafNode with the one contained in the Update proposal\r\n \r\n-* Blank the intermediate nodes along the path from the sender's leaf to the root\r\n+* For each intermediate node along the path from the sender's leaf to the root:\r\n+  If the member's leaf node is not listed in the `unmerged_leaves` field of the\r\n+  intermediate node, then blank the intermediate node.\r\n  \r\n@@ -3621,7 +3623,10 @@ A member of the group applies a Remove message by taking the following steps:\r\n \r\n * Replace the leaf node L with a blank node\r\n \r\n-* Blank the intermediate nodes along the path from L to the root\r\n+* For each intermediate node along the path from the sender's leaf to the root:\r\n+    * If the member's leaf node is listed in the `unmerged_leaves` field of the\r\n+      intermediate node, then remove the entry from `unmerged_leaves`.\r\n+    * Otherwise, blank the intermediate node.\r\n```\r\n\r\nI expect the implementation diff will be similarly small, something like:\r\n\r\n``` diff\r\n-def blank_path(self, index):\r\n+def blank_path_if_unmerged(self, index, remove):\r\n   path = self.direct_path(index)\r\n   for node in path:\r\n-    node.set_to_blank()\r\n+    if index in node.unmerged_leaves:\r\n+      if remove:\r\n+        node.unmerged_leaves.remove(index)\r\n+      # else do nothing\r\n+    else:\r\n+      node.set_to_blank()\r\n```",
+          "createdAt": "2022-12-14T14:26:12Z",
+          "updatedAt": "2022-12-14T14:26:12Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "I think this would introduce a new attack.\r\n\r\nThe unmerged leaves entry effectively becomes a \"do not delete\" marker for parent nodes. An attacker can use this to stay in the tree longer than intended and thus violate the tree invariant. Similar to the attack Joel presented a while back, the attacker can prepare a special tree in the following way:\r\n\r\n - The adds its leaf index to the unmerged leaves list of all of its direct path parent nodes.\r\n - The attacker also updates its parent hash extension (by simulating a fake Commit) so that the new parent hash now covers the updated unmerged leaves lists.\r\n - The attacker presents this new ratchet tree to the victim.\r\n\r\n - The victim joins the group either by Welcome or by External Commit\r\n - When validating the ratchet tree, the victim does not detect the ruse because all parent hash extensions from all leaves in the tree check out.\r\n - The victim (or anyone who joined after the victim) proceeds to remove the attacker from the group.\r\n - While doing so, the victim now only blanks the attacker's leaf node and leaves the attacker's direct path intact because of the markers.\r\n - The attacker is now seemingly removed, but still knows secrets of the ratchet tree.\r\n \r\nThis can possibly be prevented by introducing additional validation for new joiners, but it seems very brittle nonetheless.\r\n\r\nGiven that in a group where updates are frequent, this wouldn't bring much of a performance benefit I would not be inclined to go forward with this. We would need much more analysis and it's a bit late for that.",
+          "createdAt": "2022-12-14T15:07:41Z",
+          "updatedAt": "2022-12-14T15:07:41Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Can you explain the attack more thoroughly with actual tree examples?\r\nI'm having trouble understanding it.",
+          "createdAt": "2022-12-14T15:13:01Z",
+          "updatedAt": "2022-12-14T15:13:01Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@raphaelrobert I don't think the attack works as you describe it, or if it does, we need stronger parent hash validation rules regardless of this PR.  Any node that has ever sent a Commit should not be unmerged, so it should be impossible to both have a leaf sign a parent hash chain and appear as unmerged in any of its parents, as happens in your putative tree.\r\n\r\nI agree that some analysis is needed.  The only question is how quickly it can be done.  What I'm wondering is whether some of @TWal's earlier work can be updated.",
+          "createdAt": "2022-12-14T15:18:05Z",
+          "updatedAt": "2022-12-14T15:18:14Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@bifurcation Yes, stronger validation rules are needed. Right now what you describe is not enforced, hence my qualification as an attack. I also agree that these rules could be added regardless. ",
+          "createdAt": "2022-12-14T15:20:30Z",
+          "updatedAt": "2022-12-14T15:20:30Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I don't understand why we need stronger validation rules.\r\nWhen joining a group, invariants are checked on the tree, like the well-formedness of unmerged leaves or the validity of parent-hashes.\r\nA tree with these invariants is then secure: the signature of the leaf parent-hash-linked to a node covers the whole subtree at the time of signing, which forbids the old double-join attacks. You can't break TreeKEM's invariants without breaking the parent-hash invariants.\r\n\r\nTherefore I think we just need to prove that the new Remove preserves the MLS invariants (unmerged leaves are well-formed + every node is parent-hash linked to a node below it). If that is true, I can update my formal proofs quickly I think.",
+          "createdAt": "2022-12-14T15:27:26Z",
+          "updatedAt": "2022-12-14T15:27:26Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@TWal As I understand what @raphaelrobert  is proposing, the idea is that the attacker A prepares a tree of the following form, where:\r\n\r\n* [A] indicates A is unmerged\r\n* But A knows Q and R\r\n* A's leaf signs a parent hash chain (A -> Q -> R)\r\n* B need not be aware any of this is going on\r\n\r\nIn other words, it's like A added C to (A, B) in a full Commit, but with A also marked as unmerged at Q and R.\r\n\r\n```\r\n      R[A]\r\n    __|__\r\n   /     \\\r\n  Q[A]    _\r\n / \\     / \\\r\nA   B   C   _\r\n```\r\n\r\nA sends this tree to C in a Welcome.  If C subsequently tries to remove A, then according to this PR, you would end up with the following tree:\r\n\r\n```\r\n      R'\r\n    __|__\r\n   /     \\\r\n  Q       _\r\n / \\     / \\\r\n_   B   C   _\r\n```\r\n\r\nSince the attacker A knows Q, and C encrypted the path secret for R' to Q, A still knows the group secrets.\r\n",
+          "createdAt": "2022-12-14T15:31:28Z",
+          "updatedAt": "2022-12-14T15:31:28Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "Right now we have the following validation rules in the spec:\r\n\r\n---\r\n\r\n - Verify the integrity of the ratchet tree.\r\n - Verify that the tree hash of the ratchet tree matches the tree_hash field in GroupInfo.\r\n - For each non-empty parent node, verify that it is \"parent-hash valid\", as described in [Section 7.9.2](https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#verifying-parent-hashes).\r\n - For each non-empty leaf node, validate the LeafNode as described in [Section 7.3](https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html#leaf-node-validation).\r\n - For each non-empty parent node, verify that each entry in the node's unmerged_leaves represents a non-blank leaf node that is a descendant of the parent node.\r\n\r\n---\r\n\r\nOnly the last rule concerns the unmerged leaves. That rule is not enough to prevent an attacker who is a regular member of the tree to add its leaf index to the unmerged leaves list of all the parent nodes in its direct path.",
+          "createdAt": "2022-12-14T15:32:01Z",
+          "updatedAt": "2022-12-14T15:32:01Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@bifurcation Thanks for the illustration, that's exactly what I had in mind.",
+          "createdAt": "2022-12-14T15:32:49Z",
+          "updatedAt": "2022-12-14T15:32:49Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "For D to be parent-hash-linked to P (with child C), there is the following rule:\r\n```\r\nD is in the resolution of C, and the intersection of P's unmerged_leaves with the subtree under C is equal to the resolution of C with D removed.\r\n```\r\n\r\nWith D = C = A and P = Q, the intersection of P's unmerged leaves with the subtree under C is [A], and the resolution of C with D removed is [].\r\nTherefore the tree will be rejected by the participant processing the Welcome.",
+          "createdAt": "2022-12-14T15:44:13Z",
+          "updatedAt": "2022-12-14T15:44:13Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Note that it is similar to the example 2 of #713, and that parent-hash was modified to prevent these kind of modifications.",
+          "createdAt": "2022-12-14T15:46:30Z",
+          "updatedAt": "2022-12-14T15:46:30Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "@TWal It looks like the parent hash verification rule you mention does indeed prevent the attack. Given how unintuitive that rule is I a) missed it and b) I cannot say if it prevents the attack in all scenarios (although my intuition is it does). So it really comes down to proofs at this point.",
+          "createdAt": "2022-12-14T16:21:43Z",
+          "updatedAt": "2022-12-14T16:21:43Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The rule is a ninja equation designed by @bifurcation in #713. I agree that it is not easy to understand!\r\nIt captures two facts:\r\n- D and P were updated at the same time, and their unmerged leaves is coherent with this fact: `D.unmerged_leaves = Intersection(P.unmerged_leaves, Subtree(D))`\r\n- the nodes between D and P were filtered, hence they are blank, and the co-path subtree are mostly empty (they might contain unmerged leaves of P)\r\n\r\nFrom this we can prove the strong guarantees discussed in #713 and #731.",
+          "createdAt": "2022-12-14T16:57:52Z",
+          "updatedAt": "2022-12-14T16:57:52Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Note: if you look at the revised parent-hash link conditions in #752, it's much easier to understand why the attack doesn't work: it's the condition `LastUpdateEpoch(P) = LastUpdateEpoch(D)` which will be broken.",
+          "createdAt": "2022-12-14T17:08:58Z",
+          "updatedAt": "2022-12-14T17:08:58Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I thought I had an attack case, based on the following tree (`*` = parent hash link, B malicioiusly added the `[B]` entries), but the original sibling tree hash stopped it.\r\n\r\n```\r\n              T[B]\r\n        ______|______\r\n      */             \\\r\n      R[B]            _\r\n    __|__           __|__\r\n   /     \\*        /     \\\r\n  Q       S       _       _\r\n / \\*   */ \\     / \\     / \\ \r\nA   B   C   D   E   F   _   _\r\n```\r\n\r\nWhich points toward a simple, intuitive argument for why this proposal is OK:\r\n\r\n**Claim:** Given an honestly constructed tree, a malicious group member can't modify it to add themselves to unmerged_leaves for a node whose private key they know\r\n\r\n**Proof:**\r\n* If they know the private key because they set it, you can't be unmerged in it because [the parent-hash chaining rules forbid it](https://github.com/mlswg/mls-protocol/pull/835#discussion_r1048719223)\r\n* If they know the private key because the received it from someone else, then their leaf is covered by the original sibling subtree hash.  If they add themselves to unmerged_leaves, they'll be removed from the original sibling tree, and that hash will be invalid.",
+          "createdAt": "2022-12-14T18:23:21Z",
+          "updatedAt": "2022-12-14T18:23:21Z"
+        },
+        {
+          "author": "beurdouche",
+          "authorAssociation": "MEMBER",
+          "body": "@TWal Is the F* spec in mls-proposal up-to-date enough so that I can double check how things currently work there? Or did you ninja this by hand :D ? ",
+          "createdAt": "2022-12-14T18:29:19Z",
+          "updatedAt": "2022-12-14T18:29:19Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@beurdouche the parent-hash link invariant is defined [here](https://github.com/Inria-Prosecco/treesync/blob/main/mls-star/fstar/treesync/code/MLS.TreeSync.Invariants.ParentHash.fst) and the parent hash guarantees theorem is proved [here](https://github.com/Inria-Prosecco/treesync/blob/main/mls-star/fstar/treesync/proofs/MLS.TreeSync.Proofs.ParentHashGuarantees.fst), and Richard found the ninja equation [here](https://github.com/mlswg/mls-protocol/pull/713#issuecomment-1146288574) if that's what you're asking for!\r\n\r\n@bifurcation I don't understand why you closed the issue as completed?\r\n\r\nThe proof goes as follows.\r\n\r\nFrom the parent hash guarantees, we know that the signature covers all the subtree it the participant modified, at the time of their last modification (we name them the \"original subtrees\").\r\nWhen a private key is generated for a node, the participant generating it:\r\n- send it to the leaves in the corresponding subtree\r\n- signs the corresponding subtree (via parent-hash)\r\n\r\nNote that in every subtree signature (via parent-hash), there is the property that the private hpke key of the node is known only by the leaves of that subtree.\r\n\r\nWhen you receive tree, you check every signature and compute every original subtree, and get back the property that the private hpke key of each node is known only to leaves in its original subtree.\r\n\r\nTherefore, if you have an attack, it means you found a way to break the invariants checked when joining a group.\r\nIt might be the case that the new Remove does break the invariants and we would need to strengthen them (as tried in #835), but my feeling is that it should work fine without additional invariants.\r\nI'll check in the next days and keep you up-to-date!",
+          "createdAt": "2022-12-14T21:27:17Z",
+          "updatedAt": "2022-12-14T21:27:17Z"
         }
       ]
     }
@@ -56583,24 +56740,26 @@
       "id": "PR_kwDOBoyH6c5Esqar",
       "title": "Credentials should be replaced before expiring",
       "url": "https://github.com/mlswg/mls-protocol/pull/824",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fixes #758 ",
       "createdAt": "2022-12-07T22:27:44Z",
-      "updatedAt": "2022-12-12T19:53:36Z",
+      "updatedAt": "2022-12-14T14:02:09Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "01a20d330a15fdb45ba2d7fd7701465bf19c544d",
       "headRepository": "mlswg/mls-protocol",
       "headRefName": "expiry",
       "headRefOid": "fd9d86c1e5c5de52e5062e8bd53b64d4f1a39b1b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-12-14T14:02:09Z",
+      "mergedAt": "2022-12-14T14:02:08Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "5c1219b512635c3a82c6dd3bf36261b4b422ba10"
+      },
       "comments": [
         {
           "author": "bifurcation",
@@ -56750,6 +56909,19 @@
               "updatedAt": "2022-12-12T19:37:45Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IahFm",
+          "commit": {
+            "abbreviatedOid": "fd9d86c"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "I like the separate treatment of expired vs. revoked. Looks good to me now!",
+          "createdAt": "2022-12-13T08:17:41Z",
+          "updatedAt": "2022-12-13T08:17:41Z",
+          "comments": []
         }
       ]
     },
@@ -56758,24 +56930,26 @@
       "id": "PR_kwDOBoyH6c5E1q2G",
       "title": "Clarify group creation",
       "url": "https://github.com/mlswg/mls-protocol/pull/827",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "This PR is an alternative to #757.\r\n\r\nThis PR updates the group creation process so that epoch 0 is a \"full-fledged\" epoch, with an epoch secret (and all the derivatives) instead of just an init secret.  One implication of that is that the interim transcript hash can now be computed in the usual way, by extending the confirmed transcript hash with a confirmation tag:\r\n\r\n```\r\n// creator sets epoch secret\r\nconfirmation_key = DeriveSecret(epoch_secret, \"confirm\")\r\nconfirmed_transcript_hash = \"\"\r\nconfirmation_tag = MAC(confirmation_key, confirmed_transcript_hash)\r\ninterim_transcript_hash = Hash(confirmed_transcript_hash || confirmation_tag)\r\n```\r\n\r\nThis has the nice side effect of immediately mixing the epoch secret into the transcript hash, helping the group diverge (a concern @kkohbrok raised on the call today).\r\n\r\nWhile I was editing the group creation section, I also rationalized the requirements a bit.  One reason that #757 came up is that the group creation section currently assumes you're always starting with multiple members.  So the MUST-level requirement to fetch key packages has been downgraded to a SHOULD.\r\n\r\n Finally, I updated the specification of GroupInfo to explain the fields, in particular explaining how you get the confirmation tag in epoch 0 or later epochs.",
       "createdAt": "2022-12-08T22:43:19Z",
-      "updatedAt": "2022-12-12T14:10:54Z",
+      "updatedAt": "2022-12-14T14:01:45Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "438f36e65e5ece3b699af6df1738e1393ee75d14",
       "headRepository": "mlswg/mls-protocol",
       "headRefName": "epoch0",
       "headRefOid": "afdbe25df64668ab19ac6f74acab967064f81012",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-12-14T14:01:45Z",
+      "mergedAt": "2022-12-14T14:01:45Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "676c73c98320c498202241e9b03323b4b121b1d7"
+      },
       "comments": [
         {
           "author": "mulmarta",
@@ -56963,24 +57137,26 @@
       "id": "PR_kwDOBoyH6c5E6tdC",
       "title": "Update security and operational considerations",
       "url": "https://github.com/mlswg/mls-protocol/pull/830",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fixes #762\r\nFixes #763\r\nFixes #815\r\nFixes #813\r\n\r\n* Add a paragraph to Operational Context describing additional security services that the DS can provide\r\n* Add a citation to security analyses via the MLS Architecture\r\n* Add a section discussing metadata protection",
       "createdAt": "2022-12-09T15:40:39Z",
-      "updatedAt": "2022-12-12T19:13:59Z",
+      "updatedAt": "2022-12-14T16:02:08Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "d31d84c5687d64c3621b955792970bd54815cdc4",
       "headRepository": "mlswg/mls-protocol",
       "headRefName": "ad-sec-cons",
-      "headRefOid": "3210c663aa0c164ec2bf57f40ab75b641445883e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "4c59cbca2f15c6bbe79cef4224ffe542b92740a2",
+      "closedAt": "2022-12-14T16:02:07Z",
+      "mergedAt": "2022-12-14T16:02:07Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "0794b07a48450d4d0339307d2af804cdc7bb6e87"
+      },
       "comments": [
         {
           "author": "kkohbrok",
@@ -57029,6 +57205,84 @@
               "updatedAt": "2022-12-12T13:52:10Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5Iad7g",
+          "commit": {
+            "abbreviatedOid": "3210c66"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Thanks for incorporating our ideas for this section. Looks good to me generally, but we should be careful about how we frame the DS.",
+          "createdAt": "2022-12-13T08:11:37Z",
+          "updatedAt": "2022-12-13T08:15:29Z",
+          "comments": [
+            {
+              "originalPosition": 68,
+              "body": "This suggests that the DS is a separate party. As I noted in the other PR, that is not necessarily the case. The DS is an abstract component parts of which may run on the clients themselves. It makes sense to use the DS as adversary when it comes to metadata, but I think its abstract nature forces us to qualify a bit here.",
+              "createdAt": "2022-12-13T08:11:38Z",
+              "updatedAt": "2022-12-13T08:15:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5Ib7fM",
+          "commit": {
+            "abbreviatedOid": "3210c66"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "CHANGES_REQUESTED",
+          "body": "Modulo a few nits and Konrad's comment, I think this works.",
+          "createdAt": "2022-12-13T11:27:00Z",
+          "updatedAt": "2022-12-13T11:37:45Z",
+          "comments": [
+            {
+              "originalPosition": 75,
+              "body": "```suggestion\r\n* How prospective external joiners get a GroupInfo object for the group\r\n```",
+              "createdAt": "2022-12-13T11:27:00Z",
+              "updatedAt": "2022-12-13T11:37:45Z"
+            },
+            {
+              "originalPosition": 126,
+              "body": "```suggestion\r\nconstruct a member's leaf node to be less identifying, e.g., by using a\r\n```",
+              "createdAt": "2022-12-13T11:30:15Z",
+              "updatedAt": "2022-12-13T11:37:45Z"
+            },
+            {
+              "originalPosition": 122,
+              "body": "```suggestion\r\nNote that these information leaks reveal the group's membership only to the degree\r\n```",
+              "createdAt": "2022-12-13T11:31:27Z",
+              "updatedAt": "2022-12-13T11:37:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IkdOX",
+          "commit": {
+            "abbreviatedOid": "4c59cbc"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-14T14:03:08Z",
+          "updatedAt": "2022-12-14T14:03:08Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IlEC6",
+          "commit": {
+            "abbreviatedOid": "4c59cbc"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-14T15:26:18Z",
+          "updatedAt": "2022-12-14T15:26:18Z",
+          "comments": []
         }
       ]
     },
@@ -57079,24 +57333,26 @@
       "id": "PR_kwDOBoyH6c5FFGx9",
       "title": "editorial: Minor fixes in presentation language.",
       "url": "https://github.com/mlswg/mls-protocol/pull/832",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "duesee",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR fixes some minor issues with the presentation language. Moving `SignContent` and `RefHashInput` to their own `~~~ tls` block is required so that the `extract-tls.py` can now detect them.",
       "createdAt": "2022-12-11T11:25:29Z",
-      "updatedAt": "2022-12-12T20:45:45Z",
+      "updatedAt": "2022-12-14T14:01:27Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "3b4e6b7632a1c0d3bb215f27d5c0c0211bf789bf",
       "headRepository": "duesee/mls-protocol",
       "headRefName": "duesee/fix_presentation_language",
       "headRefOid": "360dbc7133c4923a4d7d29e921dc7587a013dfe3",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-12-14T14:01:26Z",
+      "mergedAt": "2022-12-14T14:01:26Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "7607b58f0c36ffcb63b556f947621374b590206b"
+      },
       "comments": [],
       "reviews": [
         {
@@ -57131,7 +57387,7 @@
             "abbreviatedOid": "4ab37dd"
           },
           "author": "duesee",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2022-12-12T20:45:10Z",
@@ -57144,6 +57400,32 @@
               "updatedAt": "2022-12-12T20:45:45Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IepH5",
+          "commit": {
+            "abbreviatedOid": "360dbc7"
+          },
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-13T17:13:59Z",
+          "updatedAt": "2022-12-13T17:13:59Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IkbxE",
+          "commit": {
+            "abbreviatedOid": "360dbc7"
+          },
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-14T13:59:37Z",
+          "updatedAt": "2022-12-14T13:59:37Z",
+          "comments": []
         }
       ]
     },
@@ -57159,7 +57441,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2022-12-12T16:21:16Z",
-      "updatedAt": "2022-12-12T19:54:56Z",
+      "updatedAt": "2022-12-13T08:09:04Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "ad-sec-cons",
       "baseRefOid": "9f9e4d8fad3c514ecd462325859f38d69a68eb56",
@@ -57195,6 +57477,126 @@
               "body": "```suggestion\r\nto the DS. Extensions can also be exposed via GroupInfo objects (see {{groupinfo-objects}}).\r\n```\r\n\r\nOtherwise it will render as \"exposed via Section X.X.X\"\r\n\r\nThis will render as \"exposed via Section X.X.X\".",
               "createdAt": "2022-12-12T16:37:25Z",
               "updatedAt": "2022-12-12T16:41:47Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5Iactf",
+          "commit": {
+            "abbreviatedOid": "6af959f"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-13T08:09:03Z",
+          "updatedAt": "2022-12-13T08:09:04Z",
+          "comments": [
+            {
+              "originalPosition": 11,
+              "body": "This has lead to quite a bit of confusion in the past and the architecture document is a bit ambiguous in the way the DS is defined. On the one hand you're right: The role of the DS involves message routing and it's described as a less trusted component. On the other hand, the role of the DS also involves commit ordering, which in case of a p2p system happens on the clients and which can not be done by overlay routing or p2p links.\r\n\r\nI do agree though, that even as an abstract component, we can generally say that the DS is considered less trusted, even if it's (at least partially) running within the trust boundary of the MLS client.",
+              "createdAt": "2022-12-13T08:09:03Z",
+              "updatedAt": "2022-12-13T08:09:04Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 835,
+      "id": "PR_kwDOBoyH6c5FdzZ3",
+      "title": "Have parent hash validation also verify unmerged leaves",
+      "url": "https://github.com/mlswg/mls-protocol/pull/835",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In #834, @raphaelrobert pointed out that we could be stricter in our validation of the `unmerged_leaves` field in the tree.  This PR updates the parent hash validation algorithm to also check that the `unmerged_leaves` relationships are consistent with the nodes having been updated at the same time.  In particular, it checks that the leaf node that signs the parent-hash chain is not unmerged at any of the parent nodes in the chain.",
+      "createdAt": "2022-12-14T15:53:26Z",
+      "updatedAt": "2022-12-14T16:53:11Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "5c1219b512635c3a82c6dd3bf36261b4b422ba10",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "tree-val",
+      "headRefOid": "141e050310256261b818e19e5dfcc1fccd926330",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5IlpWO",
+          "commit": {
+            "abbreviatedOid": "141e050"
+          },
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "The current parent-hash guarantees are as strong as they can be: for every subtree, the version of this subtree at the time of its last modification (i.e. when we \"un-add\" its unmerged leaves) is authenticated by one of its leaves.\r\nThese new conditions do not improve this result.",
+          "createdAt": "2022-12-14T16:38:39Z",
+          "updatedAt": "2022-12-14T16:53:11Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "This is implied by the property just above it\r\nSee the [discussion about the property](https://github.com/mlswg/mls-protocol/pull/713#issuecomment-1146399188) in #713, in which I show that the parent-hash link between D and P implies that `intersect(P.unmerged_leaves, subtree(D)) = D.unmerged_leaves`, which implies your condition.",
+              "createdAt": "2022-12-14T16:38:39Z",
+              "updatedAt": "2022-12-14T16:53:11Z"
+            },
+            {
+              "originalPosition": 8,
+              "body": "This is almost implied by the resolution equation for the same reason as the new first condition.\r\nAlmost because we can't prove that `D` is not in the unmerged leaves of nodes not authenticated by `D`.",
+              "createdAt": "2022-12-14T16:49:51Z",
+              "updatedAt": "2022-12-14T16:53:11Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 836,
+      "id": "PR_kwDOBoyH6c5FeIOZ",
+      "title": "Add a section discussing the security of the sender data protection",
+      "url": "https://github.com/mlswg/mls-protocol/pull/836",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #770 ",
+      "createdAt": "2022-12-14T16:47:18Z",
+      "updatedAt": "2022-12-14T18:47:59Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "0794b07a48450d4d0339307d2af804cdc7bb6e87",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "rand-ct",
+      "headRefOid": "b5c83aaf55159ab064b08f842b7a7488be997328",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5ImfHX",
+          "commit": {
+            "abbreviatedOid": "b5c83aa"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-14T18:47:58Z",
+          "updatedAt": "2022-12-14T18:47:58Z",
+          "comments": [
+            {
+              "originalPosition": 52,
+              "body": "```suggestion\r\nAny future ciphersuite MUST use an AEAD algorithm that is also a PRF, especially with\r\n```",
+              "createdAt": "2022-12-14T18:47:58Z",
+              "updatedAt": "2022-12-14T18:47:59Z"
             }
           ]
         }
