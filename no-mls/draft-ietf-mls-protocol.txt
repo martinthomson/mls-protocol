@@ -1955,8 +1955,8 @@ Welcome  KeyPackage  GroupInfo   PublicMessage    PrivateMessage -'
 
 6.3.1.  Content Encryption
 
-   Authenticated group content is prepared for encryption by encoding it
-   in an AuthenticatedContentTBE structure.
+   Content to be encrypted is encoded in an AuthenticatedContentTBE
+   structure.
 
    struct {
        select (PrivateMessage.content_type) {
