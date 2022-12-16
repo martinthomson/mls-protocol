@@ -409,7 +409,7 @@ dl > dd > dl {
   margin-top: 0.5em;
   margin-bottom: 0;
 }
-dl .break {
+:is(dd, span).break {
   display: none;
 }
 
@@ -429,7 +429,7 @@ a[href]:hover {
 a[href].selfRef:hover {
   background-color: var(--highlight-color);
 }
-a.xref {
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
 }
 
@@ -441,7 +441,9 @@ tt, code, pre {
 tt, code {
   /* changing the font for inline elements leads to different ascender
      and descender heights; as we want to retain baseline alignment,
-     remove leading to avoid altering the final height of lines */
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
   line-height: 0;
 }
 :is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
@@ -1053,7 +1055,7 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Barnes, et al.</td>
-<td class="center">Expires 17 June 2023</td>
+<td class="center">Expires 19 June 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1068,12 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-protocol-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-12-14" class="published">14 December 2022</time>
+<time datetime="2022-12-16" class="published">16 December 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-06-17">17 June 2023</time></dd>
+<dd class="expires"><time datetime="2023-06-19">19 June 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1144,7 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1467,30 +1469,33 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
                 <p id="section-toc.1-1.15.2.1.1"><a href="#section-15.1" class="auto internal xref">15.1</a>.  <a href="#name-confidentiality-of-the-grou" class="internal xref">Confidentiality of the Group Secrets</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
-                <p id="section-toc.1-1.15.2.2.1"><a href="#section-15.2" class="auto internal xref">15.2</a>.  <a href="#name-confidentiality-of-group-me" class="internal xref">Confidentiality of Group Metadata</a></p>
+                <p id="section-toc.1-1.15.2.2.1"><a href="#section-15.2" class="auto internal xref">15.2</a>.  <a href="#name-confidentiality-of-sender-d" class="internal xref">Confidentiality of Sender Data</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3">
+                <p id="section-toc.1-1.15.2.3.1"><a href="#section-15.3" class="auto internal xref">15.3</a>.  <a href="#name-confidentiality-of-group-me" class="internal xref">Confidentiality of Group Metadata</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2.2.1">
-                    <p id="section-toc.1-1.15.2.2.2.1.1"><a href="#section-15.2.1" class="auto internal xref">15.2.1</a>.  <a href="#name-groupid-epoch-and-message-f" class="internal xref">GroupID, Epoch, and Message Frequency</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3.2.1">
+                    <p id="section-toc.1-1.15.2.3.2.1.1"><a href="#section-15.3.1" class="auto internal xref">15.3.1</a>.  <a href="#name-groupid-epoch-and-message-f" class="internal xref">GroupID, Epoch, and Message Frequency</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2.2.2">
-                    <p id="section-toc.1-1.15.2.2.2.2.1"><a href="#section-15.2.2" class="auto internal xref">15.2.2</a>.  <a href="#name-group-extensions" class="internal xref">Group Extensions</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3.2.2">
+                    <p id="section-toc.1-1.15.2.3.2.2.1"><a href="#section-15.3.2" class="auto internal xref">15.3.2</a>.  <a href="#name-group-extensions" class="internal xref">Group Extensions</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2.2.3">
-                    <p id="section-toc.1-1.15.2.2.2.3.1"><a href="#section-15.2.3" class="auto internal xref">15.2.3</a>.  <a href="#name-group-membership" class="internal xref">Group Membership</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3.2.3">
+                    <p id="section-toc.1-1.15.2.3.2.3.1"><a href="#section-15.3.3" class="auto internal xref">15.3.3</a>.  <a href="#name-group-membership" class="internal xref">Group Membership</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3">
-                <p id="section-toc.1-1.15.2.3.1"><a href="#section-15.3" class="auto internal xref">15.3</a>.  <a href="#name-authentication" class="internal xref">Authentication</a></p>
-</li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.4">
-                <p id="section-toc.1-1.15.2.4.1"><a href="#section-15.4" class="auto internal xref">15.4</a>.  <a href="#name-forward-secrecy-and-post-co" class="internal xref">Forward Secrecy and Post-Compromise Security</a></p>
+                <p id="section-toc.1-1.15.2.4.1"><a href="#section-15.4" class="auto internal xref">15.4</a>.  <a href="#name-authentication" class="internal xref">Authentication</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.5">
-                <p id="section-toc.1-1.15.2.5.1"><a href="#section-15.5" class="auto internal xref">15.5</a>.  <a href="#name-keypackage-reuse" class="internal xref">KeyPackage Reuse</a></p>
+                <p id="section-toc.1-1.15.2.5.1"><a href="#section-15.5" class="auto internal xref">15.5</a>.  <a href="#name-forward-secrecy-and-post-co" class="internal xref">Forward Secrecy and Post-Compromise Security</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.6">
-                <p id="section-toc.1-1.15.2.6.1"><a href="#section-15.6" class="auto internal xref">15.6</a>.  <a href="#name-group-fragmentation-by-mali" class="internal xref">Group Fragmentation by Malicious Insiders</a></p>
+                <p id="section-toc.1-1.15.2.6.1"><a href="#section-15.6" class="auto internal xref">15.6</a>.  <a href="#name-keypackage-reuse" class="internal xref">KeyPackage Reuse</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.7">
+                <p id="section-toc.1-1.15.2.7.1"><a href="#section-15.7" class="auto internal xref">15.7</a>.  <a href="#name-group-fragmentation-by-mali" class="internal xref">Group Fragmentation by Malicious Insiders</a></p>
 </li>
             </ul>
 </li>
@@ -5726,7 +5731,7 @@ this client.<a href="#section-10-2.3" class="pilcrow">¶</a>
 </li>
       </ol>
 <p id="section-10-3">KeyPackages are intended to be used only once and SHOULD NOT
-be reused except in the case of last resort (see <a href="#keypackage-reuse" class="auto internal xref">Section 15.5</a>).
+be reused except in the case of last resort (see <a href="#keypackage-reuse" class="auto internal xref">Section 15.6</a>).
 Clients MAY generate and publish multiple KeyPackages to
 support multiple ciphersuites.<a href="#section-10-3" class="pilcrow">¶</a></p>
 <p id="section-10-4">The value for <code>init_key</code> MUST be a public key for the asymmetric encryption
@@ -7600,133 +7605,169 @@ keypair such that the old private key can no longer be used to decrypt new
 messages.<a href="#section-15.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="confidentiality-of-group-metadata">
+<div id="confidentiality-of-sender-data">
 <section id="section-15.2">
-        <h3 id="name-confidentiality-of-group-me">
-<a href="#section-15.2" class="section-number selfRef">15.2. </a><a href="#name-confidentiality-of-group-me" class="section-name selfRef">Confidentiality of Group Metadata</a>
+        <h3 id="name-confidentiality-of-sender-d">
+<a href="#section-15.2" class="section-number selfRef">15.2. </a><a href="#name-confidentiality-of-sender-d" class="section-name selfRef">Confidentiality of Sender Data</a>
         </h3>
-<p id="section-15.2-1">MLS does not provide confidentiality protection to some messages and fields
-within messages:<a href="#section-15.2-1" class="pilcrow">¶</a></p>
+<p id="section-15.2-1">The MLSCiphertext framing encrypts "sender data" that identifies which group
+member sent an encrypted message, as described in <a href="#sender-data-encryption" class="auto internal xref">Section 6.3.2</a>.
+As with the QUIC header protection scheme <span>[<a href="#RFC9001" class="cite xref">RFC9001</a>], <a href="https://rfc-editor.org/rfc/rfc9001#section-5.4" class="relref">Section 5.4</a></span>, this scheme
+is a variant of the HN1 construction analyzed in <span>[<a href="#NAN" class="cite xref">NAN</a>]</span>.  A sample of the
+ciphertext is combined with a <code>sender_data_secret</code> to derive a key and nonce
+that are used for AEAD encryption of the sender data.<a href="#section-15.2-1" class="pilcrow">¶</a></p>
+<p id="section-15.2-2"><code>pseudocode
+(key, nonce) = PRF(sender_data_secret, sample)
+encrypted_sender_data =
+  AEAD.Seal(key, nonce, sender_data_aad, sender_data)
+</code><a href="#section-15.2-2" class="pilcrow">¶</a></p>
+<p id="section-15.2-3">The only differences between this construction and HN1 as described in <span>[<a href="#NAN" class="cite xref">NAN</a>]</span> are
+(1) that it uses authenticated encryption instead of unauthenticated encryption
+and (2) that it protects information used to derive a nonce instead of the nonce
+itself.<a href="#section-15.2-3" class="pilcrow">¶</a></p>
+<p id="section-15.2-4">Since the <code>sender_data_secret</code> is distinct from the content encryption key, it
+follows that the sender data encryption scheme achieves AE2 security as defined
+in <span>[<a href="#NAN" class="cite xref">NAN</a>]</span>, and therefore guarantees the confidentiality of the sender data.<a href="#section-15.2-4" class="pilcrow">¶</a></p>
+<p id="section-15.2-5">Use of the same <code>sender_data_secret</code> and ciphertext sample more than once risks
+compromising sender data protection by reusing an AEAD (key, nonce) pair.  For
+example, in many AEAD schemes, reusing a key and nonce reveals the exclusive OR
+of the two plaintexts. Assuming the ciphertext output of the AEAD algorithm is
+indistinguishable from random data (i.e., the AEAD is AE1-secure in the phrasing
+of <span>[<a href="#NAN" class="cite xref">NAN</a>]</span>), the odds of two ciphertext samples being identical is roughly
+2<sup>-L/2</sup>, i.e., the birthday bound.<a href="#section-15.2-5" class="pilcrow">¶</a></p>
+<p id="section-15.2-6">The AEAD algorithms for ciphersuites defined in this document all provide this
+property. The size of the sample depends on the ciphersuite's hash function, but
+in all cases, the probability of collision is no more than 2<sup>-128</sup>.
+Any future ciphersuite MUST use an AE1-secure AEAD algorithm.<a href="#section-15.2-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="confidentiality-of-group-metadata">
+<section id="section-15.3">
+        <h3 id="name-confidentiality-of-group-me">
+<a href="#section-15.3" class="section-number selfRef">15.3. </a><a href="#name-confidentiality-of-group-me" class="section-name selfRef">Confidentiality of Group Metadata</a>
+        </h3>
+<p id="section-15.3-1">MLS does not provide confidentiality protection to some messages and fields
+within messages:<a href="#section-15.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-15.2-2.1">KeyPackage messages<a href="#section-15.2-2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-15.3-2.1">KeyPackage messages<a href="#section-15.3-2.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-2.2">GroupInfo messages<a href="#section-15.2-2.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-2.2">GroupInfo messages<a href="#section-15.3-2.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-2.3">The unencrypted portion of a Welcome message<a href="#section-15.2-2.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-2.3">The unencrypted portion of a Welcome message<a href="#section-15.3-2.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-2.4">Any Proposal or Commit messages sent as MLSPlaintext messages<a href="#section-15.2-2.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-2.4">Any Proposal or Commit messages sent as MLSPlaintext messages<a href="#section-15.3-2.4" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-2.5">The unencrypted header fields in MLSCiphertext messages<a href="#section-15.2-2.5" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-2.5">The unencrypted header fields in MLSCiphertext messages<a href="#section-15.3-2.5" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-2.6">The lengths of encrypted Welcome and MLSCiphertext messages<a href="#section-15.2-2.6" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-2.6">The lengths of encrypted Welcome and MLSCiphertext messages<a href="#section-15.3-2.6" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-15.2-3">The only mechanism MLS provides for confidentially distributing a group's
+<p id="section-15.3-3">The only mechanism MLS provides for confidentially distributing a group's
 ratchet tree to new members is to send it in a Welcome message as a
 <code>ratchet_tree</code> extension.  If an application distributes the tree in some other
-way, its security will depend on that application mechanism.<a href="#section-15.2-3" class="pilcrow">¶</a></p>
-<p id="section-15.2-4">A party observing these fields might be able to infer certain properties of the
-group:<a href="#section-15.2-4" class="pilcrow">¶</a></p>
+way, its security will depend on that application mechanism.<a href="#section-15.3-3" class="pilcrow">¶</a></p>
+<p id="section-15.3-4">A party observing these fields might be able to infer certain properties of the
+group:<a href="#section-15.3-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-15.2-5.1">Group ID<a href="#section-15.2-5.1" class="pilcrow">¶</a>
+<li class="normal" id="section-15.3-5.1">Group ID<a href="#section-15.3-5.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-5.2">Current epoch and frequency of epoch changes<a href="#section-15.2-5.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-5.2">Current epoch and frequency of epoch changes<a href="#section-15.3-5.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-5.3">Frequency of messages within an epoch<a href="#section-15.2-5.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-5.3">Frequency of messages within an epoch<a href="#section-15.3-5.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-5.4">Group extensions<a href="#section-15.2-5.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-5.4">Group extensions<a href="#section-15.3-5.4" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-5.5">Group membership<a href="#section-15.2-5.5" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-5.5">Group membership<a href="#section-15.3-5.5" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-15.2-6">The amount of metadata exposed to parties outside the group, and thus the
+<p id="section-15.3-6">The amount of metadata exposed to parties outside the group, and thus the
 ability of these parties to infer the group's properties, depends on several
-aspects of the DS design, such as:<a href="#section-15.2-6" class="pilcrow">¶</a></p>
+aspects of the DS design, such as:<a href="#section-15.3-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-15.2-7.1">How KeyPackages are distributed<a href="#section-15.2-7.1" class="pilcrow">¶</a>
+<li class="normal" id="section-15.3-7.1">How KeyPackages are distributed<a href="#section-15.3-7.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-7.2">How the ratchet tree is distributed<a href="#section-15.2-7.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-7.2">How the ratchet tree is distributed<a href="#section-15.3-7.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-7.3">How prospective external joiners get a GroupInfo object for the group<a href="#section-15.2-7.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-7.3">How prospective external joiners get a GroupInfo object for the group<a href="#section-15.3-7.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-15.2-7.4">Whether MLSPlaintext or MLSCiphertext messages are used for Proposal and
-Commit messages<a href="#section-15.2-7.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-15.3-7.4">Whether MLSPlaintext or MLSCiphertext messages are used for Proposal and
+Commit messages<a href="#section-15.3-7.4" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-15.2-8">In the remainder of this section, we note the ways that the above properties of
+<p id="section-15.3-8">In the remainder of this section, we note the ways that the above properties of
 the group are reflected in unprotected group messages, as a guide to
-understanding how they might be exposed or protected in a given application.<a href="#section-15.2-8" class="pilcrow">¶</a></p>
+understanding how they might be exposed or protected in a given application.<a href="#section-15.3-8" class="pilcrow">¶</a></p>
 <div id="groupid-epoch-and-message-frequency">
-<section id="section-15.2.1">
+<section id="section-15.3.1">
           <h4 id="name-groupid-epoch-and-message-f">
-<a href="#section-15.2.1" class="section-number selfRef">15.2.1. </a><a href="#name-groupid-epoch-and-message-f" class="section-name selfRef">GroupID, Epoch, and Message Frequency</a>
+<a href="#section-15.3.1" class="section-number selfRef">15.3.1. </a><a href="#name-groupid-epoch-and-message-f" class="section-name selfRef">GroupID, Epoch, and Message Frequency</a>
           </h4>
-<p id="section-15.2.1-1">MLS provides no mechanism to protect the group ID and epoch of a message from
+<p id="section-15.3.1-1">MLS provides no mechanism to protect the group ID and epoch of a message from
 the DS, so the group ID and the frequency of messages and epoch changes are not
-protected against inspection by the DS.<a href="#section-15.2.1-1" class="pilcrow">¶</a></p>
+protected against inspection by the DS.<a href="#section-15.3.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="group-extensions">
-<section id="section-15.2.2">
+<section id="section-15.3.2">
           <h4 id="name-group-extensions">
-<a href="#section-15.2.2" class="section-number selfRef">15.2.2. </a><a href="#name-group-extensions" class="section-name selfRef">Group Extensions</a>
+<a href="#section-15.3.2" class="section-number selfRef">15.3.2. </a><a href="#name-group-extensions" class="section-name selfRef">Group Extensions</a>
           </h4>
-<p id="section-15.2.2-1">A group's extensions are first set by the group's creator and then updated by
+<p id="section-15.3.2-1">A group's extensions are first set by the group's creator and then updated by
 GroupContextExtensions proposals.  A GroupContextExtension proposal sent as
-MLSPlaintext leaks the groups' extensions.<a href="#section-15.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-15.2.2-2">A new member learns the group's extensions via a GroupInfo object.  When the new
+MLSPlaintext leaks the groups' extensions.<a href="#section-15.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-15.3.2-2">A new member learns the group's extensions via a GroupInfo object.  When the new
 member joins via a Welcome message, the Welcome message's encryption protects
 the GroupInfo message.  When the new member joins via an external join, they
 must be provided with a GroupInfo object.  Protection of this GroupInfo object
 is up to the application -- if it is transmitted over a channel that is not
 confidential to the group and the new joiner, then it will leak the group's
-extensions.<a href="#section-15.2.2-2" class="pilcrow">¶</a></p>
+extensions.<a href="#section-15.3.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="group-membership">
-<section id="section-15.2.3">
+<section id="section-15.3.3">
           <h4 id="name-group-membership">
-<a href="#section-15.2.3" class="section-number selfRef">15.2.3. </a><a href="#name-group-membership" class="section-name selfRef">Group Membership</a>
+<a href="#section-15.3.3" class="section-number selfRef">15.3.3. </a><a href="#name-group-membership" class="section-name selfRef">Group Membership</a>
           </h4>
-<p id="section-15.2.3-1">The group's membership is represented directly by its ratchet tree, since each
+<p id="section-15.3.3-1">The group's membership is represented directly by its ratchet tree, since each
 member's LeafNode contains members' cryptographic keys, a credential that
 contains information about the member's identity, and possibly other
 identifiers.  Applications that expose the group's ratchet tree outside the
-group also leak the group's membership.<a href="#section-15.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-15.2.3-2">Changes to the group's membership are made by means of Add and Remove proposals.
+group also leak the group's membership.<a href="#section-15.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-15.3.3-2">Changes to the group's membership are made by means of Add and Remove proposals.
 If these proposals are sent as MLSPlaintext, then information will be leaked
 about the corresponding changes to the group's membership.  A party that sees
-all of these changes can reconstruct the group membership.<a href="#section-15.2.3-2" class="pilcrow">¶</a></p>
-<p id="section-15.2.3-3">Welcome messages contain a hash of each KeyPackage for which the Welcome message
+all of these changes can reconstruct the group membership.<a href="#section-15.3.3-2" class="pilcrow">¶</a></p>
+<p id="section-15.3.3-3">Welcome messages contain a hash of each KeyPackage for which the Welcome message
 is encrypted.  If a party has access to a pool of KeyPackages and observes a
 Welcome message, then they can identify the KeyPackage representing the new
 member.  If the party can also associate the Welcome with a group, then the
-party can infer that the identified new member was added to that group.<a href="#section-15.2.3-3" class="pilcrow">¶</a></p>
-<p id="section-15.2.3-4">Note that these information leaks reveal the group's membership only to the degree
+party can infer that the identified new member was added to that group.<a href="#section-15.3.3-3" class="pilcrow">¶</a></p>
+<p id="section-15.3.3-4">Note that these information leaks reveal the group's membership only to the degree
 that that membership is revealed by the contents of a member's LeafNode in the
 ratchet tree.  In some cases, this may be quite direct, e.g., due to credentials
 attesting to identifiers such as email addresses.  An application could
 construct a member's leaf node to be less identifying, e.g., by using a
-pseudonymous credential and frequently rotating encryption and signature keys.<a href="#section-15.2.3-4" class="pilcrow">¶</a></p>
+pseudonymous credential and frequently rotating encryption and signature keys.<a href="#section-15.3.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="authentication">
-<section id="section-15.3">
+<section id="section-15.4">
         <h3 id="name-authentication">
-<a href="#section-15.3" class="section-number selfRef">15.3. </a><a href="#name-authentication" class="section-name selfRef">Authentication</a>
+<a href="#section-15.4" class="section-number selfRef">15.4. </a><a href="#name-authentication" class="section-name selfRef">Authentication</a>
         </h3>
-<p id="section-15.3-1">The first form of authentication we provide is that group members can verify a
+<p id="section-15.4-1">The first form of authentication we provide is that group members can verify a
 message originated from one of the members of the group. For encrypted messages,
 this is guaranteed because messages are encrypted with an AEAD under a key
 derived from the group secrets. For plaintext messages, this is guaranteed by
 the use of a <code>membership_tag</code> which constitutes a MAC over the message, under a
-key derived from the group secrets.<a href="#section-15.3-1" class="pilcrow">¶</a></p>
-<p id="section-15.3-2">The second form of authentication is that group members can verify a message
+key derived from the group secrets.<a href="#section-15.4-1" class="pilcrow">¶</a></p>
+<p id="section-15.4-2">The second form of authentication is that group members can verify a message
 originated from a particular member of the group. This is guaranteed by a
-digital signature on each message from the sender's signature key.<a href="#section-15.3-2" class="pilcrow">¶</a></p>
-<p id="section-15.3-3">The signature keys held by group members are critical to the security of MLS
+digital signature on each message from the sender's signature key.<a href="#section-15.4-2" class="pilcrow">¶</a></p>
+<p id="section-15.4-3">The signature keys held by group members are critical to the security of MLS
 against active attacks.  If a member's signature key is compromised, then an
 attacker can create LeafNodes and KeyPackages impersonating the member; depending on the
 application, this can then allow the attacker to join the group with the
@@ -7734,28 +7775,28 @@ compromised member's identity.  For example, if a group has enabled external
 parties to join via external commits, then an attacker that has compromised a
 member's signature key could use an external commit to insert themselves into
 the group -- even using a "resync"-style external commit to replace the
-compromised member in the group.<a href="#section-15.3-3" class="pilcrow">¶</a></p>
-<p id="section-15.3-4">Applications can mitigate the risks of signature key compromise using pre-shared
+compromised member in the group.<a href="#section-15.4-3" class="pilcrow">¶</a></p>
+<p id="section-15.4-4">Applications can mitigate the risks of signature key compromise using pre-shared
 keys.  If a group requires joiners to know a PSK in addition to authenticating
 with a credential, then in order to mount an impersonation attack, the attacker
 would need to compromise the relevant PSK as well as the victim's signature key.
 The cost of this mitigation is that the application needs some external
 arrangement that ensures that the legitimate members of the group have the
-required PSKs.<a href="#section-15.3-4" class="pilcrow">¶</a></p>
+required PSKs.<a href="#section-15.4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="forward-secrecy-and-post-compromise-security">
-<section id="section-15.4">
+<section id="section-15.5">
         <h3 id="name-forward-secrecy-and-post-co">
-<a href="#section-15.4" class="section-number selfRef">15.4. </a><a href="#name-forward-secrecy-and-post-co" class="section-name selfRef">Forward Secrecy and Post-Compromise Security</a>
+<a href="#section-15.5" class="section-number selfRef">15.5. </a><a href="#name-forward-secrecy-and-post-co" class="section-name selfRef">Forward Secrecy and Post-Compromise Security</a>
         </h3>
-<p id="section-15.4-1">Forward secrecy and post-compromise security are important security notions for
+<p id="section-15.5-1">Forward secrecy and post-compromise security are important security notions for
 long-lived MLS groups.  Forward secrecy means that messages sent at a certain
 point in time are secure in the face of later compromise of a group member.
 Post-compromise security means that messages are secure even if a group member
-was compromised at some point in the past.<a href="#section-15.4-1" class="pilcrow">¶</a></p>
-<div id="section-15.4-2">
-          <div class="alignLeft art-svg artwork" id="section-15.4-2.1">
+was compromised at some point in the past.<a href="#section-15.5-1" class="pilcrow">¶</a></p>
+<div id="section-15.5-2">
+          <div class="alignLeft art-svg artwork" id="section-15.5-2.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="448" viewBox="0 0 448 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px">
               <path d="M 152,80 L 152,160" fill="none" stroke="black"></path>
               <path d="M 192,48 L 192,88" fill="none" stroke="black"></path>
@@ -7777,56 +7818,56 @@ was compromised at some point in the past.<a href="#section-15.4-1" class="pilcr
                 <text x="304" y="148">Post-Compromise</text>
                 <text x="292" y="164">Security</text>
               </g>
-            </svg><a href="#section-15.4-2.1" class="pilcrow">¶</a>
+            </svg><a href="#section-15.5-2.1" class="pilcrow">¶</a>
 </div>
 </div>
-<p id="section-15.4-3">Post-compromise security is provided between epochs by members regularly
+<p id="section-15.5-3">Post-compromise security is provided between epochs by members regularly
 updating their leaf key in the ratchet tree. Updating their leaf key prevents
 group secrets from continuing to be encrypted to public keys whose private keys
-had previously been compromised.<a href="#section-15.4-3" class="pilcrow">¶</a></p>
-<p id="section-15.4-4">Forward secrecy between epochs is provided by deleting private keys from past
+had previously been compromised.<a href="#section-15.5-3" class="pilcrow">¶</a></p>
+<p id="section-15.5-4">Forward secrecy between epochs is provided by deleting private keys from past
 versions of the ratchet tree, as this prevents old group secrets from being
 re-derived. Forward secrecy <em>within</em> an epoch is provided by deleting message
-encryption keys once they've been used to encrypt or decrypt a message.<a href="#section-15.4-4" class="pilcrow">¶</a></p>
-<p id="section-15.4-5">New groups are also at risk of using previously compromised keys (as with
+encryption keys once they've been used to encrypt or decrypt a message.<a href="#section-15.5-4" class="pilcrow">¶</a></p>
+<p id="section-15.5-5">New groups are also at risk of using previously compromised keys (as with
 post-compromise security), if a member is added to a new group via an old
 KeyPackage whose corresponding private key has been compromised.  This risk can
 be mitigated by having clients regularly generate new KeyPackages and upload
 them to the Delivery Service.  This way, the key material used to add a member
-to a new group is more likely to be fresh and less likely to be compromised.<a href="#section-15.4-5" class="pilcrow">¶</a></p>
+to a new group is more likely to be fresh and less likely to be compromised.<a href="#section-15.5-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="keypackage-reuse">
-<section id="section-15.5">
+<section id="section-15.6">
         <h3 id="name-keypackage-reuse">
-<a href="#section-15.5" class="section-number selfRef">15.5. </a><a href="#name-keypackage-reuse" class="section-name selfRef">KeyPackage Reuse</a>
+<a href="#section-15.6" class="section-number selfRef">15.6. </a><a href="#name-keypackage-reuse" class="section-name selfRef">KeyPackage Reuse</a>
         </h3>
-<p id="section-15.5-1">KeyPackages are intended to be used only once.  That is, once a KeyPackage
+<p id="section-15.6-1">KeyPackages are intended to be used only once.  That is, once a KeyPackage
 has been used to introduce the corresponding client to a group, it SHOULD be
 deleted from the KeyPackage publication system.  Reuse of KeyPackages can lead
-to replay attacks.<a href="#section-15.5-1" class="pilcrow">¶</a></p>
-<p id="section-15.5-2">An application MAY allow for reuse of a "last resort" KeyPackage in order to
+to replay attacks.<a href="#section-15.6-1" class="pilcrow">¶</a></p>
+<p id="section-15.6-2">An application MAY allow for reuse of a "last resort" KeyPackage in order to
 prevent denial-of-service attacks.  Since a KeyPackage is needed to add a
 client to a new group, an attacker could prevent a client being added to new
 groups by exhausting all available KeyPackages. To prevent such a denial-of-service
 attack, the KeyPackage publication system SHOULD rate-limit KeyPackage
-requests, especially if not authenticated.<a href="#section-15.5-2" class="pilcrow">¶</a></p>
+requests, especially if not authenticated.<a href="#section-15.6-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="group-fragmentation-by-malicious-insiders">
-<section id="section-15.6">
+<section id="section-15.7">
         <h3 id="name-group-fragmentation-by-mali">
-<a href="#section-15.6" class="section-number selfRef">15.6. </a><a href="#name-group-fragmentation-by-mali" class="section-name selfRef">Group Fragmentation by Malicious Insiders</a>
+<a href="#section-15.7" class="section-number selfRef">15.7. </a><a href="#name-group-fragmentation-by-mali" class="section-name selfRef">Group Fragmentation by Malicious Insiders</a>
         </h3>
-<p id="section-15.6-1">It is possible for a malicious member of a group to "fragment" the group by
+<p id="section-15.7-1">It is possible for a malicious member of a group to "fragment" the group by
 crafting an invalid UpdatePath.  Recall that an UpdatePath encrypts a sequence
 of path secrets to different subtrees of the group's ratchet trees.  These path
 secrets should be derived in a sequence as described in
 <a href="#ratchet-tree-evolution" class="auto internal xref">Section 7.4</a>, but the UpdatePath syntax allows the sender to
 encrypt arbitrary, unrelated secrets.  The syntax also does not guarantee that
 the encrypted path secret for a given node corresponds to the public
-key provided for that node.<a href="#section-15.6-1" class="pilcrow">¶</a></p>
-<p id="section-15.6-2">Both of these types of corruption will cause processing of a Commit to fail for
+key provided for that node.<a href="#section-15.7-1" class="pilcrow">¶</a></p>
+<p id="section-15.7-2">Both of these types of corruption will cause processing of a Commit to fail for
 some members of the group.  If the public key for a node does not match the path
 secret, then the members that decrypt that path secret will reject the commit
 based on this mismatch.  If the path secret sequence is incorrect at some point,
@@ -7834,8 +7875,8 @@ then members that can decrypt nodes before that point will compute a different
 public key for the mismatched node than the one in the UpdatePath, which also
 causes the Commit to fail.  Applications SHOULD provide mechanisms for failed
 commits to be reported, so that group members who were not able to recognize the
-error themselves can reinitialize the group if necessary.<a href="#section-15.6-2" class="pilcrow">¶</a></p>
-<p id="section-15.6-3">Even with such an error reporting mechanism in place, however, it is still
+error themselves can reinitialize the group if necessary.<a href="#section-15.7-2" class="pilcrow">¶</a></p>
+<p id="section-15.7-3">Even with such an error reporting mechanism in place, however, it is still
 possible for members to get locked out of the group by a malformed commit.
 Since malformed Commits can only be recognized by certain members of the group,
 in an asynchronous application, it may be the case that all members that could
@@ -7844,13 +7885,13 @@ accepted by the group, and the resulting state possibly used as the basis for
 further Commits.  When the affected members come back online, they will reject
 the first commit, and thus be unable to catch up with the group. These members
 will either need to add themselves back with an external Commit, or reinitialize
-the group from scratch.<a href="#section-15.6-3" class="pilcrow">¶</a></p>
-<p id="section-15.6-4">Applications can address this risk by requiring certain members of the group to
+the group from scratch.<a href="#section-15.7-3" class="pilcrow">¶</a></p>
+<p id="section-15.7-4">Applications can address this risk by requiring certain members of the group to
 acknowledge successful processing of a Commit before the group regards the
 Commit as accepted.  The minimum set of acknowledgements necessary to verify
 that a Commit is well-formed comprises an acknowledgement from one member per
 node in the UpdatePath, that is, one member from each subtree rooted in the
-copath node corresponding to the node in the UpdatePath.<a href="#section-15.6-4" class="pilcrow">¶</a></p>
+copath node corresponding to the node in the UpdatePath.<a href="#section-15.7-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -8117,7 +8158,9 @@ primitives, HMAC hash functions, and TLS signature schemes is as follows
 <p id="section-16.1-15">The hash used for the MLS transcript hash is the one referenced in the
 ciphersuite name.  In the ciphersuites defined above, "SHA256", "SHA384", and "SHA512"
 refer to the SHA-256, SHA-384, and SHA-512 functions defined in <span>[<a href="#SHS" class="cite xref">SHS</a>]</span>.<a href="#section-16.1-15" class="pilcrow">¶</a></p>
-<p id="section-16.1-16">It is advisable to keep the number of ciphersuites low to increase the chances
+<p id="section-16.1-16">In addition to the general requirements of <a href="#ciphersuites" class="auto internal xref">Section 5.1</a>, future ciphersuites
+MUST meet the requirements of <a href="#confidentiality-of-sender-data" class="auto internal xref">Section 15.2</a>.<a href="#section-16.1-16" class="pilcrow">¶</a></p>
+<p id="section-16.1-17">It is advisable to keep the number of ciphersuites low to increase the chances
 clients can interoperate in a federated environment, therefore the ciphersuites
 only include modern, yet well-established algorithms.  Depending on their
 requirements, clients can choose between two security levels (roughly 128-bit
@@ -8127,13 +8170,13 @@ negotiations. Clients may also choose ChaCha20Poly1305 or AES-GCM, e.g., for
 performance reasons. Since ChaCha20Poly1305 is not listed by FIPS 140-2 it is
 not paired with FIPS 140-2 compliant curves. The security level of symmetric
 encryption algorithms and hash functions is paired with the security level of
-the curves.<a href="#section-16.1-16" class="pilcrow">¶</a></p>
-<p id="section-16.1-17">The mandatory-to-implement ciphersuite for MLS 1.0 is
+the curves.<a href="#section-16.1-17" class="pilcrow">¶</a></p>
+<p id="section-16.1-18">The mandatory-to-implement ciphersuite for MLS 1.0 is
 <code>MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519</code> which uses
 Curve25519 for key exchange, AES-128-GCM for HPKE, HKDF over SHA2-256, and
-Ed25519 for signatures.<a href="#section-16.1-17" class="pilcrow">¶</a></p>
-<p id="section-16.1-18">New ciphersuite values are assigned by IANA as described in
-<a href="#iana-considerations" class="auto internal xref">Section 16</a>.<a href="#section-16.1-18" class="pilcrow">¶</a></p>
+Ed25519 for signatures.<a href="#section-16.1-18" class="pilcrow">¶</a></p>
+<p id="section-16.1-19">New ciphersuite values are assigned by IANA as described in
+<a href="#iana-considerations" class="auto internal xref">Section 16</a>.<a href="#section-16.1-19" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="mls-wire-formats">
@@ -8710,11 +8753,15 @@ security considerations in this document (RFC XXXX) also apply.<a href="#section
 <dd class="break"></dd>
 <dt id="I-D.ietf-mls-architecture">[I-D.ietf-mls-architecture]</dt>
         <dd>
-<span class="refAuthor">Beurdouche, B.</span>, <span class="refAuthor">Rescorla, E.</span>, <span class="refAuthor">Omara, E.</span>, <span class="refAuthor">Inguva, S.</span>, <span class="refAuthor">Kwon, A.</span>, and <span class="refAuthor">A. Duric</span>, <span class="refTitle">"The Messaging Layer Security (MLS) Architecture"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-mls-architecture-09</span>, <time datetime="2022-08-19" class="refDate">19 August 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-architecture-09">https://datatracker.ietf.org/doc/html/draft-ietf-mls-architecture-09</a>&gt;</span>. </dd>
+<span class="refAuthor">Beurdouche, B.</span>, <span class="refAuthor">Rescorla, E.</span>, <span class="refAuthor">Omara, E.</span>, <span class="refAuthor">Inguva, S.</span>, and <span class="refAuthor">A. Duric</span>, <span class="refTitle">"The Messaging Layer Security (MLS) Architecture"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-mls-architecture-10</span>, <time datetime="2022-12-16" class="refDate">16 December 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-architecture-10">https://datatracker.ietf.org/doc/html/draft-ietf-mls-architecture-10</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.irtf-cfrg-aead-limits">[I-D.irtf-cfrg-aead-limits]</dt>
         <dd>
 <span class="refAuthor">Günther, F.</span>, <span class="refAuthor">Thomson, M.</span>, and <span class="refAuthor">C. A. Wood</span>, <span class="refTitle">"Usage Limits on AEAD Algorithms"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-irtf-cfrg-aead-limits-05</span>, <time datetime="2022-07-11" class="refDate">11 July 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-aead-limits-05">https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-aead-limits-05</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="NAN">[NAN]</dt>
+        <dd>
+<span class="refAuthor">Bellare, M.</span>, <span class="refAuthor">Ng, R.</span>, and <span class="refAuthor">B. Tackmann</span>, <span class="refTitle">"Nonces Are Noticed: AEAD Revisited"</span>, <span class="seriesInfo">Advances in Cryptology - CRYPTO 2019 pp. 235-265</span>, <span class="seriesInfo">DOI 10.1007/978-3-030-26948-7_9</span>, <time datetime="2019" class="refDate">2019</time>, <span>&lt;<a href="https://doi.org/10.1007/978-3-030-26948-7_9">https://doi.org/10.1007/978-3-030-26948-7_9</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC5116">[RFC5116]</dt>
         <dd>
@@ -8740,9 +8787,9 @@ security considerations in this document (RFC XXXX) also apply.<a href="#section
         <dd>
 <span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="SECG">[SECG]</dt>
+<dt id="RFC9001">[RFC9001]</dt>
         <dd>
-<span class="refTitle">"Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2"</span>, <time datetime="2009" class="refDate">2009</time>, <span>&lt;<a href="https://secg.org/sec1-v2.pdf">https://secg.org/sec1-v2.pdf</a>&gt;</span>. </dd>
+<span class="refAuthor">Thomson, M., Ed.</span> and <span class="refAuthor">S. Turner, Ed.</span>, <span class="refTitle">"Using TLS to Secure QUIC"</span>, <span class="seriesInfo">RFC 9001</span>, <span class="seriesInfo">DOI 10.17487/RFC9001</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9001">https://www.rfc-editor.org/rfc/rfc9001</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SHS">[SHS]</dt>
         <dd>

@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 17 June 2023                                    Inria & Mozilla
+Expires: 19 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                              Phoenix R&D
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 17 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                        14 December 2022
+                                                        16 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 June 2023.
+   This Internet-Draft will expire on 19 June 2023.
 
 Copyright Notice
 
@@ -159,14 +159,15 @@ Table of Contents
      14.3.  Delayed and Reordered Application messages
    15. Security Considerations
      15.1.  Confidentiality of the Group Secrets
-     15.2.  Confidentiality of Group Metadata
-       15.2.1.  GroupID, Epoch, and Message Frequency
-       15.2.2.  Group Extensions
-       15.2.3.  Group Membership
-     15.3.  Authentication
-     15.4.  Forward Secrecy and Post-Compromise Security
-     15.5.  KeyPackage Reuse
-     15.6.  Group Fragmentation by Malicious Insiders
+     15.2.  Confidentiality of Sender Data
+     15.3.  Confidentiality of Group Metadata
+       15.3.1.  GroupID, Epoch, and Message Frequency
+       15.3.2.  Group Extensions
+       15.3.3.  Group Membership
+     15.4.  Authentication
+     15.5.  Forward Secrecy and Post-Compromise Security
+     15.6.  KeyPackage Reuse
+     15.7.  Group Fragmentation by Malicious Insiders
    16. IANA Considerations
      16.1.  MLS Ciphersuites
      16.2.  MLS Wire Formats
@@ -3558,7 +3559,7 @@ psk_secret (or 0) --> KDF.Extract
        represent this client.
 
    KeyPackages are intended to be used only once and SHOULD NOT be
-   reused except in the case of last resort (see Section 15.5).  Clients
+   reused except in the case of last resort (see Section 15.6).  Clients
    MAY generate and publish multiple KeyPackages to support multiple
    ciphersuites.
 
@@ -5284,7 +5285,46 @@ psk_secret (or 0) --> KDF.Extract
    to rotate their keypair such that the old private key can no longer
    be used to decrypt new messages.
 
-15.2.  Confidentiality of Group Metadata
+15.2.  Confidentiality of Sender Data
+
+   The MLSCiphertext framing encrypts "sender data" that identifies
+   which group member sent an encrypted message, as described in
+   Section 6.3.2.  As with the QUIC header protection scheme [RFC9001],
+   Section 5.4, this scheme is a variant of the HN1 construction
+   analyzed in [NAN].  A sample of the ciphertext is combined with a
+   sender_data_secret to derive a key and nonce that are used for AEAD
+   encryption of the sender data.
+
+   pseudocode (key, nonce) = PRF(sender_data_secret, sample)
+   encrypted_sender_data = AEAD.Seal(key, nonce, sender_data_aad,
+   sender_data)
+
+   The only differences between this construction and HN1 as described
+   in [NAN] are (1) that it uses authenticated encryption instead of
+   unauthenticated encryption and (2) that it protects information used
+   to derive a nonce instead of the nonce itself.
+
+   Since the sender_data_secret is distinct from the content encryption
+   key, it follows that the sender data encryption scheme achieves AE2
+   security as defined in [NAN], and therefore guarantees the
+   confidentiality of the sender data.
+
+   Use of the same sender_data_secret and ciphertext sample more than
+   once risks compromising sender data protection by reusing an AEAD
+   (key, nonce) pair.  For example, in many AEAD schemes, reusing a key
+   and nonce reveals the exclusive OR of the two plaintexts.  Assuming
+   the ciphertext output of the AEAD algorithm is indistinguishable from
+   random data (i.e., the AEAD is AE1-secure in the phrasing of [NAN]),
+   the odds of two ciphertext samples being identical is roughly
+   2^(-L/2), i.e., the birthday bound.
+
+   The AEAD algorithms for ciphersuites defined in this document all
+   provide this property.  The size of the sample depends on the
+   ciphersuite's hash function, but in all cases, the probability of
+   collision is no more than 2^-128.  Any future ciphersuite MUST use an
+   AE1-secure AEAD algorithm.
+
+15.3.  Confidentiality of Group Metadata
 
    MLS does not provide confidentiality protection to some messages and
    fields within messages:
@@ -5339,13 +5379,13 @@ psk_secret (or 0) --> KDF.Extract
    as a guide to understanding how they might be exposed or protected in
    a given application.
 
-15.2.1.  GroupID, Epoch, and Message Frequency
+15.3.1.  GroupID, Epoch, and Message Frequency
 
    MLS provides no mechanism to protect the group ID and epoch of a
    message from the DS, so the group ID and the frequency of messages
    and epoch changes are not protected against inspection by the DS.
 
-15.2.2.  Group Extensions
+15.3.2.  Group Extensions
 
    A group's extensions are first set by the group's creator and then
    updated by GroupContextExtensions proposals.  A GroupContextExtension
@@ -5360,7 +5400,7 @@ psk_secret (or 0) --> KDF.Extract
    confidential to the group and the new joiner, then it will leak the
    group's extensions.
 
-15.2.3.  Group Membership
+15.3.3.  Group Membership
 
    The group's membership is represented directly by its ratchet tree,
    since each member's LeafNode contains members' cryptographic keys, a
@@ -5389,7 +5429,7 @@ psk_secret (or 0) --> KDF.Extract
    node to be less identifying, e.g., by using a pseudonymous credential
    and frequently rotating encryption and signature keys.
 
-15.3.  Authentication
+15.4.  Authentication
 
    The first form of authentication we provide is that group members can
    verify a message originated from one of the members of the group.
@@ -5424,7 +5464,7 @@ psk_secret (or 0) --> KDF.Extract
    that ensures that the legitimate members of the group have the
    required PSKs.
 
-15.4.  Forward Secrecy and Post-Compromise Security
+15.5.  Forward Secrecy and Post-Compromise Security
 
    Forward secrecy and post-compromise security are important security
    notions for long-lived MLS groups.  Forward secrecy means that
@@ -5462,7 +5502,7 @@ psk_secret (or 0) --> KDF.Extract
    This way, the key material used to add a member to a new group is
    more likely to be fresh and less likely to be compromised.
 
-15.5.  KeyPackage Reuse
+15.6.  KeyPackage Reuse
 
    KeyPackages are intended to be used only once.  That is, once a
    KeyPackage has been used to introduce the corresponding client to a
@@ -5477,7 +5517,7 @@ psk_secret (or 0) --> KDF.Extract
    KeyPackage publication system SHOULD rate-limit KeyPackage requests,
    especially if not authenticated.
 
-15.6.  Group Fragmentation by Malicious Insiders
+15.7.  Group Fragmentation by Malicious Insiders
 
    It is possible for a malicious member of a group to "fragment" the
    group by crafting an invalid UpdatePath.  Recall that an UpdatePath
@@ -5683,6 +5723,9 @@ psk_secret (or 0) --> KDF.Extract
    the ciphersuite name.  In the ciphersuites defined above, "SHA256",
    "SHA384", and "SHA512" refer to the SHA-256, SHA-384, and SHA-512
    functions defined in [SHS].
+
+   In addition to the general requirements of Section 5.1, future
+   ciphersuites MUST meet the requirements of Section 15.2.
 
    It is advisable to keep the number of ciphersuites low to increase
    the chances clients can interoperate in a federated environment,
@@ -6057,12 +6100,12 @@ psk_secret (or 0) --> KDF.Extract
               <https://doi.org/10.1186/s13635-016-0030-7>.
 
    [I-D.ietf-mls-architecture]
-              Beurdouche, B., Rescorla, E., Omara, E., Inguva, S., Kwon,
-              A., and A. Duric, "The Messaging Layer Security (MLS)
+              Beurdouche, B., Rescorla, E., Omara, E., Inguva, S., and
+              A. Duric, "The Messaging Layer Security (MLS)
               Architecture", Work in Progress, Internet-Draft, draft-
-              ietf-mls-architecture-09, 19 August 2022,
+              ietf-mls-architecture-10, 16 December 2022,
               <https://datatracker.ietf.org/doc/html/draft-ietf-mls-
-              architecture-09>.
+              architecture-10>.
 
    [I-D.irtf-cfrg-aead-limits]
               Günther, F., Thomson, M., and C. A. Wood, "Usage Limits on
@@ -6070,6 +6113,11 @@ psk_secret (or 0) --> KDF.Extract
               irtf-cfrg-aead-limits-05, 11 July 2022,
               <https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-
               aead-limits-05>.
+
+   [NAN]      Bellare, M., Ng, R., and B. Tackmann, "Nonces Are Noticed:
+              AEAD Revisited", Advances in Cryptology - CRYPTO 2019 pp.
+              235-265, DOI 10.1007/978-3-030-26948-7_9, 2019,
+              <https://doi.org/10.1007/978-3-030-26948-7_9>.
 
    [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
@@ -6102,9 +6150,9 @@ psk_secret (or 0) --> KDF.Extract
               DOI 10.17487/RFC9000, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9000>.
 
-   [SECG]     "Elliptic Curve Cryptography, Standards for Efficient
-              Cryptography Group, ver. 2", 2009,
-              <https://secg.org/sec1-v2.pdf>.
+   [RFC9001]  Thomson, M., Ed. and S. Turner, Ed., "Using TLS to Secure
+              QUIC", RFC 9001, DOI 10.17487/RFC9001, May 2021,
+              <https://www.rfc-editor.org/rfc/rfc9001>.
 
    [SHS]      Dang, Q., "Secure Hash Standard", National Institute of
               Standards and Technology report,
