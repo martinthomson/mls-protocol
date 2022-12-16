@@ -5544,7 +5544,7 @@ psk_secret (or 0) --> KDF.Extract
 
    *  MLS Signature Labels (Section 16.6)
 
-   *  MLS Exporter Labels (Section 16.6)
+   *  MLS Exporter Labels (Section 16.7)
 
    All of these registries should be under a heading of "Messaging Layer
    Security", and assignments are made via the Specification Required
@@ -6103,12 +6103,12 @@ psk_secret (or 0) --> KDF.Extract
               <https://doi.org/10.1186/s13635-016-0030-7>.
 
    [I-D.ietf-mls-architecture]
-              Beurdouche, B., Rescorla, E., Omara, E., Inguva, S., Kwon,
-              A., and A. Duric, "The Messaging Layer Security (MLS)
+              Beurdouche, B., Rescorla, E., Omara, E., Inguva, S., and
+              A. Duric, "The Messaging Layer Security (MLS)
               Architecture", Work in Progress, Internet-Draft, draft-
-              ietf-mls-architecture-09, 19 August 2022,
+              ietf-mls-architecture-10, 16 December 2022,
               <https://datatracker.ietf.org/doc/html/draft-ietf-mls-
-              architecture-09>.
+              architecture-10>.
 
    [I-D.irtf-cfrg-aead-limits]
               Günther, F., Thomson, M., and C. A. Wood, "Usage Limits on
