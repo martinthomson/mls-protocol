@@ -1518,10 +1518,16 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
                 <p id="section-toc.1-1.16.2.5.1"><a href="#section-16.5" class="auto internal xref">16.5</a>.  <a href="#name-mls-credential-types" class="internal xref">MLS Credential Types</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.6">
-                <p id="section-toc.1-1.16.2.6.1"><a href="#section-16.6" class="auto internal xref">16.6</a>.  <a href="#name-mls-designated-expert-pool" class="internal xref">MLS Designated Expert Pool</a></p>
+                <p id="section-toc.1-1.16.2.6.1"><a href="#section-16.6" class="auto internal xref">16.6</a>.  <a href="#name-mls-signature-labels" class="internal xref">MLS Signature Labels</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.7">
-                <p id="section-toc.1-1.16.2.7.1"><a href="#section-16.7" class="auto internal xref">16.7</a>.  <a href="#name-the-message-mls-mime-type" class="internal xref">The "message/mls" MIME Type</a></p>
+                <p id="section-toc.1-1.16.2.7.1"><a href="#section-16.7" class="auto internal xref">16.7</a>.  <a href="#name-mls-exporter-labels" class="internal xref">MLS Exporter Labels</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.8">
+                <p id="section-toc.1-1.16.2.8.1"><a href="#section-16.8" class="auto internal xref">16.8</a>.  <a href="#name-mls-designated-expert-pool" class="internal xref">MLS Designated Expert Pool</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.9">
+                <p id="section-toc.1-1.16.2.9.1"><a href="#section-16.9" class="auto internal xref">16.9</a>.  <a href="#name-the-message-mls-mime-type" class="internal xref">The "message/mls" MIME Type</a></p>
 </li>
             </ul>
 </li>
@@ -3185,8 +3191,11 @@ label = "MLS 1.0 " + Label;
 content = Content;
 </pre><a href="#section-5.1-16" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-17">Here, the functions <code>Signature.Sign</code> and <code>Signature.Verify</code> are defined
-by the signature algorithm.<a href="#section-5.1-17" class="pilcrow">¶</a></p>
+<p id="section-5.1-17">Here, the functions <code>Signature.Sign</code> and <code>Signature.Verify</code> are defined by the
+signature algorithm.  If MLS extensions require signatures by group members,
+they should re-use the SignWithLabel construction, using a distinct label.  To
+avoid collisions in these labels, an IANA registry is defined in
+<a href="#mls-signature-labels" class="auto internal xref">Section 16.6</a>.<a href="#section-5.1-17" class="pilcrow">¶</a></p>
 <p id="section-5.1-18">The ciphersuites are defined in section <a href="#mls-ciphersuites" class="auto internal xref">Section 16.1</a>.<a href="#section-5.1-18" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -5401,7 +5410,9 @@ MLS-Exporter(Label, Context, Length) =
 </div>
 <p id="section-8.5-3">Applications SHOULD provide a unique label to <code>MLS-Exporter</code> that
 identifies the secret's intended purpose. This is to help prevent the same
-secret from being generated and used in two different places.<a href="#section-8.5-3" class="pilcrow">¶</a></p>
+secret from being generated and used in two different places. To help avoid
+the same label being used in different applications, an IANA registry for these
+labels has been defined in <a href="#mls-exporter-labels" class="auto internal xref">Section 16.7</a>.<a href="#section-8.5-3" class="pilcrow">¶</a></p>
 <p id="section-8.5-4">The exported values are bound to the group epoch from which the
 <code>exporter_secret</code> is derived, and hence reflect a particular state of
 the group.<a href="#section-8.5-4" class="pilcrow">¶</a></p>
@@ -7913,10 +7924,14 @@ copath node corresponding to the node in the UpdatePath.<a href="#section-15.7-4
 </li>
         <li class="normal" id="section-16-2.5">MLS Credential Types (<a href="#mls-credential-types" class="auto internal xref">Section 16.5</a>)<a href="#section-16-2.5" class="pilcrow">¶</a>
 </li>
+        <li class="normal" id="section-16-2.6">MLS Signature Labels (<a href="#mls-signature-labels" class="auto internal xref">Section 16.6</a>)<a href="#section-16-2.6" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-16-2.7">MLS Exporter Labels (<a href="#mls-exporter-labels" class="auto internal xref">Section 16.7</a>)<a href="#section-16-2.7" class="pilcrow">¶</a>
+</li>
       </ul>
 <p id="section-16-3">All of these registries should be under a heading of "Messaging Layer Security",
 and assignments are made via the Specification Required policy <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. See
-<a href="#de" class="auto internal xref">Section 16.6</a> for additional information about the MLS Designated Experts (DEs).<a href="#section-16-3" class="pilcrow">¶</a></p>
+<a href="#de" class="auto internal xref">Section 16.8</a> for additional information about the MLS Designated Experts (DEs).<a href="#section-16-3" class="pilcrow">¶</a></p>
 <p id="section-16-4">RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
 this document<a href="#section-16-4" class="pilcrow">¶</a></p>
 <div id="mls-ciphersuites">
@@ -8193,11 +8208,7 @@ are in the range 0x0000 to 0xffff.<a href="#section-16.2-1" class="pilcrow">¶</
 </li>
           <li class="normal" id="section-16.2-3.2">Name: The name of the wire format<a href="#section-16.2-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-16.2-3.3">Recommended: Whether support for this wire format is recommended by the IETF MLS
-WG.  Valid values are "Y" and "N".  The "Recommended" column is assigned a
-value of "N" unless explicitly requested, and adding a value with a
-"Recommended" value of "Y" requires Standards Action <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.  IESG Approval
-is REQUIRED for a Y-&gt;N transition.<a href="#section-16.2-3.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-16.2-3.3">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 16.1</a><a href="#section-16.2-3.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-16.2-3.4">Reference: The document where this wire format is defined<a href="#section-16.2-3.4" class="pilcrow">¶</a>
 </li>
@@ -8288,11 +8299,7 @@ list:<a href="#section-16.3-3.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="normal" id="section-16.3-3.4">Recommended: Whether support for this extension is recommended by the IETF MLS
-WG.  Valid values are "Y" and "N".  The "Recommended" column is assigned a
-value of "N" unless explicitly requested, and adding a value with a
-"Recommended" value of "Y" requires Standards Action <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.  IESG Approval
-is REQUIRED for a Y-&gt;N transition.<a href="#section-16.3-3.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-16.3-3.4">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 16.1</a><a href="#section-16.3-3.4" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-16.3-3.5">Reference: The document where this extension is defined<a href="#section-16.3-3.5" class="pilcrow">¶</a>
 </li>
@@ -8377,11 +8384,7 @@ extension type values are in the range 0x0000 to 0xffff.<a href="#section-16.4-1
 </li>
           <li class="normal" id="section-16.4-3.2">Name: The name of the proposal type<a href="#section-16.4-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-16.4-3.3">Recommended: Whether support for this extension is recommended by the IETF MLS
-WG.  Valid values are "Y" and "N".  The "Recommended" column is assigned a
-value of "N" unless explicitly requested, and adding a value with a
-"Recommended" value of "Y" requires Standards Action <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.  IESG Approval
-is REQUIRED for a Y-&gt;N transition.<a href="#section-16.4-3.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-16.4-3.3">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 16.1</a><a href="#section-16.4-3.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-16.4-3.4">Path Required: Whether a Commit covering a proposal of this type is required
 to have its <code>path</code> field populated (see <a href="#commit" class="auto internal xref">Section 12.4</a>).<a href="#section-16.4-3.4" class="pilcrow">¶</a>
@@ -8483,11 +8486,7 @@ so valid credential type values are in the range 0x0000 to 0xffff.<a href="#sect
 </li>
           <li class="normal" id="section-16.5-3.2">Name: The name of the credential type<a href="#section-16.5-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-16.5-3.3">Recommended: Whether support for this credential is recommended by the IETF MLS
-WG.  Valid values are "Y" and "N".  The "Recommended" column is assigned a
-value of "N" unless explicitly requested, and adding a value with a
-"Recommended" value of "Y" requires Standards Action <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.  IESG Approval
-is REQUIRED for a Y-&gt;N transition.<a href="#section-16.5-3.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-16.5-3.3">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 16.1</a><a href="#section-16.5-3.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-16.5-3.4">Reference: The document where this credential is defined<a href="#section-16.5-3.4" class="pilcrow">¶</a>
 </li>
@@ -8532,162 +8531,258 @@ is REQUIRED for a Y-&gt;N transition.<a href="#section-16.5-3.3" class="pilcrow"
         </table>
 </section>
 </div>
-<div id="de">
+<div id="mls-signature-labels">
 <section id="section-16.6">
-        <h3 id="name-mls-designated-expert-pool">
-<a href="#section-16.6" class="section-number selfRef">16.6. </a><a href="#name-mls-designated-expert-pool" class="section-name selfRef">MLS Designated Expert Pool</a>
+        <h3 id="name-mls-signature-labels">
+<a href="#section-16.6" class="section-number selfRef">16.6. </a><a href="#name-mls-signature-labels" class="section-name selfRef">MLS Signature Labels</a>
         </h3>
-<p id="section-16.6-1">Specification Required <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> registry requests are registered
+<p id="section-16.6-1">The <code>SignWithLabel</code> function defined in <a href="#ciphersuites" class="auto internal xref">Section 5.1</a> avoids the risk of
+confusion between signatures in different contexts.  Each context is assigned a
+distinct label that is incorporated into the signature.  This registry records
+the labels defined in this document, and allows additional labels to be
+registered in case extensions add other types of signature using the same
+signature keys used elsewhere in MLS.<a href="#section-16.6-1" class="pilcrow">¶</a></p>
+<p id="section-16.6-2">Template:<a href="#section-16.6-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-16.6-3.1">Label: The string to be used as the <code>Label</code> parameter to <code>SignWithLabel</code><a href="#section-16.6-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-16.6-3.2">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 16.1</a><a href="#section-16.6-3.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-16.6-3.3">Reference: The document where this credential is defined<a href="#section-16.6-3.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-16.6-4">Initial contents:<a href="#section-16.6-4" class="pilcrow">¶</a></p>
+<table class="center" id="table-12">
+          <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Label</th>
+              <th class="text-left" rowspan="1" colspan="1">Recommended</th>
+              <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">"MLSContentTBS"</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">"LeafNodeTBS"</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">"KeyPackageTBS"</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">"GroupInfoTBS"</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
+            </tr>
+          </tbody>
+        </table>
+</section>
+</div>
+<div id="mls-exporter-labels">
+<section id="section-16.7">
+        <h3 id="name-mls-exporter-labels">
+<a href="#section-16.7" class="section-number selfRef">16.7. </a><a href="#name-mls-exporter-labels" class="section-name selfRef">MLS Exporter Labels</a>
+        </h3>
+<p id="section-16.7-1">The exporter function defined in <a href="#exporters" class="auto internal xref">Section 8.5</a> allows applications to derive key
+material from the MLS key schedule.  Like the TLS exporter <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, the MLS
+exporter uses a label to distinguish between different applications' use of the
+exporter.  This registry allows applications to register their usage to avoid
+collisions.<a href="#section-16.7-1" class="pilcrow">¶</a></p>
+<p id="section-16.7-2">Template:<a href="#section-16.7-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-16.7-3.1">Label: The string to be used as the <code>Label</code> parameter to <code>MLS-Exporter</code><a href="#section-16.7-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-16.7-3.2">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 16.1</a><a href="#section-16.7-3.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-16.7-3.3">Reference: The document where this credential is defined<a href="#section-16.7-3.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-16.7-4">The registry has no initial contents, since it is intended to be used by
+applications, not the core protocol.  The table below is intended only to show
+the column layout of the registry.<a href="#section-16.7-4" class="pilcrow">¶</a></p>
+<table class="center" id="table-13">
+          <caption><a href="#table-13" class="selfRef">Table 13</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Label</th>
+              <th class="text-left" rowspan="1" colspan="1">Recommended</th>
+              <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">(N/A)</td>
+              <td class="text-left" rowspan="1" colspan="1">(N/A)</td>
+              <td class="text-left" rowspan="1" colspan="1">(N/A)</td>
+            </tr>
+          </tbody>
+        </table>
+</section>
+</div>
+<div id="de">
+<section id="section-16.8">
+        <h3 id="name-mls-designated-expert-pool">
+<a href="#section-16.8" class="section-number selfRef">16.8. </a><a href="#name-mls-designated-expert-pool" class="section-name selfRef">MLS Designated Expert Pool</a>
+        </h3>
+<p id="section-16.8-1">Specification Required <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> registry requests are registered
 after a three-week review period on the MLS DEs' mailing list:
 <a href="mailto:mls-reg-review@ietf.org">mls-reg-review@ietf.org</a>, on the advice of one or more of the MLS DEs. However,
 to allow for the allocation of values prior to publication, the MLS
 DEs may approve registration once they are satisfied that such a
-specification will be published.<a href="#section-16.6-1" class="pilcrow">¶</a></p>
-<p id="section-16.6-2">Registration requests sent to the MLS DEs mailing list for review
+specification will be published.<a href="#section-16.8-1" class="pilcrow">¶</a></p>
+<p id="section-16.8-2">Registration requests sent to the MLS DEs mailing list for review
 SHOULD use an appropriate subject (e.g., "Request to register value
-in MLS Bar registry").<a href="#section-16.6-2" class="pilcrow">¶</a></p>
-<p id="section-16.6-3">Within the review period, the MLS DEs will either approve or deny
+in MLS Bar registry").<a href="#section-16.8-2" class="pilcrow">¶</a></p>
+<p id="section-16.8-3">Within the review period, the MLS DEs will either approve or deny
 the registration request, communicating this decision to the MLS DEs
 mailing list and IANA. Denials SHOULD include an explanation and, if
 applicable, suggestions as to how to make the request successful.
 Registration requests that are undetermined for a period longer than
 21 days can be brought to the IESG's attention for resolution using
-the <a href="mailto:iesg@ietf.org">iesg@ietf.org</a> mailing list.<a href="#section-16.6-3" class="pilcrow">¶</a></p>
-<p id="section-16.6-4">Criteria that SHOULD be applied by the MLS DEs includes determining
+the <a href="mailto:iesg@ietf.org">iesg@ietf.org</a> mailing list.<a href="#section-16.8-3" class="pilcrow">¶</a></p>
+<p id="section-16.8-4">Criteria that SHOULD be applied by the MLS DEs includes determining
 whether the proposed registration duplicates existing functionality,
 whether it is likely to be of general applicability or useful only
 for a single application, and whether the registration description
 is clear. For example, the MLS DEs will apply the ciphersuite-related
-advisory found in <a href="#ciphersuites" class="auto internal xref">Section 5.1</a>.<a href="#section-16.6-4" class="pilcrow">¶</a></p>
-<p id="section-16.6-5">IANA MUST only accept registry updates from the MLS DEs and SHOULD
-direct all requests for registration to the MLS DEs' mailing list.<a href="#section-16.6-5" class="pilcrow">¶</a></p>
-<p id="section-16.6-6">It is suggested that multiple MLS DEs be appointed who are able to
+advisory found in <a href="#ciphersuites" class="auto internal xref">Section 5.1</a>.<a href="#section-16.8-4" class="pilcrow">¶</a></p>
+<p id="section-16.8-5">IANA MUST only accept registry updates from the MLS DEs and SHOULD
+direct all requests for registration to the MLS DEs' mailing list.<a href="#section-16.8-5" class="pilcrow">¶</a></p>
+<p id="section-16.8-6">It is suggested that multiple MLS DEs be appointed who are able to
 represent the perspectives of different applications using this
 specification, in order to enable broadly informed review of
 registration decisions. In cases where a registration decision could
 be perceived as creating a conflict of interest for a particular
-MLS DE, that MLS DE SHOULD defer to the judgment of the other MLS DEs.<a href="#section-16.6-6" class="pilcrow">¶</a></p>
+MLS DE, that MLS DE SHOULD defer to the judgment of the other MLS DEs.<a href="#section-16.8-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="the-messagemls-mime-type">
-<section id="section-16.7">
+<section id="section-16.9">
         <h3 id="name-the-message-mls-mime-type">
-<a href="#section-16.7" class="section-number selfRef">16.7. </a><a href="#name-the-message-mls-mime-type" class="section-name selfRef">The "message/mls" MIME Type</a>
+<a href="#section-16.9" class="section-number selfRef">16.9. </a><a href="#name-the-message-mls-mime-type" class="section-name selfRef">The "message/mls" MIME Type</a>
         </h3>
-<p id="section-16.7-1">This document registers the "message/mls" MIME media type in order to allow other
-protocols (e.g., HTTP <span>[<a href="#RFC7540" class="cite xref">RFC7540</a>]</span>) to convey MLS messages.<a href="#section-16.7-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-16.7-2">
-          <dt id="section-16.7-2.1">Type name:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.2">
-            <p id="section-16.7-2.2.1">message<a href="#section-16.7-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-16.9-1">This document registers the "message/mls" MIME media type in order to allow other
+protocols (e.g., HTTP <span>[<a href="#RFC7540" class="cite xref">RFC7540</a>]</span>) to convey MLS messages.<a href="#section-16.9-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-16.9-2">
+          <dt id="section-16.9-2.1">Type name:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.2">
+            <p id="section-16.9-2.2.1">message<a href="#section-16.9-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-2.3">Subtype name:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.4">
-            <p id="section-16.7-2.4.1">mls<a href="#section-16.7-2.4.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-2.3">Subtype name:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.4">
+            <p id="section-16.9-2.4.1">mls<a href="#section-16.9-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-2.5">Required parameters:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.6">
-            <p id="section-16.7-2.6.1">none<a href="#section-16.7-2.6.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-2.5">Required parameters:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.6">
+            <p id="section-16.9-2.6.1">none<a href="#section-16.9-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-2.7">Optional parameters:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.8">
-            <span class="break"></span><dl class="dlParallel" id="section-16.7-2.8.1">
-              <dt id="section-16.7-2.8.1.1">version</dt>
-              <dd style="margin-left: 1.5em" id="section-16.7-2.8.1.2">
-                <p id="section-16.7-2.8.1.2.1"></p><a href="#section-16.7-2.8.1.2" class="pilcrow">¶</a>
+<dt id="section-16.9-2.7">Optional parameters:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.8">
+            <span class="break"></span><dl class="dlParallel" id="section-16.9-2.8.1">
+              <dt id="section-16.9-2.8.1.1">version</dt>
+              <dd style="margin-left: 1.5em" id="section-16.9-2.8.1.2">
+                <p id="section-16.9-2.8.1.2.1"></p><a href="#section-16.9-2.8.1.2" class="pilcrow">¶</a>
 </dd>
               <dd class="break"></dd>
-<dt id="section-16.7-2.8.1.3">  version:</dt>
-              <dd style="margin-left: 1.5em" id="section-16.7-2.8.1.4">
-                <p id="section-16.7-2.8.1.4.1">The MLS protocol version expressed as a string
+<dt id="section-16.9-2.8.1.3">  version:</dt>
+              <dd style="margin-left: 1.5em" id="section-16.9-2.8.1.4">
+                <p id="section-16.9-2.8.1.4.1">The MLS protocol version expressed as a string
   <code>&lt;major&gt;.&lt;minor&gt;</code>.  If omitted the version is "1.0", which
   corresponds to MLS ProtocolVersion mls10. If for some reason
   the version number in the MIME type parameter differs from the
   ProtocolVersion embedded in the protocol, the protocol takes
-  precedence.<a href="#section-16.7-2.8.1.4.1" class="pilcrow">¶</a></p>
+  precedence.<a href="#section-16.9-2.8.1.4.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
 </dl>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-2.9">Encoding considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.10">
-            <p id="section-16.7-2.10.1">MLS messages are represented using the TLS
+<dt id="section-16.9-2.9">Encoding considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.10">
+            <p id="section-16.9-2.10.1">MLS messages are represented using the TLS
 presentation language <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>. Therefore MLS messages need to be
-treated as binary data.<a href="#section-16.7-2.10.1" class="pilcrow">¶</a></p>
+treated as binary data.<a href="#section-16.9-2.10.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-2.11">Security considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.12">
-            <p id="section-16.7-2.12.1">MLS is an encrypted messaging layer designed
+<dt id="section-16.9-2.11">Security considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.12">
+            <p id="section-16.9-2.12.1">MLS is an encrypted messaging layer designed
 to be transmitted over arbitrary lower layer protocols. The
-security considerations in this document (RFC XXXX) also apply.<a href="#section-16.7-2.12.1" class="pilcrow">¶</a></p>
+security considerations in this document (RFC XXXX) also apply.<a href="#section-16.9-2.12.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-2.13">Interoperability considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.14">
-            <p id="section-16.7-2.14.1">N/A<a href="#section-16.7-2.14.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-2.13">Interoperability considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.14">
+            <p id="section-16.9-2.14.1">N/A<a href="#section-16.9-2.14.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-2.15">Published specification:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.16">
-            <p id="section-16.7-2.16.1">RFC XXXX<a href="#section-16.7-2.16.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-2.15">Published specification:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.16">
+            <p id="section-16.9-2.16.1">RFC XXXX<a href="#section-16.9-2.16.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-2.17">Applications that use this media type:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.18">
-            <p id="section-16.7-2.18.1">MLS-based messaging applications<a href="#section-16.7-2.18.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-2.17">Applications that use this media type:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.18">
+            <p id="section-16.9-2.18.1">MLS-based messaging applications<a href="#section-16.9-2.18.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-2.19">Fragment identifier considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-2.20">
-            <p id="section-16.7-2.20.1">N/A<a href="#section-16.7-2.20.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-2.19">Fragment identifier considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-2.20">
+            <p id="section-16.9-2.20.1">N/A<a href="#section-16.9-2.20.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-16.7-3">Additional information:<a href="#section-16.7-3" class="pilcrow">¶</a></p>
+<p id="section-16.9-3">Additional information:<a href="#section-16.9-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-16.7-4.1">Deprecated alias names for this type: N/A<a href="#section-16.7-4.1" class="pilcrow">¶</a>
+<li class="normal" id="section-16.9-4.1">Deprecated alias names for this type: N/A<a href="#section-16.9-4.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-16.7-4.2">Magic number(s): N/A<a href="#section-16.7-4.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-16.9-4.2">Magic number(s): N/A<a href="#section-16.9-4.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-16.7-4.3">File extension(s): N/A<a href="#section-16.7-4.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-16.9-4.3">File extension(s): N/A<a href="#section-16.9-4.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-16.7-4.4">Macintosh file type code(s): N/A<a href="#section-16.7-4.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-16.9-4.4">Macintosh file type code(s): N/A<a href="#section-16.9-4.4" class="pilcrow">¶</a>
 </li>
         </ul>
-<span class="break"></span><dl class="dlParallel" id="section-16.7-5">
-          <dt id="section-16.7-5.1">Person &amp; email address to contact for further information:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-5.2">
-            <p id="section-16.7-5.2.1">IETF MLS Working Group <a href="mailto:mls@ietf.org">mls@ietf.org</a><a href="#section-16.7-5.2.1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-16.9-5">
+          <dt id="section-16.9-5.1">Person &amp; email address to contact for further information:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-5.2">
+            <p id="section-16.9-5.2.1">IETF MLS Working Group <a href="mailto:mls@ietf.org">mls@ietf.org</a><a href="#section-16.9-5.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-5.3">Intended usage:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-5.4">
-            <p id="section-16.7-5.4.1">COMMON<a href="#section-16.7-5.4.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-5.3">Intended usage:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-5.4">
+            <p id="section-16.9-5.4.1">COMMON<a href="#section-16.9-5.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-5.5">Restrictions on usage:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-5.6">
-            <p id="section-16.7-5.6.1">N/A<a href="#section-16.7-5.6.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-5.5">Restrictions on usage:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-5.6">
+            <p id="section-16.9-5.6.1">N/A<a href="#section-16.9-5.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-5.7">Author:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-5.8">
-            <p id="section-16.7-5.8.1">IETF MLS Working Group<a href="#section-16.7-5.8.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-5.7">Author:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-5.8">
+            <p id="section-16.9-5.8.1">IETF MLS Working Group<a href="#section-16.9-5.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-5.9">Change controller:</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-5.10">
-            <p id="section-16.7-5.10.1">IESG<a href="#section-16.7-5.10.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-5.9">Change controller:</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-5.10">
+            <p id="section-16.9-5.10.1">IESG<a href="#section-16.9-5.10.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-16.7-5.11">Provisional registration? (standards tree only):</dt>
-          <dd style="margin-left: 1.5em" id="section-16.7-5.12">
-            <p id="section-16.7-5.12.1">No<a href="#section-16.7-5.12.1" class="pilcrow">¶</a></p>
+<dt id="section-16.9-5.11">Provisional registration? (standards tree only):</dt>
+          <dd style="margin-left: 1.5em" id="section-16.9-5.12">
+            <p id="section-16.9-5.12.1">No<a href="#section-16.9-5.12.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -8983,8 +9078,8 @@ where <code>th(Z)</code> covers <code>(C, _, D)</code><a href="#appendix-B-5.2.2
       </ol>
 <p id="appendix-B-6">When a new member joins, they will receive a tree that has the following parent
 hash values, and compute the indicated parent-hash validity relationships:<a href="#appendix-B-6" class="pilcrow">¶</a></p>
-<table class="center" id="table-12">
-        <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
+<table class="center" id="table-14">
+        <caption><a href="#table-14" class="selfRef">Table 14</a></caption>
 <thead>
           <tr>
             <th class="text-left" rowspan="1" colspan="1">Node</th>
