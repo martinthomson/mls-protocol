@@ -102,8 +102,8 @@ Table of Contents
        5.3.3.  Uniquely Identifying Clients
    6.  Message Framing
      6.1.  Content Authentication
-     6.2.  Encoding and Decoding a Plaintext
-     6.3.  Encoding and Decoding a Ciphertext
+     6.2.  Encoding and Decoding a Public Message
+     6.3.  Encoding and Decoding a Private Message
        6.3.1.  Content Encryption
        6.3.2.  Sender Data Encryption
    7.  Ratchet Tree Operations
@@ -163,22 +163,26 @@ Table of Contents
      15.3.  Delayed and Reordered Application messages
    16. Security Considerations
      16.1.  Confidentiality of the Group Secrets
-     16.2.  Confidentiality of Group Metadata
-       16.2.1.  GroupID, Epoch, and Message Frequency
-       16.2.2.  Group Extensions
-       16.2.3.  Group Membership
-     16.3.  Authentication
-     16.4.  Forward Secrecy and Post-Compromise Security
-     16.5.  KeyPackage Reuse
-     16.6.  Group Fragmentation by Malicious Insiders
+     16.2.  Confidentiality of Sender Data
+     16.3.  Confidentiality of Group Metadata
+       16.3.1.  GroupID, Epoch, and Message Frequency
+       16.3.2.  Group Extensions
+       16.3.3.  Group Membership
+     16.4.  Authentication
+     16.5.  Forward Secrecy and Post-Compromise Security
+     16.6.  KeyPackage Reuse
+     16.7.  Group Fragmentation by Malicious Insiders
    17. IANA Considerations
      17.1.  MLS Ciphersuites
      17.2.  MLS Wire Formats
      17.3.  MLS Extension Types
      17.4.  MLS Proposal Types
      17.5.  MLS Credential Types
-     17.6.  MLS Designated Expert Pool
-     17.7.  The "message/mls" MIME Type
+     17.6.  MLS Signature Labels
+     17.7.  MLS Public Key Encryption Labels
+     17.8.  MLS Exporter Labels
+     17.9.  MLS Designated Expert Pool
+     17.10. The "message/mls" MIME Type
    18. References
      18.1.  Normative References
      18.2.  Informative References
@@ -666,11 +670,10 @@ Table of Contents
    Signature Key:  A signing key pair used to authenticate the sender of
       a message.
 
-   Handshake Message:  An MLSPlaintext or MLSCiphertext message carrying
-      an MLS Proposal or Commit object, as opposed to application data.
+   Handshake Message:  A PublicMessage or PrivateMessage carrying an MLS
+      Proposal or Commit object, as opposed to application data.
 
-   Application Message:  An MLSCiphertext message carrying application
-      data.
+   Application Message:  A PrivateMessage carrying application data.
 
    Terminology specific to tree computations is described in
    Section 4.1.
@@ -682,10 +685,10 @@ Table of Contents
    further secret values, and "key" to refer to a value that is used
    with an algorithm such as HMAC or an AEAD algorithm.
 
-   The MLSPlaintext and MLSCiphertext formats are defined in Section 6;
-   they represent integrity-protected and confidentiality-protected
-   messages, respectively.  Security notions such as forward secrecy and
-   post-compromise security are defined in Section 16.
+   The PublicMessage and PrivateMessage formats are defined in
+   Section 6; they represent integrity-protected and confidentiality-
+   protected messages, respectively.  Security notions such as forward
+   secrecy and post-compromise security are defined in Section 16.
 
 2.1.  Presentation Language
 
@@ -843,10 +846,10 @@ Table of Contents
 
    Proposal and Commit messages are sent from one member of a group to
    the others.  MLS provides a common framing layer for sending messages
-   within a group: An _MLSPlaintext_ message provides sender
-   authentication for unencrypted Proposal and Commit messages.  An
-   _MLSCiphertext_ message provides encryption and authentication for
-   both Proposal/Commit messages as well as any application data.
+   within a group: A _PublicMessage_ provides sender authentication for
+   unencrypted Proposal and Commit messages.  A _PrivateMessage_
+   provides encryption and authentication for both Proposal/Commit
+   messages as well as any application data.
 
 3.1.  Cryptographic State and Evolution
 
@@ -941,7 +944,7 @@ Table of Contents
    application might gather several proposals before committing them all
    at once.  In the illustrations below, we show the Proposal and Commit
    messages directly, while in reality they would be sent encapsulated
-   in MLSPlaintext or MLSCiphertext objects.
+   in PublicMessage or PrivateMessage objects.
 
    Before the initialization of a group, clients publish KeyPackages to
    a directory provided by the Service Provider (see Figure 2).
@@ -1449,7 +1452,7 @@ Table of Contents
 5.1.2.  Signing
 
    The signature algorithm specified in the ciphersuite is the mandatory
-   algorithm to be used for signatures in MLSContentAuthData and the
+   algorithm to be used for signatures in FramedContentAuthData and the
    tree signatures.  It MUST be the same as the signature algorithm
    specified in the credentials in the leaves of the tree (including the
    leaf node information in KeyPackages used to add new members).
@@ -1481,7 +1484,10 @@ Table of Contents
    content = Content;
 
    Here, the functions Signature.Sign and Signature.Verify are defined
-   by the signature algorithm.
+   by the signature algorithm.  If MLS extensions require signatures by
+   group members, they should re-use the SignWithLabel construction,
+   using a distinct label.  To avoid collisions in these labels, an IANA
+   registry is defined in Section 17.6.
 
 5.1.3.  Public-Key Encryption
 
@@ -1507,6 +1513,13 @@ Table of Contents
 
    label = "MLS 1.0 " + Label;
    content = Context;
+
+   Here, the functions SealBase and OpenBase are defined [RFC9180],
+   using the HPKE algorithms specified by the group's cipehersuite.  If
+   MLS extensions require HPKE encryption operations, they should re-use
+   the EncryptWithLabel construction, using a distinct label.  To avoid
+   collisions in these labels, an IANA registry is defined in
+   Section 17.7.
 
 5.2.  Hash-Based Identifiers
 
@@ -1539,7 +1552,7 @@ Table of Contents
 
    For a KeyPackageRef, the value input is the encoded KeyPackage, and
    the ciphersuite specified in the KeyPackage determines the KDF used.
-   For a ProposalRef, the value input is the MLSAuthenticatedContent
+   For a ProposalRef, the value input is the AuthenticatedContent
    carrying the proposal.  In the latter two cases, the KDF is
    determined by the group's ciphersuite.
 
@@ -1722,25 +1735,25 @@ Table of Contents
    group, as well as signing to authenticate the sender.
 
    In most of the protocol, messages are handled in the form of
-   MLSAuthenticatedContent objects.  These structures contain the
-   content of the message itself as well as information to authenticate
-   the sender (see Section 6.1).  The additional protections required to
+   AuthenticatedContent objects.  These structures contain the content
+   of the message itself as well as information to authenticate the
+   sender (see Section 6.1).  The additional protections required to
    transmit these messages over an untrusted channel (group membership
    authentication or AEAD encryption) are added by encoding the
-   MLSAuthenticatedContent as an MLSPlaintext or MLSCiphertext message,
+   AuthenticatedContent as an PublicMessage or PrivateMessage message,
    which can then be sent as an MLSMessage.  Likewise, these protections
    are enforced (via membership verification or AEAD decryption) when
-   decoding an MLSPlaintext or MLSCiphertext into an
-   MLSAuthenticatedContent object.
+   decoding an PublicMessage or PrivateMessage into an
+   AuthenticatedContent object.
 
-   MLSCiphertext represents a signed and encrypted message, with
+   PrivateMessage represents a signed and encrypted message, with
    protections for both the content of the message and related metadata.
-   MLSPlaintext represents a message that is only signed, and not
-   encrypted.  Applications MUST use MLSCiphertext to encrypt
-   application messages and SHOULD use MLSCiphertext to encode handshake
-   messages, but MAY transmit handshake messages encoded as MLSPlaintext
-   objects in cases where it is necessary for the Delivery Service to
-   examine such messages.
+   PublicMessage represents a message that is only signed, and not
+   encrypted.  Applications MUST use PrivateMessage to encrypt
+   application messages and SHOULD use PrivateMessage to encode
+   handshake messages, but MAY transmit handshake messages encoded as
+   PublicMessage objects in cases where it is necessary for the Delivery
+   Service to examine such messages.
 
    enum {
        reserved(0),
@@ -1788,7 +1801,7 @@ Table of Contents
        opaque authenticated_data<V>;
 
        ContentType content_type;
-       select (MLSContent.content_type) {
+       select (FramedContent.content_type) {
            case application:
              opaque application_data<V>;
            case proposal:
@@ -1796,16 +1809,16 @@ Table of Contents
            case commit:
              Commit commit;
        };
-   } MLSContent;
+   } FramedContent;
 
    struct {
        ProtocolVersion version = mls10;
        WireFormat wire_format;
        select (MLSMessage.wire_format) {
            case mls_plaintext:
-               MLSPlaintext plaintext;
+               PublicMessage plaintext;
            case mls_ciphertext:
-               MLSCiphertext ciphertext;
+               PrivateMessage ciphertext;
            case mls_welcome:
                Welcome welcome;
            case mls_group_info:
@@ -1816,7 +1829,7 @@ Table of Contents
    } MLSMessage;
 
    Messages from senders that aren't in the group are sent as
-   MLSPlaintext.  See Section 12.1.8 and Section 12.4.3.2 for more
+   PublicMessage.  See Section 12.1.8 and Section 12.4.3.2 for more
    details.
 
    The following structure is used to fully describe the data
@@ -1824,9 +1837,9 @@ Table of Contents
 
    struct {
        WireFormat wire_format;
-       MLSContent content;
-       MLSContentAuthData auth;
-   } MLSAuthenticatedContent;
+       FramedContent content;
+       FramedContentAuthData auth;
+   } AuthenticatedContent;
 
    The following figure illustrates how the various structures described
    in this section relate to each other, and the high-level operations
@@ -1837,25 +1850,25 @@ Table of Contents
                                  +--------------+--------------+
                                                 |
                                                 V
-                                        MLSContent
+                                         FramedContent
                                              |  |                -.
                                              |  |                  |
                                     +--------+  |                  |
                                     |           |                  |
                                     V           |                  +-- Asymmetric
-                           MLSContentAuthData   |                  |   Sign / Verify
+                          FramedContentAuthData |                  |   Sign / Verify
                                     |           |                  |
                                     +--------+  |                  |
                                              |  |                  |
                                              V  V                -'
-                                       MLSAuthenticatedContent
+                                       AuthenticatedContent
                                                 |                -.
                                                 |                  |
                                                 |                  |
                                        +--------+--------+         +-- Symmetric
                                        |                 |         |   Protect / Unprotect
                                        V                 V         |
-Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
+Welcome  KeyPackage  GroupInfo   PublicMessage    PrivateMessage -'
    |          |          |             |                 |
    |          |          |             |                 |
    +----------+----------+----+--------+-----------------+
@@ -1865,13 +1878,14 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
 
 6.1.  Content Authentication
 
-   MLSContent is authenticated using the MLSContentAuthData structure.
+   FramedContent is authenticated using the FramedContentAuthData
+   structure.
 
    struct {
        ProtocolVersion version = mls10;
        WireFormat wire_format;
-       MLSContent content;
-       select (MLSContentTBS.content.sender.sender_type) {
+       FramedContent content;
+       select (FramedContentTBS.content.sender.sender_type) {
            case member:
            case new_member_commit:
                GroupContext context;
@@ -1879,14 +1893,14 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
            case new_member_proposal:
                struct{};
        };
-   } MLSContentTBS;
+   } FramedContentTBS;
 
    opaque MAC<V>;
 
    struct {
-       /* SignWithLabel(., "MLSContentTBS", MLSContentTBS) */
+       /* SignWithLabel(., "FramedContentTBS", FramedContentTBS) */
        opaque signature<V>;
-       select (MLSContent.content_type) {
+       select (FramedContent.content_type) {
            case commit:
                /*
                  MAC(confirmation_key,
@@ -1897,10 +1911,10 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
            case proposal:
                struct{};
        };
-   } MLSContentAuthData;
+   } FramedContentAuthData;
 
    The signature is computed using SignWithLabel with label
-   "MLSContentTBS" and with a content that covers the message content
+   "FramedContentTBS" and with a content that covers the message content
    and the wire format that will be used for this message.  If the
    sender's sender_type is member, the content also covers the
    GroupContext for the current epoch so that signatures are specific to
@@ -1930,18 +1944,19 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
    depending on the sender_type of the sender as described above.
 
    The confirmation tag value confirms that the members of the group
-   have arrived at the same state of the group.  A MLSContentAuthData is
-   said to be valid when both the signature and confirmation_tag fields
-   are valid.
+   have arrived at the same state of the group.  A FramedContentAuthData
+   is said to be valid when both the signature and confirmation_tag
+   fields are valid.
 
-6.2.  Encoding and Decoding a Plaintext
+6.2.  Encoding and Decoding a Public Message
 
-   Plaintexts are encoded using the MLSPlaintext structure.
+   Messages that are authenticated but not encrypted are encoded using
+   the PublicMessage structure.
 
    struct {
-       MLSContent content;
-       MLSContentAuthData auth;
-       select (MLSPlaintext.content.sender.sender_type) {
+       FramedContent content;
+       FramedContentAuthData auth;
+       select (PublicMessage.content.sender.sender_type) {
            case member:
                MAC membership_tag;
            case external:
@@ -1949,26 +1964,27 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
            case new_member_proposal:
                struct{};
        };
-   } MLSPlaintext;
+   } PublicMessage;
 
-   The membership_tag field in the MLSPlaintext object authenticates the
-   sender's membership in the group.  For messages sent by members, it
-   MUST be set to the following value:
+   The membership_tag field in the PublicMessage object authenticates
+   the sender's membership in the group.  For messages sent by members,
+   it MUST be set to the following value:
 
    struct {
-     MLSContentTBS content_tbs;
-     MLSContentAuthData auth;
-   } MLSContentTBM;
+     FramedContentTBS content_tbs;
+     FramedContentAuthData auth;
+   } AuthenticatedContentTBM;
 
-   membership_tag = MAC(membership_key, MLSContentTBM)
+   membership_tag = MAC(membership_key, AuthenticatedContentTBM)
 
-   When decoding an MLSPlaintext into an MLSAuthenticatedContent, the
+   When decoding an PublicMessage into an AuthenticatedContent, the
    application MUST check membership_tag and MUST check that the
-   MLSContentAuthData is valid.
+   FramedContentAuthData is valid.
 
-6.3.  Encoding and Decoding a Ciphertext
+6.3.  Encoding and Decoding a Private Message
 
-   Ciphertexts are encoded using the MLSCiphertext structure.
+   Authenticated and encrypted messages are encoded using the
+   PrivateMessage structure.
 
    struct {
        opaque group_id<V>;
@@ -1977,19 +1993,18 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
        opaque authenticated_data<V>;
        opaque encrypted_sender_data<V>;
        opaque ciphertext<V>;
-   } MLSCiphertext;
+   } PrivateMessage;
 
    encrypted_sender_data and ciphertext are encrypted using the AEAD
    function specified by the ciphersuite in use, using as input the
-   structures MLSSenderData and MLSCiphertextContent.
+   structures SenderData and PrivateContentTBE.
 
 6.3.1.  Content Encryption
 
-   The ciphertext content is encoded using the MLSCiphertextContent
-   structure.
+   Content to be encrypted is encoded in an PrivateContentTBE structure.
 
    struct {
-       select (MLSCiphertext.content_type) {
+       select (PrivateMessage.content_type) {
            case application:
              opaque application_data<V>;
 
@@ -2000,21 +2015,21 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
              Commit commit;
        };
 
-       MLSContentAuthData auth;
+       FramedContentAuthData auth;
        opaque padding[length_of_padding];
-   } MLSCiphertextContent;
+   } PrivateContentTBE;
 
    The padding field is set by the sender, by first encoding the content
    (via the select) and the auth field, then appending the chosen number
    of zero bytes.  A receiver identifies the padding field in a
-   plaintext decoded from MLSCiphertext.ciphertext by first decoding the
-   content and the auth field; then the padding field comprises any
+   plaintext decoded from PrivateMessage.ciphertext by first decoding
+   the content and the auth field; then the padding field comprises any
    remaining octets of plaintext.  The padding field MUST be filled with
    all zero bytes.  A receiver MUST verify that there are no non-zero
    bytes in the padding field, and if this check fails, the enclosing
-   MLSCiphertext MUST be rejected as malformed.  This check ensures that
-   the padding process is deterministic, so that, for example, padding
-   cannot be used as a covert channel.
+   PrivateMessage MUST be rejected as malformed.  This check ensures
+   that the padding process is deterministic, so that, for example,
+   padding cannot be used as a covert channel.
 
    In the MLS key schedule, the sender creates two distinct key ratchets
    for handshake and application messages for each member of the group.
@@ -2060,10 +2075,10 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
        uint64 epoch;
        ContentType content_type;
        opaque authenticated_data<V>;
-   } MLSCiphertextContentAAD;
+   } PrivateContentAAD;
 
-   When decoding an MLSCiphertextContent, the application MUST check
-   that the MLSContentAuthData is valid.
+   When decoding an PrivateContentTBE, the application MUST check that
+   the FramedContentAuthData is valid.
 
    It is up to the application to decide what authenticated_data to
    provide and how much padding to add to a given message (if any).  The
@@ -2083,11 +2098,11 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
        uint32 leaf_index;
        uint32 generation;
        opaque reuse_guard[4];
-   } MLSSenderData;
+   } SenderData;
 
-   When constructing an MLSSenderData from a Sender object, the sender
-   MUST verify Sender.sender_type is member and use Sender.leaf_index
-   for MLSSenderData.leaf_index.
+   When constructing a SenderData object from a Sender object, the
+   sender MUST verify Sender.sender_type is member and use
+   Sender.leaf_index for SenderData.leaf_index.
 
    The reuse_guard field contains a fresh random value used to avoid
    nonce reuse in the case of state loss or corruption, as described in
@@ -2107,13 +2122,13 @@ Welcome  KeyPackage  GroupInfo   MLSPlaintext      MLSCiphertext -'
                          ciphertext_sample, AEAD.Nn)
 
    The Additional Authenticated Data (AAD) for the SenderData ciphertext
-   is the first three fields of MLSCiphertext:
+   is the first three fields of PrivateMessage:
 
    struct {
        opaque group_id<V>;
        uint64 epoch;
        ContentType content_type;
-   } MLSSenderDataAAD;
+   } SenderDataAAD;
 
    When parsing a SenderData struct as part of message decryption, the
    recipient MUST verify that the leaf index indicated in the leaf_index
@@ -3060,7 +3075,7 @@ psk_secret (or 0) --> KDF.Extract
     +------------------+---------------------+-----------------------+
     | "membership"     | membership_key      | Computing the         |
     |                  |                     | membership MAC for an |
-    |                  |                     | MLSPlaintext          |
+    |                  |                     | PublicMessage         |
     +------------------+---------------------+-----------------------+
     | "resumption"     | resumption_psk      | Proving membership in |
     |                  |                     | this epoch (via a PSK |
@@ -3134,7 +3149,7 @@ psk_secret (or 0) --> KDF.Extract
       credentials.
 
    *  The confirmed_transcript_hash field is updated with the data for
-      an MLSAuthenticatedContent encoding a Commit message as described
+      an AuthenticatedContent encoding a Commit message as described
       below.
 
    *  The extensions field changes when a GroupContextExtensions
@@ -3146,7 +3161,7 @@ psk_secret (or 0) --> KDF.Extract
    all Proposal and Commit messages that have ever been sent in a group.
    Commit messages are included directly.  Proposal messages are
    indirectly included via the Commit that applied them.  Both types of
-   message are included by hashing the MLSAuthenticatedContent object in
+   message are included by hashing the AuthenticatedContent object in
    which they were sent.
 
    The transcript hash comprises two individual hashes:
@@ -3163,14 +3178,14 @@ psk_secret (or 0) --> KDF.Extract
    members can compute it directly.
 
    Each Commit message updates these hashes by way of its enclosing
-   MLSAuthenticatedContent.  The MLSAuthenticatedContent struct is split
-   into ConfirmedTranscriptHashInput and InterimTranscriptHashInput.
-   The former is used to update the confirmed transcript hash and the
-   latter to update the interim transcript hash.
+   AuthenticatedContent.  The AuthenticatedContent struct is split into
+   ConfirmedTranscriptHashInput and InterimTranscriptHashInput.  The
+   former is used to update the confirmed transcript hash and the latter
+   to update the interim transcript hash.
 
    struct {
        WireFormat wire_format;
-       MLSContent content; /* with content_type == commit */
+       FramedContent content; /* with content_type == commit */
        opaque signature<V>;
    } ConfirmedTranscriptHashInput;
 
@@ -3353,7 +3368,9 @@ psk_secret (or 0) --> KDF.Extract
    Applications SHOULD provide a unique label to MLS-Exporter that
    identifies the secret's intended purpose.  This is to help prevent
    the same secret from being generated and used in two different
-   places.
+   places.  To help avoid the same label being used in different
+   applications, an IANA registry for these labels has been defined in
+   Section 17.8.
 
    The exported values are bound to the group epoch from which the
    exporter_secret is derived, and hence reflect a particular state of
@@ -3589,7 +3606,7 @@ psk_secret (or 0) --> KDF.Extract
        represent this client.
 
    KeyPackages are intended to be used only once and SHOULD NOT be
-   reused except in the case of last resort (see Section 16.5).  Clients
+   reused except in the case of last resort (see Section 16.6).  Clients
    MAY generate and publish multiple KeyPackages to support multiple
    ciphersuites.
 
@@ -3873,7 +3890,7 @@ psk_secret (or 0) --> KDF.Extract
 
 12.1.  Proposals
 
-   Proposals are included in an MLSContent by way of a Proposal
+   Proposals are included in a FramedContent by way of a Proposal
    structure that indicates their type:
 
    // See IANA registry for registered values
@@ -3892,12 +3909,13 @@ psk_secret (or 0) --> KDF.Extract
        };
    } Proposal;
 
-   On receiving an MLSContent containing a Proposal, a client MUST
-   verify the signature inside MLSContentAuthData and that the epoch
-   field of the enclosing MLSContent is equal to the epoch field of the
-   current GroupContext object.  If the verification is successful, then
-   the Proposal should be cached in such a way that it can be retrieved
-   by hash (as a ProposalOrRef object) in a later Commit message.
+   On receiving a FramedContent containing a Proposal, a client MUST
+   verify the signature inside FramedContentAuthData and that the epoch
+   field of the enclosing FramedContent is equal to the epoch field of
+   the current GroupContext object.  If the verification is successful,
+   then the Proposal should be cached in such a way that it can be
+   retrieved by hash (as a ProposalOrRef object) in a later Commit
+   message.
 
 12.1.1.  Add
 
@@ -4086,9 +4104,9 @@ psk_secret (or 0) --> KDF.Extract
    the addition of an MLS client proposing it be added to the group.
    External proposals which are not authorized are considered invalid.
 
-   An external proposal MUST be sent as an MLSPlaintext object, since
-   the sender will not have the keys necessary to construct an
-   MLSCiphertext object.
+   An external proposal MUST be sent as a PublicMessage object, since
+   the sender will not have the keys necessary to construct a
+   PrivateMessage object.
 
 12.1.8.1.  External Senders Extension
 
@@ -4230,7 +4248,7 @@ psk_secret (or 0) --> KDF.Extract
    can be included by value.  Commits for previously sent proposals from
    anyone (including the committer) can be sent by reference.  Proposals
    sent by reference are specified by including the hash of the
-   MLSAuthenticatedContent object in which the proposal was sent (see
+   AuthenticatedContent object in which the proposal was sent (see
    Section 5.2).
 
    enum {
@@ -4420,11 +4438,11 @@ psk_secret (or 0) --> KDF.Extract
       of PSKs in the derivation corresponds to the order of PreSharedKey
       proposals in the proposals vector.
 
-   *  Construct an MLSContent object containing the Commit object.  Sign
-      the MLSContent using the old GroupContext as context.
+   *  Construct a FramedContent object containing the Commit object.
+      Sign the FramedContent using the old GroupContext as context.
 
-      -  Use the MLSContent to update the confirmed transcript hash and
-         update the new GroupContext.
+      -  Use the FramedContent to update the confirmed transcript hash
+         and update the new GroupContext.
 
       -  Use the init_secret from the previous epoch, the commit_secret
          and the psk_secret as defined in the previous steps, and the
@@ -4437,15 +4455,15 @@ psk_secret (or 0) --> KDF.Extract
 
       -  Calculate the interim transcript hash using the new confirmed
          transcript hash and the confirmation_tag from the
-         MLSContentAuthData.
+         FramedContentAuthData.
 
-   *  Protect the MLSAuthenticatedContent object using keys from the old
+   *  Protect the AuthenticatedContent object using keys from the old
       epoch:
 
-      -  If encoding as MLSPlaintext, compute the membership_tag value
+      -  If encoding as PublicMessage, compute the membership_tag value
          using the membership_key.
 
-      -  If encoding as an MLSCiphertext, encrypt the message using the
+      -  If encoding as an PrivateMessage, encrypt the message using the
          sender_data_secret and the next (key, nonce) pair from the
          sender's handshake ratchet.
 
@@ -4455,7 +4473,7 @@ psk_secret (or 0) --> KDF.Extract
          transcript hash, and group context extensions from the new
          state
 
-      -  The confirmation_tag from the MLSContentAuthData object
+      -  The confirmation_tag from the FramedContentAuthData object
 
       -  Other extensions as defined by the application
 
@@ -4507,21 +4525,21 @@ psk_secret (or 0) --> KDF.Extract
    A member of the group applies a Commit message by taking the
    following steps:
 
-   *  Verify that the epoch field of the enclosing MLSContent is equal
-      to the epoch field of the current GroupContext object
+   *  Verify that the epoch field of the enclosing FramedContent is
+      equal to the epoch field of the current GroupContext object
 
    *  Unprotect the Commit using the keys from the current epoch:
 
-      -  If the message is encoded as MLSPlaintext, verify the
+      -  If the message is encoded as PublicMessage, verify the
          membership MAC using the membership_key
 
-      -  If the message is encoded as MLSCiphertext, decrypt the message
-         using the sender_data_secret and the (key, nonce) pair from the
-         step on the sender's hash ratchet indicated by the generation
-         field.
+      -  If the message is encoded as PrivateMessage, decrypt the
+         message using the sender_data_secret and the (key, nonce) pair
+         from the step on the sender's hash ratchet indicated by the
+         generation field.
 
-   *  Verify that the signature on the MLSContent message as described
-      in Section Section 6.1.
+   *  Verify that the signature on the FramedContent message as
+      described in Section Section 6.1.
 
    *  Verify that the proposals vector is valid as specified in
       Section 12.2.
@@ -4595,7 +4613,7 @@ psk_secret (or 0) --> KDF.Extract
    *  Use the confirmation_key for the new epoch to compute the
       confirmation tag for this message, as described below, and verify
       that it is the same as the confirmation_tag field in the
-      MLSContentAuthData object.
+      FramedContentAuthData object.
 
    *  If the above checks are successful, consider the new GroupContext
       object as the current state of the group.
@@ -4769,9 +4787,15 @@ psk_secret (or 0) --> KDF.Extract
       -  For each non-empty leaf node, validate the LeafNode as
          described in Section 7.3.
 
-      -  For each non-empty parent node, verify that each entry in the
-         node's unmerged_leaves represents a non-blank leaf node that is
-         a descendant of the parent node.
+      -  For each non-empty parent node and each entry in the node's
+         unmerged_leaves field:
+
+         o  Verify that the entry represents a non-blank leaf node that
+            is a descendant of the parent node.
+
+         o  Verify that every non-blank intermediate node beween the
+            leaf node and the parent node also has an entry for the leaf
+            node in its unmerged_leaves.
 
    *  Identify a leaf whose LeafNode is identical to the one in the
       KeyPackage.  If no such field exists, return an error.  Let
@@ -4896,14 +4920,14 @@ psk_secret (or 0) --> KDF.Extract
       within the group
 
    *  External Commits MUST be signed by the new member.  In particular,
-      the signature on the enclosing MLSAuthenticatedContent MUST verify
+      the signature on the enclosing AuthenticatedContent MUST verify
       using the public key for the credential in the leaf_node of the
       path field.
 
    *  When processing a Commit, both existing and new members MUST use
       the external init secret as described in Section 8.3.
 
-   *  The sender type for the MLSAuthenticatedContent encapsulating the
+   *  The sender type for the AuthenticatedContent encapsulating the
       External Commit MUST be new_member_commit.
 
    External Commits come in two "flavors" -- a "join" commit that adds
@@ -5185,7 +5209,7 @@ psk_secret (or 0) --> KDF.Extract
 14.  Sequencing of State Changes
 
    Each Commit message is premised on a given starting state, indicated
-   by the epoch field of the enclosing MLSContent.  If the changes
+   by the epoch field of the enclosing FramedContent.  If the changes
    implied by a Commit message are made starting from a different state,
    the results will be incorrect.
 
@@ -5251,8 +5275,8 @@ psk_secret (or 0) --> KDF.Extract
    Bob "When are we going to the movie?", then the answer "Wednesday"
    could be leaked to an adversary solely by the ciphertext length.
 
-   The length of the padding field in MLSCiphertextContent can be chosen
-   at the time of message encryption by the sender.  Senders may use
+   The length of the padding field in PrivateContentTBE can be chosen by
+   the sender at the time of message encryption.  Senders may use
    padding to reduce the ability of attackers outside the group to infer
    the size of the encrypted content.  Note, however, that the
    transports used to carry MLS messages may have maximum message sizes,
@@ -5322,7 +5346,46 @@ psk_secret (or 0) --> KDF.Extract
    to rotate their keypair such that the old private key can no longer
    be used to decrypt new messages.
 
-16.2.  Confidentiality of Group Metadata
+16.2.  Confidentiality of Sender Data
+
+   The MLSCiphertext framing encrypts "sender data" that identifies
+   which group member sent an encrypted message, as described in
+   Section 6.3.2.  As with the QUIC header protection scheme [RFC9001],
+   Section 5.4, this scheme is a variant of the HN1 construction
+   analyzed in [NAN].  A sample of the ciphertext is combined with a
+   sender_data_secret to derive a key and nonce that are used for AEAD
+   encryption of the sender data.
+
+   pseudocode (key, nonce) = PRF(sender_data_secret, sample)
+   encrypted_sender_data = AEAD.Seal(key, nonce, sender_data_aad,
+   sender_data)
+
+   The only differences between this construction and HN1 as described
+   in [NAN] are (1) that it uses authenticated encryption instead of
+   unauthenticated encryption and (2) that it protects information used
+   to derive a nonce instead of the nonce itself.
+
+   Since the sender_data_secret is distinct from the content encryption
+   key, it follows that the sender data encryption scheme achieves AE2
+   security as defined in [NAN], and therefore guarantees the
+   confidentiality of the sender data.
+
+   Use of the same sender_data_secret and ciphertext sample more than
+   once risks compromising sender data protection by reusing an AEAD
+   (key, nonce) pair.  For example, in many AEAD schemes, reusing a key
+   and nonce reveals the exclusive OR of the two plaintexts.  Assuming
+   the ciphertext output of the AEAD algorithm is indistinguishable from
+   random data (i.e., the AEAD is AE1-secure in the phrasing of [NAN]),
+   the odds of two ciphertext samples being identical is roughly
+   2^(-L/2), i.e., the birthday bound.
+
+   The AEAD algorithms for ciphersuites defined in this document all
+   provide this property.  The size of the sample depends on the
+   ciphersuite's hash function, but in all cases, the probability of
+   collision is no more than 2^-128.  Any future ciphersuite MUST use an
+   AE1-secure AEAD algorithm.
+
+16.3.  Confidentiality of Group Metadata
 
    MLS does not provide confidentiality protection to some messages and
    fields within messages:
@@ -5333,11 +5396,11 @@ psk_secret (or 0) --> KDF.Extract
 
    *  The unencrypted portion of a Welcome message
 
-   *  Any Proposal or Commit messages sent as MLSPlaintext messages
+   *  Any Proposal or Commit messages sent as PublicMessage messages
 
-   *  The unencrypted header fields in MLSCiphertext messages
+   *  The unencrypted header fields in PrivateMessage messages
 
-   *  The lengths of encrypted Welcome and MLSCiphertext messages
+   *  The lengths of encrypted Welcome and PrivateMessage messages
 
    The only mechanism MLS provides for confidentially distributing a
    group's ratchet tree to new members is to send it in a Welcome
@@ -5369,25 +5432,25 @@ psk_secret (or 0) --> KDF.Extract
    *  How prospective external joiners get a GroupInfo object for the
       group
 
-   *  Whether MLSPlaintext or MLSCiphertext messages are used for
-      Proposal and Commit messages
+   *  Whether Proposal and Commit messages are sent as PublicMessage or
+      PrivateMessage
 
    In the remainder of this section, we note the ways that the above
    properties of the group are reflected in unprotected group messages,
    as a guide to understanding how they might be exposed or protected in
    a given application.
 
-16.2.1.  GroupID, Epoch, and Message Frequency
+16.3.1.  GroupID, Epoch, and Message Frequency
 
    MLS provides no mechanism to protect the group ID and epoch of a
    message from the DS, so the group ID and the frequency of messages
    and epoch changes are not protected against inspection by the DS.
 
-16.2.2.  Group Extensions
+16.3.2.  Group Extensions
 
    A group's extensions are first set by the group's creator and then
    updated by GroupContextExtensions proposals.  A GroupContextExtension
-   proposal sent as MLSPlaintext leaks the groups' extensions.
+   proposal sent as a PublicMessage leaks the groups' extensions.
 
    A new member learns the group's extensions via a GroupInfo object.
    When the new member joins via a Welcome message, the Welcome
@@ -5398,7 +5461,7 @@ psk_secret (or 0) --> KDF.Extract
    confidential to the group and the new joiner, then it will leak the
    group's extensions.
 
-16.2.3.  Group Membership
+16.3.3.  Group Membership
 
    The group's membership is represented directly by its ratchet tree,
    since each member's LeafNode contains members' cryptographic keys, a
@@ -5407,7 +5470,7 @@ psk_secret (or 0) --> KDF.Extract
    ratchet tree outside the group also leak the group's membership.
 
    Changes to the group's membership are made by means of Add and Remove
-   proposals.  If these proposals are sent as MLSPlaintext, then
+   proposals.  If these proposals are sent as PublicMessage, then
    information will be leaked about the corresponding changes to the
    group's membership.  A party that sees all of these changes can
    reconstruct the group membership.
@@ -5427,7 +5490,7 @@ psk_secret (or 0) --> KDF.Extract
    node to be less identifying, e.g., by using a pseudonymous credential
    and frequently rotating encryption and signature keys.
 
-16.3.  Authentication
+16.4.  Authentication
 
    The first form of authentication we provide is that group members can
    verify a message originated from one of the members of the group.
@@ -5462,7 +5525,7 @@ psk_secret (or 0) --> KDF.Extract
    that ensures that the legitimate members of the group have the
    required PSKs.
 
-16.4.  Forward Secrecy and Post-Compromise Security
+16.5.  Forward Secrecy and Post-Compromise Security
 
    Forward secrecy and post-compromise security are important security
    notions for long-lived MLS groups.  Forward secrecy means that
@@ -5500,7 +5563,7 @@ psk_secret (or 0) --> KDF.Extract
    This way, the key material used to add a member to a new group is
    more likely to be fresh and less likely to be compromised.
 
-16.5.  KeyPackage Reuse
+16.6.  KeyPackage Reuse
 
    KeyPackages are intended to be used only once.  That is, once a
    KeyPackage has been used to introduce the corresponding client to a
@@ -5515,7 +5578,7 @@ psk_secret (or 0) --> KDF.Extract
    KeyPackage publication system SHOULD rate-limit KeyPackage requests,
    especially if not authenticated.
 
-16.6.  Group Fragmentation by Malicious Insiders
+16.7.  Group Fragmentation by Malicious Insiders
 
    It is possible for a malicious member of a group to "fragment" the
    group by crafting an invalid UpdatePath.  Recall that an UpdatePath
@@ -5573,9 +5636,15 @@ psk_secret (or 0) --> KDF.Extract
 
    *  MLS Credential Types (Section 17.5)
 
+   *  MLS Signature Labels (Section 17.6)
+
+   *  MLS Public Key Encryption Labels (Section 17.7)
+
+   *  MLS Exporter Labels (Section 17.8)
+
    All of these registries should be under a heading of "Messaging Layer
    Security", and assignments are made via the Specification Required
-   policy [RFC8126].  See Section 17.6 for additional information about
+   policy [RFC8126].  See Section 17.9 for additional information about
    the MLS Designated Experts (DEs).
 
    RFC EDITOR: Please replace XXXX throughout with the RFC number
@@ -5722,6 +5791,9 @@ psk_secret (or 0) --> KDF.Extract
    "SHA384", and "SHA512" refer to the SHA-256, SHA-384, and SHA-512
    functions defined in [SHS].
 
+   In addition to the general requirements of Section 5.1, future
+   ciphersuites MUST meet the requirements of Section 16.2.
+
    It is advisable to keep the number of ciphersuites low to increase
    the chances clients can interoperate in a federated environment,
    therefore the ciphersuites only include modern, yet well-established
@@ -5755,12 +5827,7 @@ psk_secret (or 0) --> KDF.Extract
 
    *  Name: The name of the wire format
 
-   *  Recommended: Whether support for this wire format is recommended
-      by the IETF MLS WG.  Valid values are "Y" and "N".  The
-      "Recommended" column is assigned a value of "N" unless explicitly
-      requested, and adding a value with a "Recommended" value of "Y"
-      requires Standards Action [RFC8126].  IESG Approval is REQUIRED
-      for a Y->N transition.
+   *  Recommended: Same as in Section 17.1
 
    *  Reference: The document where this wire format is defined
 
@@ -5810,12 +5877,7 @@ psk_secret (or 0) --> KDF.Extract
 
       -  GI: GroupInfo objects
 
-   *  Recommended: Whether support for this extension is recommended by
-      the IETF MLS WG.  Valid values are "Y" and "N".  The "Recommended"
-      column is assigned a value of "N" unless explicitly requested, and
-      adding a value with a "Recommended" value of "Y" requires
-      Standards Action [RFC8126].  IESG Approval is REQUIRED for a Y->N
-      transition.
+   *  Recommended: Same as in Section 17.1
 
    *  Reference: The document where this extension is defined
 
@@ -5856,12 +5918,7 @@ psk_secret (or 0) --> KDF.Extract
 
    *  Name: The name of the proposal type
 
-   *  Recommended: Whether support for this extension is recommended by
-      the IETF MLS WG.  Valid values are "Y" and "N".  The "Recommended"
-      column is assigned a value of "N" unless explicitly requested, and
-      adding a value with a "Recommended" value of "Y" requires
-      Standards Action [RFC8126].  IESG Approval is REQUIRED for a Y->N
-      transition.
+   *  Recommended: Same as in Section 17.1
 
    *  Path Required: Whether a Commit covering a proposal of this type
       is required to have its path field populated (see Section 12.4).
@@ -5910,12 +5967,7 @@ psk_secret (or 0) --> KDF.Extract
 
    *  Name: The name of the credential type
 
-   *  Recommended: Whether support for this credential is recommended by
-      the IETF MLS WG.  Valid values are "Y" and "N".  The "Recommended"
-      column is assigned a value of "N" unless explicitly requested, and
-      adding a value with a "Recommended" value of "Y" requires
-      Standards Action [RFC8126].  IESG Approval is REQUIRED for a Y->N
-      transition.
+   *  Recommended: Same as in Section 17.1
 
    *  Reference: The document where this credential is defined
 
@@ -5936,7 +5988,101 @@ psk_secret (or 0) --> KDF.Extract
 
                                  Table 11
 
-17.6.  MLS Designated Expert Pool
+17.6.  MLS Signature Labels
+
+   The SignWithLabel function defined in Section 5.1.2 avoids the risk
+   of confusion between signatures in different contexts.  Each context
+   is assigned a distinct label that is incorporated into the signature.
+   This registry records the labels defined in this document, and allows
+   additional labels to be registered in case extensions add other types
+   of signature using the same signature keys used elsewhere in MLS.
+
+   Template:
+
+   *  Label: The string to be used as the Label parameter to
+      SignWithLabel
+
+   *  Recommended: Same as in Section 17.1
+
+   *  Reference: The document where this credential is defined
+
+   Initial contents:
+
+             +====================+=============+===========+
+             | Label              | Recommended | Reference |
+             +====================+=============+===========+
+             | "FramedContentTBS" | Y           | RFC XXXX  |
+             +--------------------+-------------+-----------+
+             | "LeafNodeTBS"      | Y           | RFC XXXX  |
+             +--------------------+-------------+-----------+
+             | "KeyPackageTBS"    | Y           | RFC XXXX  |
+             +--------------------+-------------+-----------+
+             | "GroupInfoTBS"     | Y           | RFC XXXX  |
+             +--------------------+-------------+-----------+
+
+                                 Table 12
+
+17.7.  MLS Public Key Encryption Labels
+
+   The EncryptWithLabel function defined in Section 5.1.3 avoids the
+   risk of confusion between ciphertexts produced for different purposes
+   in different contexts.  Each context is assigned a distinct label
+   that is incorporated into the signature.  This registry records the
+   labels defined in this document, and allows additional labels to be
+   registered in case extensions add other types of public-key
+   encryption using the same HPKE keys used elsewhere in MLS.
+
+   Template:
+
+   *  Label: The string to be used as the Label parameter to
+      EncryptWithLabel
+
+   *  Recommended: Same as in Section 17.1
+
+   *  Reference: The document where this credential is defined
+
+   Initial contents:
+
+              +==================+=============+===========+
+              | Label            | Recommended | Reference |
+              +==================+=============+===========+
+              | "UpdatePathNode" | Y           | RFC XXXX  |
+              +------------------+-------------+-----------+
+              | "Welcome"        | Y           | RFC XXXX  |
+              +------------------+-------------+-----------+
+
+                                 Table 13
+
+17.8.  MLS Exporter Labels
+
+   The exporter function defined in Section 8.5 allows applications to
+   derive key material from the MLS key schedule.  Like the TLS exporter
+   [RFC8446], the MLS exporter uses a label to distinguish between
+   different applications' use of the exporter.  This registry allows
+   applications to register their usage to avoid collisions.
+
+   Template:
+
+   *  Label: The string to be used as the Label parameter to MLS-
+      Exporter
+
+   *  Recommended: Same as in Section 17.1
+
+   *  Reference: The document where this credential is defined
+
+   The registry has no initial contents, since it is intended to be used
+   by applications, not the core protocol.  The table below is intended
+   only to show the column layout of the registry.
+
+                    +=======+=============+===========+
+                    | Label | Recommended | Reference |
+                    +=======+=============+===========+
+                    | (N/A) | (N/A)       | (N/A)     |
+                    +-------+-------------+-----------+
+
+                                  Table 14
+
+17.9.  MLS Designated Expert Pool
 
    Specification Required [RFC8126] registry requests are registered
    after a three-week review period on the MLS DEs' mailing list: mls-
@@ -5974,7 +6120,7 @@ psk_secret (or 0) --> KDF.Extract
    be perceived as creating a conflict of interest for a particular MLS
    DE, that MLS DE SHOULD defer to the judgment of the other MLS DEs.
 
-17.7.  The "message/mls" MIME Type
+17.10.  The "message/mls" MIME Type
 
    This document registers the "message/mls" MIME media type in order to
    allow other protocols (e.g., HTTP [RFC7540]) to convey MLS messages.
@@ -6109,6 +6255,11 @@ psk_secret (or 0) --> KDF.Extract
               <https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-
               aead-limits-05>.
 
+   [NAN]      Bellare, M., Ng, R., and B. Tackmann, "Nonces Are Noticed:
+              AEAD Revisited", Advances in Cryptology - CRYPTO 2019 pp.
+              235-265, DOI 10.1007/978-3-030-26948-7_9, 2019,
+              <https://doi.org/10.1007/978-3-030-26948-7_9>.
+
    [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
               <https://www.rfc-editor.org/rfc/rfc5116>.
@@ -6139,6 +6290,10 @@ psk_secret (or 0) --> KDF.Extract
               Multiplexed and Secure Transport", RFC 9000,
               DOI 10.17487/RFC9000, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9000>.
+
+   [RFC9001]  Thomson, M., Ed. and S. Turner, Ed., "Using TLS to Secure
+              QUIC", RFC 9001, DOI 10.17487/RFC9001, May 2021,
+              <https://www.rfc-editor.org/rfc/rfc9001>.
 
    [SHS]      Dang, Q., "Secure Hash Standard", National Institute of
               Standards and Technology report,
@@ -6278,7 +6433,7 @@ Appendix B.  Evolution of Parent Hashes
    | Z'   | H(Y', ph="", osth=th(X'))            | Yes                 |
    +------+--------------------------------------+---------------------+
 
-                                  Table 12
+                                  Table 15
 
    In other words, the joiner will find the following path-hash links in
    the tree:
