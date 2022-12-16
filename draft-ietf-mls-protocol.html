@@ -6991,9 +6991,17 @@ as described in <a href="#verifying-parent-hashes" class="auto internal xref">Se
                   <li class="normal" id="section-12.4.3.1-10.4.2.3">For each non-empty leaf node, validate the LeafNode as described in
 <a href="#leaf-node-validation" class="auto internal xref">Section 7.3</a>.<a href="#section-12.4.3.1-10.4.2.3" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.4.2.4">For each non-empty parent node, verify that each entry in the node's
-<code>unmerged_leaves</code> represents a non-blank leaf node that is a descendant of
-the parent node.<a href="#section-12.4.3.1-10.4.2.4" class="pilcrow">¶</a>
+                  <li class="normal" id="section-12.4.3.1-10.4.2.4">
+                    <p id="section-12.4.3.1-10.4.2.4.1">For each non-empty parent node and each entry in the node's
+<code>unmerged_leaves</code> field:<a href="#section-12.4.3.1-10.4.2.4.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-12.4.3.1-10.4.2.4.2.1">Verify that the entry represents a non-blank leaf node that is a
+descendant of the parent node.<a href="#section-12.4.3.1-10.4.2.4.2.1" class="pilcrow">¶</a>
+</li>
+                      <li class="normal" id="section-12.4.3.1-10.4.2.4.2.2">Verify that every non-blank intermediate node beween the leaf node and the
+parent node also has an entry for the leaf node in its <code>unmerged_leaves</code>.<a href="#section-12.4.3.1-10.4.2.4.2.2" class="pilcrow">¶</a>
+</li>
+                    </ul>
 </li>
                 </ul>
 </li>
