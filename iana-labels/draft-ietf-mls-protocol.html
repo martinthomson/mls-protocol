@@ -8501,17 +8501,16 @@ distinct label that is incorporated into the signature.  This registry records
 the labels defined in this document, and allows additional labels to be
 registered in case extensions add other types of signature using the same
 signature keys used elsewhere in MLS.<a href="#section-16.6-1" class="pilcrow">¶</a></p>
-<p id="section-16.6-2">Labels beginning with "PRIVATE:" are reserved for private use.<a href="#section-16.6-2" class="pilcrow">¶</a></p>
-<p id="section-16.6-3">Template:<a href="#section-16.6-3" class="pilcrow">¶</a></p>
+<p id="section-16.6-2">Template:<a href="#section-16.6-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-16.6-4.1">Label: The string to be used as the <code>Label</code> parameter to <code>SignWithLabel</code><a href="#section-16.6-4.1" class="pilcrow">¶</a>
+<li class="normal" id="section-16.6-3.1">Label: The string to be used as the <code>Label</code> parameter to <code>SignWithLabel</code><a href="#section-16.6-3.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-16.6-4.2">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 16.1</a><a href="#section-16.6-4.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-16.6-3.2">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 16.1</a><a href="#section-16.6-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-16.6-4.3">Reference: The document where this credential is defined<a href="#section-16.6-4.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-16.6-3.3">Reference: The document where this credential is defined<a href="#section-16.6-3.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-16.6-5">Initial contents:<a href="#section-16.6-5" class="pilcrow">¶</a></p>
+<p id="section-16.6-4">Initial contents:<a href="#section-16.6-4" class="pilcrow">¶</a></p>
 <table class="center" id="table-12">
           <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
 <thead>
@@ -8565,7 +8564,26 @@ collisions.<a href="#section-16.7-1" class="pilcrow">¶</a></p>
           <li class="normal" id="section-16.7-3.3">Reference: The document where this credential is defined<a href="#section-16.7-3.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-16.7-4">The registry has no initial contents.<a href="#section-16.7-4" class="pilcrow">¶</a></p>
+<p id="section-16.7-4">The registry has no initial contents, since it is intended to be used by
+applications, not the core protocol.  The table below is intended only to show
+the column layout of the registry.<a href="#section-16.7-4" class="pilcrow">¶</a></p>
+<table class="center" id="table-13">
+          <caption><a href="#table-13" class="selfRef">Table 13</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Label</th>
+              <th class="text-left" rowspan="1" colspan="1">Recommended</th>
+              <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">(N/A)</td>
+              <td class="text-left" rowspan="1" colspan="1">(N/A)</td>
+              <td class="text-left" rowspan="1" colspan="1">(N/A)</td>
+            </tr>
+          </tbody>
+        </table>
 </section>
 </div>
 <div id="de">
@@ -9015,8 +9033,8 @@ where <code>th(Z)</code> covers <code>(C, _, D)</code><a href="#appendix-B-5.2.2
       </ol>
 <p id="appendix-B-6">When a new member joins, they will receive a tree that has the following parent
 hash values, and compute the indicated parent-hash validity relationships:<a href="#appendix-B-6" class="pilcrow">¶</a></p>
-<table class="center" id="table-13">
-        <caption><a href="#table-13" class="selfRef">Table 13</a></caption>
+<table class="center" id="table-14">
+        <caption><a href="#table-14" class="selfRef">Table 14</a></caption>
 <thead>
           <tr>
             <th class="text-left" rowspan="1" colspan="1">Node</th>
