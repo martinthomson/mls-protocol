@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-15T01:38:26.519878+00:00",
+  "timestamp": "2022-12-18T01:23:55.912428+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -8153,15 +8153,15 @@
       "id": "I_kwDOBoyH6c5W6Prz",
       "title": "Does the \"MLS\" prefix of some structs signal something?",
       "url": "https://github.com/mlswg/mls-protocol/issues/759",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "duesee",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Does anyone know why the MLS draft uses the \"MLS\" prefix for some structs, e.g., `MLSMessage` and not just `Message`? Is there (still) some logic behind this? None of the explanations I could come up with hold for all structs.\r\n\r\nMaybe this is something that just evolved over the years? If so, I would be happy to make an editorial PR to remove all of those :-)",
       "createdAt": "2022-11-21T15:12:48Z",
-      "updatedAt": "2022-12-08T10:54:59Z",
-      "closedAt": null,
+      "updatedAt": "2022-12-16T17:21:00Z",
+      "closedAt": "2022-12-16T17:21:00Z",
       "comments": [
         {
           "author": "beurdouche",
@@ -8172,7 +8172,7 @@
         },
         {
           "author": "duesee",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": ">  This also helps disambiguating between message formats\r\n\r\nCan you say more?\r\n\r\nOne of my theories was that it was used to avoid naming collisions with other possibly \"imported\" structs from other RFCs. But its `ContentType` and not `MLSContentType`, so... :-)",
           "createdAt": "2022-11-21T15:26:02Z",
           "updatedAt": "2022-11-21T15:27:50Z"
@@ -8186,7 +8186,7 @@
         },
         {
           "author": "duesee",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "First of all, sorry if I widen the scope of this issue a bit.\r\n\r\nBut when you said that the terminology comes from TLS, it clicked.\r\n\r\nWhen I started to work with MLS a few weeks ago, I got confused by the term MLSPlaintext. In TLS, a TLSPlaintext is not protected and only used as a stepping stone. This is different in MLS because an MLSPlaintext is always signed and not \"converted\" into an MLSCiphertext afterwards.\u00b9 It seems close to TLS but isn't.\r\n\r\nWhich brings me back to the \"MLS\" prefix thing. Not sure how peoples' heads work, but mine tries to get rid of not useful information such as an \"MLS\" prefix. And when we remove all \"MLS\" prefixes, it becomes more clear that Plaintext is probably not the right term to describe a signed message. The prefix \"MLS\" in MLSPlaintext blurries that because now we have something \"MLS-specific\". But still, it has \"plaintext\" in its name.\r\n\r\nAlso, I thought that -- similar to the fact that \"...TBS\" is \"never send over the wire\" -- the \"MLS\" prefix denotes things that are send over the wire -- which is not true, e.g., in the case of MLSContentTBS.\r\n\r\nFurthermore, the MLS prefix makes MLSCiphertext and MLSPlaintext stand out in ...\r\n\r\n```\r\nMLSMessage\r\n    Welcome\r\n    KeyPackage\r\n    GroupInfo\r\n    MLSPlaintext // Why the prefix?\r\n    MLSCiphertext // Why the prefix?\r\n```\r\n\r\nWhat makes these variants different?\r\n\r\nWhat would have made more sense to me is something like ...\r\n\r\n```\r\nMessage\r\n    Welcome\r\n    KeyPackage\r\n    GroupInfo\r\n    MLSPlaintext -> <Named after its usage in the system>\r\n    MLSCiphertext -> <Named after its usage in the system>\r\n\r\nMLSContent    -> Content\r\nMLSContentTBS -> ContentTBS\r\nMLSContentTBM -> ContentTBM\r\nMLSSenderData    -> SenderData\r\n...\r\n```\r\n\r\nHowever, I have no good idea what a much better name would be. `MLSPlaintext -> Signed{,Message}` and `MLSCiphertext -> SignedAndEncrypted{,Message}` is a bit better IMO but clunky.\r\n\r\n\u00b9 This was the case in the past, see https://github.com/mlswg/mls-protocol/pull/706.",
           "createdAt": "2022-11-22T12:01:58Z",
           "updatedAt": "2022-11-22T12:04:03Z"
@@ -8214,7 +8214,7 @@
         },
         {
           "author": "duesee",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "Thanks, @bifurcation! This looks really promising! `PublicMessage` and `PrivateMessage` are the best terms I heard so far.\r\n\r\nWhile we're at it, should we add a \"...TBE\" (To-Be-Encrypted) to the (possibly new) `ContentPlaintext`? While the `...TBS`, and `...TBM` appendices may seem intimidating at first, they provide a very good idea where to expect (and how to use) them.",
           "createdAt": "2022-12-08T10:54:58Z",
           "updatedAt": "2022-12-08T10:54:58Z"
@@ -8569,7 +8569,7 @@
       "id": "I_kwDOBoyH6c5YLmag",
       "title": "KDF.Nh",
       "url": "https://github.com/mlswg/mls-protocol/issues/770",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -8579,8 +8579,8 @@
       ],
       "body": "_Comment by @paulwouters_\n\n~~~ \n   The key and nonce provided to the AEAD are computed as the KDF of the\n   first KDF.Nh bytes of the ciphertext generated in the previous\n   section.\n~~~\nI don't think I understand the security model here? What happens if the previous ciphertext has 00's for the first KDF.Nh bytes?\n\n",
       "createdAt": "2022-12-06T15:47:06Z",
-      "updatedAt": "2022-12-14T16:48:24Z",
-      "closedAt": null,
+      "updatedAt": "2022-12-16T17:02:46Z",
+      "closedAt": "2022-12-16T17:02:46Z",
       "comments": [
         {
           "author": "bifurcation",
@@ -10109,15 +10109,15 @@
       "id": "I_kwDOBoyH6c5ZMV9P",
       "title": "Faster remove?",
       "url": "https://github.com/mlswg/mls-protocol/issues/834",
-      "state": "CLOSED",
+      "state": "OPEN",
       "author": "TWal",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "When removing a participant, we blank its path up to the root because it might know the private key inside these nodes.\r\nWe actually know precisely which nodes contain private key that are known to this participant: it is nodes for which the participant is not an umerged leaf.\r\n\r\nFrom this remark, we could design an alternative Remove that produces less blank nodes:\r\n- blank all nodes on the path for which the participant is unmerged\r\n- remove the participant from the unmerged leaves list of other nodes\r\n\r\nI think this would preserve the parent-hash invariants, but would need to check more thoroughly.\r\n(the intuition might rely on an invariant that is not checked on unmerged leaves, which is that the set of nodes for which a node is unmerged forms a connected path from the leaf going up [note that this invariant would have been true for free with #752!])\r\n\r\nPros:\r\n- less blank nodes are produced\r\n- removing a participant just after adding it does not change the tree, it's not that useful but it's a pretty property!\r\n\r\nCons:\r\n- the remove definition is more complex\r\n- the optimization isn't great if the participant is merged for most nodes (e.g., it has issued an UpdatePath in the past)\r\n\r\nWhat do you think?",
       "createdAt": "2022-12-14T11:26:43Z",
-      "updatedAt": "2022-12-14T21:27:17Z",
-      "closedAt": "2022-12-14T18:38:45Z",
+      "updatedAt": "2022-12-16T07:48:03Z",
+      "closedAt": null,
       "comments": [
         {
           "author": "kkohbrok",
@@ -10244,6 +10244,72 @@
           "body": "@beurdouche the parent-hash link invariant is defined [here](https://github.com/Inria-Prosecco/treesync/blob/main/mls-star/fstar/treesync/code/MLS.TreeSync.Invariants.ParentHash.fst) and the parent hash guarantees theorem is proved [here](https://github.com/Inria-Prosecco/treesync/blob/main/mls-star/fstar/treesync/proofs/MLS.TreeSync.Proofs.ParentHashGuarantees.fst), and Richard found the ninja equation [here](https://github.com/mlswg/mls-protocol/pull/713#issuecomment-1146288574) if that's what you're asking for!\r\n\r\n@bifurcation I don't understand why you closed the issue as completed?\r\n\r\nThe proof goes as follows.\r\n\r\nFrom the parent hash guarantees, we know that the signature covers all the subtree it the participant modified, at the time of their last modification (we name them the \"original subtrees\").\r\nWhen a private key is generated for a node, the participant generating it:\r\n- send it to the leaves in the corresponding subtree\r\n- signs the corresponding subtree (via parent-hash)\r\n\r\nNote that in every subtree signature (via parent-hash), there is the property that the private hpke key of the node is known only by the leaves of that subtree.\r\n\r\nWhen you receive tree, you check every signature and compute every original subtree, and get back the property that the private hpke key of each node is known only to leaves in its original subtree.\r\n\r\nTherefore, if you have an attack, it means you found a way to break the invariants checked when joining a group.\r\nIt might be the case that the new Remove does break the invariants and we would need to strengthen them (as tried in #835), but my feeling is that it should work fine without additional invariants.\r\nI'll check in the next days and keep you up-to-date!",
           "createdAt": "2022-12-14T21:27:17Z",
           "updatedAt": "2022-12-14T21:27:17Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thinking about an actual proof, I find that it does break the invariants:\r\n\r\nSuppose we start with the following tree (which is valid, although we can't get it with normal operations)\r\n```\r\n      Y[C]   \r\n    __|__    \r\n  */     \\   \r\n  X       Z  \r\n / \\*    / \\*\r\nA   B   C   D\r\n```\r\n\r\nRemoving C makes:\r\n```\r\n      Y\r\n    __|__    \r\n  */     \\   \r\n  X       _  \r\n / \\*    / \\\r\nA   B   _   D\r\n```\r\n\r\nIt breaks the parent-hash link X -> Y, because the original sibling tree hash is not the same.\r\n\r\nIn practice, it's not possible to have the situation with C unmerged for Y but not for Z, but it's not an invariant checked when joining a group, so we can't rely on it\u2026\r\nNote that this invariant is guaranteed for free with the unmerged leaves defined as in #752 :)",
+          "createdAt": "2022-12-15T11:24:21Z",
+          "updatedAt": "2022-12-15T11:24:21Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'm sorry, I hit the wrong button when commenting!",
+          "createdAt": "2022-12-15T14:43:03Z",
+          "updatedAt": "2022-12-15T14:43:03Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It's concerning that we have trees that are valid according to the validation rules but can't be produced by normal operations.  It seems like that calls for more validation.\r\n\r\nI noticed as I was looking at this yesterday that I don't think we are validating two (equivalent) properties that are true for every real case of an unmerged leaf:\r\n\r\n* If X is unmerged at P, then it is unmerged at every node below P (P's descendants)\r\n* If X is not unmerged at P, then it is not unmerged at every node above P (P's ancestors)\r\n\r\nMore generally, I wonder if there's a connection here, that unmerged Remove is safe if and only if the tree validation rules prevent trees that could not have arisen naturally.\r\n\r\nI would argue that we should fix the latter issue anyway.  I filed #837 for this.\r\n\r\n\r\n",
+          "createdAt": "2022-12-15T15:28:34Z",
+          "updatedAt": "2022-12-15T15:28:34Z"
+        },
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi, I don't think this optimization is worth it. At least in the IM use case, I see lots of problems anytime there is a build-up of unmerged leaves. I see unmerged leaves as a transient situation that should not be encouraged nor optimized.",
+          "createdAt": "2022-12-16T02:47:27Z",
+          "updatedAt": "2022-12-16T02:47:27Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The optimization does seem elegant, but at the very least this change should be brought to the list. In particular, I'd love to hear @MartaMularczyk's and @psyoptix' opinion on this from a provable security perspective before we consider merging this into the spec.",
+          "createdAt": "2022-12-16T07:48:03Z",
+          "updatedAt": "2022-12-16T07:48:03Z"
+        }
+      ]
+    },
+    {
+      "number": 840,
+      "id": "I_kwDOBoyH6c5ZVre5",
+      "title": "IANA considerations for signature labels?",
+      "url": "https://github.com/mlswg/mls-protocol/issues/840",
+      "state": "CLOSED",
+      "author": "TWal",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The `Label` of `SignWithLabel` absolutely needs to be unique for every signature happening in the protocol, for security and avoid signature ambiguity.\r\nThat includes signatures happening in extensions.\r\n\r\nShould this be referenced in a IANA considerations to ensure there is no conflict in the future? Or at least say something about this somewhere?\r\n\r\nWe have to think how to design things well here to be future-proof: the `SignContent` structure must be used for every signature done with the leaf signature keys, which includes what might happen in extensions but also in future versions of MLS.\r\nIf future versions of MLS could avoid doing [what TLS 1.3 did to dis-ambiguate signatures with TLS 1.2](https://www.rfc-editor.org/rfc/rfc8446.html#section-4.4.3), that would be great!",
+      "createdAt": "2022-12-15T17:53:30Z",
+      "updatedAt": "2022-12-16T17:04:27Z",
+      "closedAt": "2022-12-16T17:04:27Z",
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This seems to come down to whether we expect the signature keys used for MLS authentication to be used outside of MLS (otherwise there's no risk of confusion) and if so, whether this spec has any influence on that usage. If you're using your MLS key to sign Bitcoin transactions, we can't do much to help that.  \r\n\r\nNote that there is not an issue for future version of MLS here.  The label is constructed as `\"MLS 1.0 \" + Label`, so a future version could just increment the `1.0` part of that.\r\n\r\nGiven all that, I might prefer a recommendation that signature keys not be reused across contexts, rather than trying to accommodate reuse.\r\n\r\nIf we do something here, we should do something analogous to the [TLS exporter labels](https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#exporter-labels) registry, which are similarly intended for domain separation between different use cases.  We should probably consider making an exporter label registry anyway.",
+          "createdAt": "2022-12-15T23:05:04Z",
+          "updatedAt": "2022-12-15T23:05:04Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I agree, we shouldn't do anything about someone using the MLS signature key in another protocol.\r\n\r\nAbout future MLS versions: I agree, but note that there is a length tag before that.\r\nIt means that we impose to all signature of future MLS versions to start with `opaque label<V>;` (including the quic integer)\r\nIs it something acceptable or not, I don't now. I just think we should have in mind that the decisions we make now on `SignContent` will have an impact on the design of future MLS versions.\r\n\r\nAbout extensions: in the extensions document, there is a signature computed with `SignWithLabel(\u2026, \"TargetedMessageTBS\", \u2026)`\r\nIf two extensions were to use the same label then this could lead to security problems, this is why I think the labels should be in some registry to ensure they are all unique.\r\nOne other thing we could do is to separate all extensions signatures from the core MLS signatures, for exemple using the label \"MLS 1.0 extension [label from extension]\"? Like that a bogus extension can't introduce a security flaw in core MLS that way?",
+          "createdAt": "2022-12-16T12:03:50Z",
+          "updatedAt": "2022-12-16T12:03:50Z"
         }
       ]
     }
@@ -57507,25 +57573,33 @@
       "id": "PR_kwDOBoyH6c5FdzZ3",
       "title": "Have parent hash validation also verify unmerged leaves",
       "url": "https://github.com/mlswg/mls-protocol/pull/835",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "In #834, @raphaelrobert pointed out that we could be stricter in our validation of the `unmerged_leaves` field in the tree.  This PR updates the parent hash validation algorithm to also check that the `unmerged_leaves` relationships are consistent with the nodes having been updated at the same time.  In particular, it checks that the leaf node that signs the parent-hash chain is not unmerged at any of the parent nodes in the chain.",
       "createdAt": "2022-12-14T15:53:26Z",
-      "updatedAt": "2022-12-14T16:53:11Z",
+      "updatedAt": "2022-12-15T15:34:29Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "5c1219b512635c3a82c6dd3bf36261b4b422ba10",
       "headRepository": "mlswg/mls-protocol",
       "headRefName": "tree-val",
       "headRefOid": "141e050310256261b818e19e5dfcc1fccd926330",
-      "closedAt": null,
+      "closedAt": "2022-12-15T15:34:29Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closing in favor of #837 ",
+          "createdAt": "2022-12-15T15:34:10Z",
+          "updatedAt": "2022-12-15T15:34:10Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOBoyH6c5IlpWO",
@@ -57560,25 +57634,35 @@
       "id": "PR_kwDOBoyH6c5FeIOZ",
       "title": "Add a section discussing the security of the sender data protection",
       "url": "https://github.com/mlswg/mls-protocol/pull/836",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Fixes #770 ",
       "createdAt": "2022-12-14T16:47:18Z",
-      "updatedAt": "2022-12-14T18:47:59Z",
+      "updatedAt": "2022-12-16T17:02:45Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "0794b07a48450d4d0339307d2af804cdc7bb6e87",
       "headRepository": "mlswg/mls-protocol",
       "headRefName": "rand-ct",
-      "headRefOid": "b5c83aaf55159ab064b08f842b7a7488be997328",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "4513a3f706c1968b5f603fb2ad0b8bcb1b9c0d82",
+      "closedAt": "2022-12-16T17:02:45Z",
+      "mergedAt": "2022-12-16T17:02:45Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "0e2eaff34c5156cf28aaf9ead47effd59e91b673"
+      },
+      "comments": [
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I would propose we say that we need AE1 security for our AEAD scheme, which gives us random ciphertexts and if we have random ciphertexts the input to key/nonce generation for sender data encryption is unique. This in turn gives us AE1 security for sender data encryption. I don't think we need AE2 encryption because our nonces are random and don't reveal any private information. Also, if I understand correctly, AES GCM is not AE2 secure, so if we want AE2 security, we need a different scheme or the transform described in NAN.\r\n\r\nProbably needless to say, but I don't have a security proof for any of this. So more eyes on whatever we write here would be appreciated.",
+          "createdAt": "2022-12-15T07:18:04Z",
+          "updatedAt": "2022-12-15T07:20:02Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOBoyH6c5ImfHX",
@@ -57599,8 +57683,573 @@
               "updatedAt": "2022-12-14T18:47:59Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IriYL",
+          "commit": {
+            "abbreviatedOid": "55cdd1c"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Generally looks good, thanks for addressing my concerns. Just two nits.",
+          "createdAt": "2022-12-15T14:57:04Z",
+          "updatedAt": "2022-12-15T15:06:44Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "```suggestion\r\nis a variation of the HN1 construction analyzed in {{NAN}}.  A sample of the\r\n```",
+              "createdAt": "2022-12-15T14:57:04Z",
+              "updatedAt": "2022-12-15T15:06:44Z"
+            },
+            {
+              "originalPosition": 36,
+              "body": "Plus we don't actually use the ciphertext as nonce, but instead just use it as context in the key/nonce derivation to ensure that the nonce doesn't repeat.",
+              "createdAt": "2022-12-15T15:04:45Z",
+              "updatedAt": "2022-12-15T15:06:44Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5Ir2ZC",
+          "commit": {
+            "abbreviatedOid": "4513a3f"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-15T15:38:53Z",
+          "updatedAt": "2022-12-15T15:38:53Z",
+          "comments": []
         }
       ]
+    },
+    {
+      "number": 837,
+      "id": "PR_kwDOBoyH6c5FjonF",
+      "title": "Validate additional properties of unmerged leaves",
+      "url": "https://github.com/mlswg/mls-protocol/pull/837",
+      "state": "MERGED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In discussion of #834, it came up that the current tree validation rules are loose enough that they allow configurations of `unmerged_leaves` that could not come about by normal operations.  This PR adds a check to enforce that if a node is unmerged at a parent node, it is also unmerged at every node between that parent node and the unmerged leaf.  \r\n\r\nThis is clearly a necessary property of any honestly-created tree, given the way `unmerged_leaves` entries are set and cleared (including the possible changes in #834).  I think it is also sufficient, but I don't have a proof on hand.",
+      "createdAt": "2022-12-15T15:28:21Z",
+      "updatedAt": "2022-12-16T17:07:50Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "0794b07a48450d4d0339307d2af804cdc7bb6e87",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "more-valid",
+      "headRefOid": "30e5c7250a42d8f053517ff8950a1538b5cded9b",
+      "closedAt": "2022-12-16T17:07:49Z",
+      "mergedAt": "2022-12-16T17:07:49Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "e14e9c74fe18bc96418712f5fc7c1f61448a7140"
+      },
+      "comments": [
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Note that this property is *partly* checked by parent hash validation, [as @TWal notes](https://github.com/mlswg/mls-protocol/pull/835#discussion_r1048719223), but it still allows [some unnatural trees](https://github.com/mlswg/mls-protocol/issues/834#issuecomment-1352921209).  So the main impact of this PR is to have an explicit, complete check in addition to the implicit, partial check in parent hash validation.",
+          "createdAt": "2022-12-15T15:32:18Z",
+          "updatedAt": "2022-12-15T15:32:18Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Independently of #834, I think this is a useful property to have: this is a key invariant that is used in the O(n log log n) algorithm for parent-hash verification described in #527 and implemented in mlspp.\r\n\r\nI don't know how hard it would be to add enough checks to reject every \"unnatural trees\", for example I don't think it's possible to have a blank node whose children are non-blank internal nodes, but a tree having this thing would be accepted when joining a group?",
+          "createdAt": "2022-12-16T12:31:08Z",
+          "updatedAt": "2022-12-16T12:31:08Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5Ivfls",
+          "commit": {
+            "abbreviatedOid": "e658eb9"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-16T07:49:12Z",
+          "updatedAt": "2022-12-16T07:49:12Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 838,
+      "id": "PR_kwDOBoyH6c5FjtjF",
+      "title": "Don't blank leaves that aren't known to a removed member",
+      "url": "https://github.com/mlswg/mls-protocol/pull/838",
+      "state": "CLOSED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #834 ",
+      "createdAt": "2022-12-15T15:40:59Z",
+      "updatedAt": "2022-12-16T15:45:15Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "0794b07a48450d4d0339307d2af804cdc7bb6e87",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "remove-unmerged",
+      "headRefOid": "089aa2b5408982b6633510e1de46c9641472618c",
+      "closedAt": "2022-12-16T15:42:40Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "mulmarta",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "While it sounds like a nice idea, I'm rather reluctant to make such changes at this stage. There has been a number of analyses of MLS and most of them are unlikely to be updated. I haven't been able to find an attack in a couple of days, but I don't feel certain enough that this is secure.\r\n\r\nWould it be possible to make this an extension instead? Or maybe (also) a part of MLS 2.0?",
+          "createdAt": "2022-12-16T11:40:06Z",
+          "updatedAt": "2022-12-16T11:40:06Z"
+        },
+        {
+          "author": "TWal",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yes, this could be defined cleanly in an extension. It could be a separate proposal, i.e. we could have `Remove` (as we have now) and `FastRemove` (the new version I proposed) that live together.\r\n\r\nAbout attacks on such a change, I really think it only boils down to whether it breaks the parent-hash invariant (the one checked when joining a group) or not.\r\nHere is an intuition:\r\nif the current MLS is secure, and FastRemove don't break the parent-hash invariants but introduce a security flaw (e.g. break the TreeKEM secrecy invariant), then there would be an attack on the current MLS: the attacker could apply FastRemove on a tree (no need for this to be an actual proposal) and invite someone in a group with this tree.\r\nThe new tree would be accepted by the joining while not satisfying the TreeKEM secrecy invariant, hence an attack on the current MLS.",
+          "createdAt": "2022-12-16T12:12:58Z",
+          "updatedAt": "2022-12-16T12:12:58Z"
+        },
+        {
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "body": "I would also like to put the optimisation into perspective again: This only makes removes faster in the narrow time window after a new member joined and before said member did its initial update. Furthermore, this only applies to the removal of new members. With that in mind, the optimisation should be more accurately renamed as \"More efficient removal of new joiners\".\r\nNew members are strongly encouraged to do an update as quickly as possible (even when the general update policy is more relaxed), therefore I expect this time window to be relatively short in an overwhelming majority of MLS deployments.\r\n\r\nThe risk @mulmarta describes is real, and I don't think it is justified by the marginal performance gain.",
+          "createdAt": "2022-12-16T12:16:17Z",
+          "updatedAt": "2022-12-16T12:16:17Z"
+        },
+        {
+          "author": "seanturner",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Discussed at 12/16/2022 interim. Decided to close, but it can be revived later as an extension.",
+          "createdAt": "2022-12-16T15:45:14Z",
+          "updatedAt": "2022-12-16T15:45:14Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 839,
+      "id": "PR_kwDOBoyH6c5FkGQf",
+      "title": "Remove \"MLS\" prefix on structs",
+      "url": "https://github.com/mlswg/mls-protocol/pull/839",
+      "state": "MERGED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #759 \r\n\r\nAs discussed in #759, this PR makes the following terminology changes:\r\n\r\n| Before                      | After                     |\r\n|:----------------------------|:--------------------------|\r\n| MLSMessage                  | MLSMessage                |\r\n| MLSContent                  | GroupContent              |\r\n| MLSContentTBS               | GroupContentTBS           |\r\n| MLSContentAuthData          | GroupContentAuthData      |\r\n| MLSAuthenticatedContent     | AuthenticatedContent      |\r\n| MLSContentTBM               | AuthenticatedContentTBM   |\r\n| MLSSenderData               | SenderData                |\r\n| MLSSenderDataAAD            | SenderDataAAD             |\r\n| MLSCiphertextContent        | AuthenticatedContentTBE   |\r\n| MLSCiphertextContentAAD     | ContentAAD                |\r\n| MLSPlaintext                | PublicMessage             |\r\n| MLSCiphertext               | PrivateMessage            |\r\n\r\nIt might be useful to review the two commits here separately.  The first is just a global search-and-replace.  The second is a light review for grammar (\"a\" vs. \"an\"), and makes a few small copy edits.",
+      "createdAt": "2022-12-15T16:51:05Z",
+      "updatedAt": "2022-12-16T17:20:59Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "e14e9c74fe18bc96418712f5fc7c1f61448a7140",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "no-mls",
+      "headRefOid": "4e6b759e89d7583d06e723189c9a38f14fd10603",
+      "closedAt": "2022-12-16T17:20:59Z",
+      "mergedAt": "2022-12-16T17:20:59Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "9099b72fb387e4cec03d071444001cb3499066f3"
+      },
+      "comments": [
+        {
+          "author": "rohan-wire",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I have a slight preference for SignedMessage and EncryptedMessage instead of PublicMessage and PrivateMessage",
+          "createdAt": "2022-12-16T15:23:01Z",
+          "updatedAt": "2022-12-16T15:23:01Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "As discussed in the interim 2022-12-16:\r\n* Keeping Public/Private\r\n* GroupContent -> FramedContent\r\n* ContentAAD -> PrivateContentAAD\r\n* I also added: AuthenticatedContentTBE -> PrivateContentTBE (to be parallel with PrivateContentAAD)",
+          "createdAt": "2022-12-16T17:20:13Z",
+          "updatedAt": "2022-12-16T17:20:13Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5ItW62",
+          "commit": {
+            "abbreviatedOid": "44c019a"
+          },
+          "author": "duesee",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Thanks for tackling this, @bifurcation! I hope to help a bit with a review.\r\n\r\nI grepped for the old names ...\r\n\r\n```sh\r\nfor name_before in MLSContent MLSContentTBS MLSContentAuthData MLSAuthenticatedContent MLSContentTBM MLSSenderData MLSSenderDataAAD MLSCiphertextContent MLSCiphertextContentAAD MLSPlaintext MLSCiphertext; do echo Checking $name_before; rg -i $name_before; done\r\nChecking MLSContent\r\nChecking MLSContentTBS\r\nChecking MLSContentAuthData\r\nChecking MLSAuthenticatedContent\r\nChecking MLSContentTBM\r\nChecking MLSSenderData\r\nChecking MLSSenderDataAAD\r\nChecking MLSCiphertextContent\r\nChecking MLSCiphertextContentAAD\r\nChecking MLSPlaintext\r\ndraft-ietf-mls-protocol.md\r\n355:- Handle non-member sender cases in MLSPlaintextTBS\r\n395:- Move MLSPlaintext signature under the confirmation tag (\\*)\r\n397:- Explicitly authenticate group membership with MLSPLaintext (\\*)\r\n458:- Allow multiple Proposals and a single Commit in one MLSPlaintext (\\*)\r\n481:- Cover the entire MLSPlaintext in the transcript hash (\\*)\r\nChecking MLSCiphertext\r\n```\r\n\r\n... and verified that the remaining instances of `MLSPlaintext` are all in the `##  Change Log` section. Furthermore, I checked that no accidental renames were made to this section.\r\n\r\nI couldn't find any (grammatical or visual) mistakes in the second commit. Also, doing some spot-checks for the first commit, I couldn't find anything wrong either.\r\n\r\nSo, it all looks excellent to me :+1:",
+          "createdAt": "2022-12-15T19:46:42Z",
+          "updatedAt": "2022-12-15T19:50:13Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5Iveek",
+          "commit": {
+            "abbreviatedOid": "44c019a"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-16T07:44:01Z",
+          "updatedAt": "2022-12-16T07:44:01Z",
+          "comments": [
+            {
+              "originalPosition": 101,
+              "body": "I suggested \"MessageContent\", \"MessageContentTBS\", etc. as opposed to using the \"Group-\" prefix. It got some \ud83d\udc4d\ud83c\udffb, but no other reaction. Do you still prefer the \"Group-\" prefix?",
+              "createdAt": "2022-12-16T07:44:01Z",
+              "updatedAt": "2022-12-16T07:44:01Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5Iv_Aa",
+          "commit": {
+            "abbreviatedOid": "44c019a"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-12-16T09:34:56Z",
+          "updatedAt": "2022-12-16T09:34:56Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5IwB4D",
+          "commit": {
+            "abbreviatedOid": "44c019a"
+          },
+          "author": "beurdouche",
+          "authorAssociation": "MEMBER",
+          "state": "CHANGES_REQUESTED",
+          "body": "I agree with Konrad that `GroupContent` is very weird. Here is a proposal `FrameContent`.\r\nAlso `ContentAAD` should be changed to `PrivateMessageAAD`",
+          "createdAt": "2022-12-16T09:44:15Z",
+          "updatedAt": "2022-12-16T09:54:50Z",
+          "comments": [
+            {
+              "originalPosition": 101,
+              "body": "```suggestion\r\n    select (FrameContent.content_type) {\r\n```",
+              "createdAt": "2022-12-16T09:44:15Z",
+              "updatedAt": "2022-12-16T09:52:38Z"
+            },
+            {
+              "originalPosition": 110,
+              "body": "```suggestion\r\n} FrameContent;\r\n```",
+              "createdAt": "2022-12-16T09:45:09Z",
+              "updatedAt": "2022-12-16T09:52:38Z"
+            },
+            {
+              "originalPosition": 142,
+              "body": "```suggestion\r\n    FrameContent content;\r\n    FrameContentAuthData auth;\r\n```",
+              "createdAt": "2022-12-16T09:46:21Z",
+              "updatedAt": "2022-12-16T09:52:38Z"
+            },
+            {
+              "originalPosition": 152,
+              "body": "```suggestion\r\n                                         FrameContent\r\n```",
+              "createdAt": "2022-12-16T09:46:50Z",
+              "updatedAt": "2022-12-16T09:52:38Z"
+            },
+            {
+              "originalPosition": 159,
+              "body": "```suggestion\r\n                           FrameContentAuthData |                  |   Sign / Verify\r\n```",
+              "createdAt": "2022-12-16T09:47:02Z",
+              "updatedAt": "2022-12-16T09:52:38Z"
+            },
+            {
+              "originalPosition": 182,
+              "body": "```suggestion\r\nFrameContent is authenticated using the FrameContentAuthData structure.\r\n```",
+              "createdAt": "2022-12-16T09:47:18Z",
+              "updatedAt": "2022-12-16T09:52:38Z"
+            },
+            {
+              "originalPosition": 191,
+              "body": "```suggestion\r\n    FrameContent content;\r\n    select (FrameContentTBS.content.sender.sender_type) {\r\n```",
+              "createdAt": "2022-12-16T09:47:48Z",
+              "updatedAt": "2022-12-16T09:52:38Z"
+            },
+            {
+              "originalPosition": 200,
+              "body": "```suggestion\r\n} FrameContentTBS;\r\n```",
+              "createdAt": "2022-12-16T09:47:57Z",
+              "updatedAt": "2022-12-16T09:52:38Z"
+            },
+            {
+              "originalPosition": 206,
+              "body": "```suggestion\r\n    /* SignWithLabel(., \"FrameContentTBS\", FrameContentTBS) */\r\n```",
+              "createdAt": "2022-12-16T09:48:13Z",
+              "updatedAt": "2022-12-16T09:52:38Z"
+            },
+            {
+              "originalPosition": 209,
+              "body": "```suggestion\r\n    select (FrameContent.content_type) {\r\n```",
+              "createdAt": "2022-12-16T09:48:23Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 218,
+              "body": "```suggestion\r\n} FrameContentAuthData;\r\n```",
+              "createdAt": "2022-12-16T09:48:33Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 223,
+              "body": "```suggestion\r\n`\"FrameContentTBS\"` and with a content that covers the message content and\r\n```",
+              "createdAt": "2022-12-16T09:48:42Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 232,
+              "body": "```suggestion\r\nat the same state of the group. A FrameContentAuthData is said to be valid when both\r\n```",
+              "createdAt": "2022-12-16T09:48:53Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 247,
+              "body": "```suggestion\r\n    FrameContent content;\r\n    FrameContentAuthData auth;\r\n```",
+              "createdAt": "2022-12-16T09:49:07Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 271,
+              "body": "```suggestion\r\n  FrameContentTBS content_tbs;\r\n  FrameContentAuthData auth;\r\n```",
+              "createdAt": "2022-12-16T09:49:22Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 284,
+              "body": "```suggestion\r\nFrameContentAuthData is valid.\r\n```",
+              "createdAt": "2022-12-16T09:49:31Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 325,
+              "body": "```suggestion\r\n    FrameContentAuthData auth;\r\n```",
+              "createdAt": "2022-12-16T09:49:45Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 355,
+              "body": "```suggestion\r\nFrameContentAuthData is valid.\r\n```",
+              "createdAt": "2022-12-16T09:49:54Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 433,
+              "body": "```suggestion\r\n    FrameContent content; /* with content_type == commit */\r\n```",
+              "createdAt": "2022-12-16T09:50:08Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 442,
+              "body": "```suggestion\r\nProposals are included in a FrameContent by way of a Proposal structure\r\n```",
+              "createdAt": "2022-12-16T09:50:15Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 453,
+              "body": "```suggestion\r\nOn receiving a FrameContent containing a Proposal, a client MUST verify the\r\n```",
+              "createdAt": "2022-12-16T09:50:24Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 455,
+              "body": "```suggestion\r\nsignature inside FrameContentAuthData and that the `epoch` field of the enclosing\r\nFrameContent is equal to the `epoch` field of the current GroupContext object.\r\n```",
+              "createdAt": "2022-12-16T09:50:43Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 488,
+              "body": "```suggestion\r\n* Construct a FrameContent object containing the Commit object. Sign the\r\n  FrameContent using the old GroupContext as context.\r\n  * Use the FrameContent to update the confirmed transcript hash and update\r\n```",
+              "createdAt": "2022-12-16T09:51:01Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 497,
+              "body": "```suggestion\r\n    hash and the `confirmation_tag` from the FrameContentAuthData.\r\n```",
+              "createdAt": "2022-12-16T09:51:12Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 513,
+              "body": "```suggestion\r\n  * The confirmation_tag from the FrameContentAuthData object\r\n```",
+              "createdAt": "2022-12-16T09:51:20Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 522,
+              "body": "```suggestion\r\n* Verify that the `epoch` field of the enclosing FrameContent is equal\r\n```",
+              "createdAt": "2022-12-16T09:51:30Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 535,
+              "body": "```suggestion\r\n* Verify that the signature on the FrameContent message as described in\r\n```",
+              "createdAt": "2022-12-16T09:51:40Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 544,
+              "body": "```suggestion\r\n  `confirmation_tag` field in the FrameContentAuthData object.\r\n```",
+              "createdAt": "2022-12-16T09:51:48Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            },
+            {
+              "originalPosition": 567,
+              "body": "```suggestion\r\nindicated by the `epoch` field of the enclosing FrameContent.\r\n```",
+              "createdAt": "2022-12-16T09:51:58Z",
+              "updatedAt": "2022-12-16T09:52:39Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 841,
+      "id": "PR_kwDOBoyH6c5FpYay",
+      "title": "Create IANA registries for signature and export labels",
+      "url": "https://github.com/mlswg/mls-protocol/pull/841",
+      "state": "MERGED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #840 \r\n\r\nAlso copies the \"Recommended\" field by reference, instead of reciting it in each registry.\r\n\r\nNote that this has a conflict with #839 that `git` will not catch -- \"MLSContentTBS\" will have to be changed to whatever new name is agreed in that PR.",
+      "createdAt": "2022-12-16T14:24:43Z",
+      "updatedAt": "2022-12-16T17:04:26Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "0794b07a48450d4d0339307d2af804cdc7bb6e87",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "iana-labels",
+      "headRefOid": "4a485e4a8616f00bceb305b1178c16d76f87f9d6",
+      "closedAt": "2022-12-16T17:04:26Z",
+      "mergedAt": "2022-12-16T17:04:26Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "b52457283d7b0d2376151b527221bdec29949add"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5Ix0At",
+          "commit": {
+            "abbreviatedOid": "14514e4"
+          },
+          "author": "mulmarta",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-16T15:18:52Z",
+          "updatedAt": "2022-12-16T15:18:53Z",
+          "comments": [
+            {
+              "originalPosition": 30,
+              "body": "```suggestion\r\n* MLS Exporter Labels ({{mls-exporter-labels}})\r\n```",
+              "createdAt": "2022-12-16T15:18:53Z",
+              "updatedAt": "2022-12-16T15:18:53Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 842,
+      "id": "PR_kwDOBoyH6c5FqV_O",
+      "title": "Add label and context to public-key encryption",
+      "url": "https://github.com/mlswg/mls-protocol/pull/842",
+      "state": "OPEN",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As discussed in the virtual interim 2022-12-16, it is possible that extensions might be tempted to re-use HPKE public keys created for MLS.  Even within MLS, we have two different public-key encryption cases, Welcome and Commit (though these currently use different keys).\r\n\r\nCurrently, for Commit encryption, the HPKE `info` parameter is set to the group context.  The content of `info` is actually undefined for Welcome encryption (!)  This PR makes the following changes:\r\n\r\n* Define general `EncryptWithLabel` and `DecryptWithLabel` functions that populte the HPKE `info` parameter with an encoded label and context\r\n* Apply these to Commit and Welcome encryption:\r\n    * Commit: label=\"UpdatePathNode\", context=`group_context`\r\n    * Welcome: label=\"Welcome\", context=`encrypted_group_info`\r\n* Add an IANA registry of public-key encryption labels (as for signing)\r\n\r\nThere is also a bit of reorganization of the Ciphersuites section to split it into three subsections.",
+      "createdAt": "2022-12-16T17:28:58Z",
+      "updatedAt": "2022-12-17T14:55:21Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "9099b72fb387e4cec03d071444001cb3499066f3",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "encrypt-with-label",
+      "headRefOid": "3151f50ae958ee98aa1a40cb41e935f83ed0d7ce",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOBoyH6c5I01jL",
+          "commit": {
+            "abbreviatedOid": "3151f50"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "I think this captures what we discussed during the interim.\r\n\r\nFWIW, I'm wondering if we didn't have a domain separation issue in the past when we only had one HPKE public key in KeyPackages and used it for both the Welcome subsequently for UpdatePath as well. Either way, I think this is a good defense-in-depth mechanism.",
+          "createdAt": "2022-12-17T14:47:42Z",
+          "updatedAt": "2022-12-17T14:55:21Z",
+          "comments": [
+            {
+              "originalPosition": 81,
+              "body": "```suggestion\r\ncontext = Context;\r\n```",
+              "createdAt": "2022-12-17T14:47:42Z",
+              "updatedAt": "2022-12-17T14:55:21Z"
+            },
+            {
+              "originalPosition": 85,
+              "body": "```suggestion\r\nHPKE algorithms specified by the group's ciphersuite.  If MLS extensions\r\n```",
+              "createdAt": "2022-12-17T14:48:22Z",
+              "updatedAt": "2022-12-17T14:55:21Z"
+            },
+            {
+              "originalPosition": 124,
+              "body": "```suggestion\r\nHere `node_public_key` is the public key of the node for which the path secret is\r\nencrypted, `group_context` is the provisional GroupContext object for\r\n```",
+              "createdAt": "2022-12-17T14:50:15Z",
+              "updatedAt": "2022-12-17T14:55:21Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 843,
+      "id": "PR_kwDOBoyH6c5FqXtf",
+      "title": "Disambiguate section references",
+      "url": "https://github.com/mlswg/mls-protocol/pull/843",
+      "state": "MERGED",
+      "author": "bifurcation",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2022-12-16T17:34:55Z",
+      "updatedAt": "2022-12-16T18:17:18Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "9099b72fb387e4cec03d071444001cb3499066f3",
+      "headRepository": "mlswg/mls-protocol",
+      "headRefName": "disambiguate",
+      "headRefOid": "223c215f1068286a3a8f1f25fa16952882ba2eed",
+      "closedAt": "2022-12-16T18:17:18Z",
+      "mergedAt": "2022-12-16T18:17:18Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "0d0a41ac674999ccae8f3a81217877b1e9564a13"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
