@@ -28,14 +28,14 @@ in size ranging from two to thousands.
 <meta content="draft-ietf-mls-protocol-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.15.3
-    Python 3.10.8
+    Python 3.10.9
     appdirs 1.4.4
     ConfigArgParse 1.5.3
     google-i18n-address 2.5.2
     html5lib 1.1
     intervaltree 3.1.0
     Jinja2 3.1.2
-    lxml 4.9.1
+    lxml 4.9.2
     MarkupSafe 2.1.1
     pycountry 22.3.5
     PyYAML 6.0
@@ -1055,7 +1055,7 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Barnes, et al.</td>
-<td class="center">Expires 19 June 2023</td>
+<td class="center">Expires 22 June 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1068,12 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-protocol-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-12-16" class="published">16 December 2022</time>
+<time datetime="2022-12-19" class="published">19 December 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-06-19">19 June 2023</time></dd>
+<dd class="expires"><time datetime="2023-06-22">22 June 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1144,7 +1144,7 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1238,6 +1238,17 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-ciphersuites" class="internal xref">Ciphersuites</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.1">
+                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="auto internal xref">5.1.1</a>.  <a href="#name-public-keys" class="internal xref">Public Keys</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.2">
+                    <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="auto internal xref">5.1.2</a>.  <a href="#name-signing" class="internal xref">Signing</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.3">
+                    <p id="section-toc.1-1.5.2.1.2.3.1"><a href="#section-5.1.3" class="auto internal xref">5.1.3</a>.  <a href="#name-public-key-encryption" class="internal xref">Public-Key Encryption</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-hash-based-identifiers" class="internal xref">Hash-Based Identifiers</a></p>
@@ -1526,13 +1537,16 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
                 <p id="section-toc.1-1.17.2.6.1"><a href="#section-17.6" class="auto internal xref">17.6</a>.  <a href="#name-mls-signature-labels" class="internal xref">MLS Signature Labels</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.7">
-                <p id="section-toc.1-1.17.2.7.1"><a href="#section-17.7" class="auto internal xref">17.7</a>.  <a href="#name-mls-exporter-labels" class="internal xref">MLS Exporter Labels</a></p>
+                <p id="section-toc.1-1.17.2.7.1"><a href="#section-17.7" class="auto internal xref">17.7</a>.  <a href="#name-mls-public-key-encryption-l" class="internal xref">MLS Public Key Encryption Labels</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.8">
-                <p id="section-toc.1-1.17.2.8.1"><a href="#section-17.8" class="auto internal xref">17.8</a>.  <a href="#name-mls-designated-expert-pool" class="internal xref">MLS Designated Expert Pool</a></p>
+                <p id="section-toc.1-1.17.2.8.1"><a href="#section-17.8" class="auto internal xref">17.8</a>.  <a href="#name-mls-exporter-labels" class="internal xref">MLS Exporter Labels</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.9">
-                <p id="section-toc.1-1.17.2.9.1"><a href="#section-17.9" class="auto internal xref">17.9</a>.  <a href="#name-the-message-mls-mime-type" class="internal xref">The "message/mls" MIME Type</a></p>
+                <p id="section-toc.1-1.17.2.9.1"><a href="#section-17.9" class="auto internal xref">17.9</a>.  <a href="#name-mls-designated-expert-pool" class="internal xref">MLS Designated Expert Pool</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.10">
+                <p id="section-toc.1-1.17.2.10.1"><a href="#section-17.10" class="auto internal xref">17.10</a>. <a href="#name-the-message-mls-mime-type" class="internal xref">The "message/mls" MIME Type</a></p>
 </li>
             </ul>
 </li>
@@ -3140,67 +3154,121 @@ following primitives to be used in group key computations:<a href="#section-5.1-
 strings to HPKE key pairs.  As in HPKE, MLS assumes that an AEAD algorithm
 produces a single ciphertext output from AEAD encryption (aligning with
 <span>[<a href="#RFC5116" class="cite xref">RFC5116</a>]</span>), as opposed to a separate ciphertext and tag.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
-<p id="section-5.1-4">Ciphersuites are represented with the CipherSuite type. HPKE public keys
-are opaque values in a format defined by the underlying
-protocol (see the Cryptographic Dependencies section of the HPKE specification for more
-information).<a href="#section-5.1-4" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-5.1-5">
+<p id="section-5.1-4">Ciphersuites are represented with the CipherSuite type. The ciphersuites are
+defined in <a href="#mls-ciphersuites" class="auto internal xref">Section 17.1</a>.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+<div id="public-keys">
+<section id="section-5.1.1">
+          <h4 id="name-public-keys">
+<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-public-keys" class="section-name selfRef">Public Keys</a>
+          </h4>
+<p id="section-5.1.1-1">HPKE public keys are opaque values in a format defined by the underlying
+protocol (see the Cryptographic Dependencies section of the HPKE specification
+for more information).<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-5.1.1-2">
 <pre>
 opaque HPKEPublicKey&lt;V&gt;;
-</pre><a href="#section-5.1-5" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-6">The signature algorithm specified in the ciphersuite is the mandatory algorithm
-to be used for signatures in FramedContentAuthData and the tree signatures.  It MUST be
-the same as the signature algorithm specified in the credentials in the leaves
-of the tree (including the leaf node information in KeyPackages used to add new
-members).<a href="#section-5.1-6" class="pilcrow">¶</a></p>
-<p id="section-5.1-7">Like HPKE public keys, signature public keys are represented as opaque values in
-a format defined by the ciphersuite's signature scheme.<a href="#section-5.1-7" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-5.1-8">
+<p id="section-5.1.1-3">Signature public keys are likewise represented as opaque values in a format
+defined by the ciphersuite's signature scheme.<a href="#section-5.1.1-3" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-5.1.1-4">
 <pre>
 opaque SignaturePublicKey&lt;V&gt;;
-</pre><a href="#section-5.1-8" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.1-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-9">For ciphersuites using Ed25519 or Ed448 signature schemes, the public key is in
+<p id="section-5.1.1-5">For ciphersuites using Ed25519 or Ed448 signature schemes, the public key is in
 the format specified in <span>[<a href="#RFC8032" class="cite xref">RFC8032</a>]</span>.  For ciphersuites using ECDSA with the
 NIST curves (P-256, P-384, or P-521), the public key is represented as an
-encoded UncompressedPointRepresentation struct, as defined in <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>.<a href="#section-5.1-9" class="pilcrow">¶</a></p>
-<p id="section-5.1-10">The signatures used in this document are encoded as specified in <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>.
+encoded UncompressedPointRepresentation struct, as defined in <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>.<a href="#section-5.1.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="signing">
+<section id="section-5.1.2">
+          <h4 id="name-signing">
+<a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-signing" class="section-name selfRef">Signing</a>
+          </h4>
+<p id="section-5.1.2-1">The signature algorithm specified in the ciphersuite is the mandatory algorithm
+to be used for signatures in FramedContentAuthData and the tree signatures.  It
+MUST be the same as the signature algorithm specified in the credentials in the
+leaves of the tree (including the leaf node information in KeyPackages used to
+add new members).<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.2-2">The signatures used in this document are encoded as specified in <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>.
 In particular, ECDSA signatures are DER-encoded and EdDSA signatures are defined
-as the concatenation of <code>r</code> and <code>s</code> as specified in <span>[<a href="#RFC8032" class="cite xref">RFC8032</a>]</span>.<a href="#section-5.1-10" class="pilcrow">¶</a></p>
-<p id="section-5.1-11">To disambiguate different signatures used in MLS, each signed value is prefixed
-by a label as shown below:<a href="#section-5.1-11" class="pilcrow">¶</a></p>
-<div class="lang-pseudocode sourcecode" id="section-5.1-12">
+as the concatenation of <code>r</code> and <code>s</code> as specified in <span>[<a href="#RFC8032" class="cite xref">RFC8032</a>]</span>.<a href="#section-5.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.2-3">To disambiguate different signatures used in MLS, each signed value is prefixed
+by a label as shown below:<a href="#section-5.1.2-3" class="pilcrow">¶</a></p>
+<div class="lang-pseudocode sourcecode" id="section-5.1.2-4">
 <pre>
 SignWithLabel(SignatureKey, Label, Content) =
     Signature.Sign(SignatureKey, SignContent)
 
 VerifyWithLabel(VerificationKey, Label, Content, SignatureValue) =
     Signature.Verify(VerificationKey, SignContent, SignatureValue)
-</pre><a href="#section-5.1-12" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-13">Where SignContent is specified as:<a href="#section-5.1-13" class="pilcrow">¶</a></p>
-<div class="lang-tls sourcecode" id="section-5.1-14">
+<p id="section-5.1.2-5">Where SignContent is specified as:<a href="#section-5.1.2-5" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-5.1.2-6">
 <pre>
 struct {
     opaque label&lt;V&gt;;
     opaque content&lt;V&gt;;
 } SignContent;
-</pre><a href="#section-5.1-14" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.2-6" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-15">And its fields set to:<a href="#section-5.1-15" class="pilcrow">¶</a></p>
-<div class="lang-pseudocode sourcecode" id="section-5.1-16">
+<p id="section-5.1.2-7">And its fields set to:<a href="#section-5.1.2-7" class="pilcrow">¶</a></p>
+<div class="lang-pseudocode sourcecode" id="section-5.1.2-8">
 <pre>
 label = "MLS 1.0 " + Label;
 content = Content;
-</pre><a href="#section-5.1-16" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.2-8" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-17">Here, the functions <code>Signature.Sign</code> and <code>Signature.Verify</code> are defined by the
+<p id="section-5.1.2-9">Here, the functions <code>Signature.Sign</code> and <code>Signature.Verify</code> are defined by the
 signature algorithm.  If MLS extensions require signatures by group members,
 they should re-use the SignWithLabel construction, using a distinct label.  To
 avoid collisions in these labels, an IANA registry is defined in
-<a href="#mls-signature-labels" class="auto internal xref">Section 17.6</a>.<a href="#section-5.1-17" class="pilcrow">¶</a></p>
-<p id="section-5.1-18">The ciphersuites are defined in section <a href="#mls-ciphersuites" class="auto internal xref">Section 17.1</a>.<a href="#section-5.1-18" class="pilcrow">¶</a></p>
+<a href="#mls-signature-labels" class="auto internal xref">Section 17.6</a>.<a href="#section-5.1.2-9" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="public-key-encryption">
+<section id="section-5.1.3">
+          <h4 id="name-public-key-encryption">
+<a href="#section-5.1.3" class="section-number selfRef">5.1.3. </a><a href="#name-public-key-encryption" class="section-name selfRef">Public-Key Encryption</a>
+          </h4>
+<p id="section-5.1.3-1">As with signing, MLS includes a label and context in encryption operations to
+avoid confusion between ciphertexts produced for different purposes.  Encryption
+and decryption including this label and context are done as follows:<a href="#section-5.1.3-1" class="pilcrow">¶</a></p>
+<div class="lang-pseudocode sourcecode" id="section-5.1.3-2">
+<pre>
+EncryptWithLabel(PublicKey, Label, Context, Plaintext) =
+  SealBase(PublicKey, EncryptContext, "", Plaintext)
+
+DecryptWithLabel(PrivateKey, Label, Context, KEMOutput, Ciphertext) =
+  OpenBase(KEMOutput, PrivateKey, EncryptContext, "", Ciphertext)
+</pre><a href="#section-5.1.3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5.1.3-3">Where EncryptContext is specified as:<a href="#section-5.1.3-3" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-5.1.3-4">
+<pre>
+struct {
+  opaque label&lt;V&gt;;
+  opaque context&lt;V&gt;;
+} EncryptContext;
+</pre><a href="#section-5.1.3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-5.1.3-5">And its fields set to:<a href="#section-5.1.3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1.3-6">
+<pre>
+label = "MLS 1.0 " + Label;
+context = Context;
+</pre><a href="#section-5.1.3-6" class="pilcrow">¶</a>
+</div>
+<p id="section-5.1.3-7">Here, the functions <code>SealBase</code> and <code>OpenBase</code> are defined <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>, using the
+HPKE algorithms specified by the group's ciphersuite.  If MLS extensions
+require HPKE encryption operations, they should re-use the EncryptWithLabel
+construction, using a distinct label.  To avoid collisions in these labels, an
+IANA registry is defined in <a href="#mls-public-key-encryption-labels" class="auto internal xref">Section 17.7</a>.<a href="#section-5.1.3-7" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="hash-based-identifiers">
@@ -4525,25 +4593,22 @@ exclude all new leaf nodes added as part of the current Commit. The length of
 the <code>encrypted_path_secret</code> vector MUST be equal to the length of the resolution
 of the copath node (excluding new leaf nodes), with each ciphertext being the
 encryption to the respective resolution node.<a href="#section-7.6-3" class="pilcrow">¶</a></p>
-<p id="section-7.6-4">The HPKECiphertext values are computed as<a href="#section-7.6-4" class="pilcrow">¶</a></p>
+<p id="section-7.6-4">The HPKECiphertext values are encrypted and decrypted as follows:<a href="#section-7.6-4" class="pilcrow">¶</a></p>
 <div class="lang-pseudocode sourcecode" id="section-7.6-5">
 <pre>
-kem_output, context = SetupBaseS(node_public_key, group_context)
-ciphertext = context.Seal("", path_secret)
+(kem_output, ciphertext) =
+  EncryptWithLabel(node_public_key, "UpdatePathNode",
+                   group_context, path_secret)
+
+path_secret =
+  DecryptWithLabel(node_private_key, "UpdatePathNode",
+                   group_context, kem_output, ciphertext)
 </pre><a href="#section-7.6-5" class="pilcrow">¶</a>
 </div>
-<p id="section-7.6-6">where <code>node_public_key</code> is the public key of the node that the path
-secret is being encrypted for, group_context is the provisional GroupContext object
-for the group, and the functions <code>SetupBaseS</code> and
-<code>Seal</code> are defined according to <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-7.6-6" class="pilcrow">¶</a></p>
-<p id="section-7.6-7">Decryption is performed in the corresponding way, using the private
-key of the resolution node.<a href="#section-7.6-7" class="pilcrow">¶</a></p>
-<div class="lang-pseudocode sourcecode" id="section-7.6-8">
-<pre>
-context = SetupBaseR(kem_output, node_private_key, group_context)
-path_secret = context.Open("", ciphertext)
-</pre><a href="#section-7.6-8" class="pilcrow">¶</a>
-</div>
+<p id="section-7.6-6">Here <code>node_public_key</code> is the public key of the node for which the path secret is
+encrypted, <code>group_context</code> is the provisional GroupContext object for
+the group, and the <code>EncryptWithLabel</code> function is as defined in
+<a href="#public-key-encryption" class="auto internal xref">Section 5.1.3</a>.<a href="#section-7.6-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="adding-and-removing-leaves">
@@ -5416,7 +5481,7 @@ MLS-Exporter(Label, Context, Length) =
 identifies the secret's intended purpose. This is to help prevent the same
 secret from being generated and used in two different places. To help avoid
 the same label being used in different applications, an IANA registry for these
-labels has been defined in <a href="#mls-exporter-labels" class="auto internal xref">Section 17.7</a>.<a href="#section-8.5-3" class="pilcrow">¶</a></p>
+labels has been defined in <a href="#mls-exporter-labels" class="auto internal xref">Section 17.8</a>.<a href="#section-8.5-3" class="pilcrow">¶</a></p>
 <p id="section-8.5-4">The exported values are bound to the group epoch from which the
 <code>exporter_secret</code> is derived, and hence reflect a particular state of
 the group.<a href="#section-8.5-4" class="pilcrow">¶</a></p>
@@ -6949,119 +7014,130 @@ indicated by the <code>cipher_suite</code> field. If no such field exists, or if
 ciphersuite indicated in the KeyPackage does not match the one in the
 Welcome message, return an error.<a href="#section-12.4.3.1-8.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-8.2">Decrypt the <code>encrypted_group_secrets</code> value with the algorithms indicated
-by the ciphersuite and the private key corresponding to <code>init_key</code> in the
-referenced KeyPackage.<a href="#section-12.4.3.1-8.2" class="pilcrow">¶</a>
-</li>
-              <li class="normal" id="section-12.4.3.1-8.3">If a <code>PreSharedKeyID</code> is part of the GroupSecrets and the client is not in
-possession of the corresponding PSK, return an error. Additionally, if a
-<code>PreSharedKeyID</code> has type <code>resumption</code> with usage <code>reinit</code> or <code>branch</code>, verify
-that it is the only such PSK.<a href="#section-12.4.3.1-8.3" class="pilcrow">¶</a>
-</li>
-              <li class="normal" id="section-12.4.3.1-8.4">From the <code>joiner_secret</code> in the decrypted GroupSecrets object and the PSKs
-specified in the <code>GroupSecrets</code>, derive the <code>welcome_secret</code> and using that
-the <code>welcome_key</code> and <code>welcome_nonce</code>. Use the key and nonce to decrypt the
-<code>encrypted_group_info</code> field.<a href="#section-12.4.3.1-8.4" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-8.2">Decrypt the <code>encrypted_group_secrets</code> value with the algorithms indicated by
+the ciphersuite and the private key <code>init_key_priv</code> corresponding to
+<code>init_key</code> in the referenced KeyPackage.<a href="#section-12.4.3.1-8.2" class="pilcrow">¶</a>
 </li>
             </ul>
 <div class="lang-pseudocode sourcecode" id="section-12.4.3.1-9">
 <pre>
-welcome_nonce = KDF.Expand(welcome_secret, "nonce", AEAD.Nn)
-welcome_key = KDF.Expand(welcome_secret, "key", AEAD.Nk)
+encrypted_group_secrets = EncryptWithLabel(init_key, "Welcome",
+                                           encrypted_group_info, group_secrets)
+
+group_secrets = DecryptWithLabel(kem_output, init_key_priv, "Welcome",
+                                 encrypted_group_info, ciphertext)
 </pre><a href="#section-12.4.3.1-9" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-10.1">Verify the signature on the GroupInfo object. The signature input comprises
+<li class="normal" id="section-12.4.3.1-10.1">If a <code>PreSharedKeyID</code> is part of the GroupSecrets and the client is not in
+possession of the corresponding PSK, return an error. Additionally, if a
+<code>PreSharedKeyID</code> has type <code>resumption</code> with usage <code>reinit</code> or <code>branch</code>, verify
+that it is the only such PSK.<a href="#section-12.4.3.1-10.1" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-12.4.3.1-10.2">From the <code>joiner_secret</code> in the decrypted GroupSecrets object and the PSKs
+specified in the <code>GroupSecrets</code>, derive the <code>welcome_secret</code> and using that
+the <code>welcome_key</code> and <code>welcome_nonce</code>. Use the key and nonce to decrypt the
+<code>encrypted_group_info</code> field.<a href="#section-12.4.3.1-10.2" class="pilcrow">¶</a>
+</li>
+            </ul>
+<div class="lang-pseudocode sourcecode" id="section-12.4.3.1-11">
+<pre>
+welcome_nonce = KDF.Expand(welcome_secret, "nonce", AEAD.Nn)
+welcome_key = KDF.Expand(welcome_secret, "key", AEAD.Nk)
+</pre><a href="#section-12.4.3.1-11" class="pilcrow">¶</a>
+</div>
+<ul class="normal">
+<li class="normal" id="section-12.4.3.1-12.1">Verify the signature on the GroupInfo object. The signature input comprises
 all of the fields in the GroupInfo object except the signature field. The
 public key is taken from the LeafNode of the
 ratchet tree with leaf index <code>signer</code>. If the node is blank or if
-signature verification fails, return an error.<a href="#section-12.4.3.1-10.1" class="pilcrow">¶</a>
+signature verification fails, return an error.<a href="#section-12.4.3.1-12.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.2">Verify that the <code>group_id</code> is unique among the groups that the client is
-currently participating in.<a href="#section-12.4.3.1-10.2" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-12.2">Verify that the <code>group_id</code> is unique among the groups that the client is
+currently participating in.<a href="#section-12.4.3.1-12.2" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.3">Verify that the <code>cipher_suite</code> in the GroupInfo matches the <code>cipher_suite</code> in
-the KeyPackage.<a href="#section-12.4.3.1-10.3" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-12.3">Verify that the <code>cipher_suite</code> in the GroupInfo matches the <code>cipher_suite</code> in
+the KeyPackage.<a href="#section-12.4.3.1-12.3" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.4">
-                <p id="section-12.4.3.1-10.4.1">Verify the integrity of the ratchet tree.<a href="#section-12.4.3.1-10.4.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-12.4.3.1-12.4">
+                <p id="section-12.4.3.1-12.4.1">Verify the integrity of the ratchet tree.<a href="#section-12.4.3.1-12.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-10.4.2.1">Verify that the tree hash of the ratchet tree matches the <code>tree_hash</code> field
-in GroupInfo.<a href="#section-12.4.3.1-10.4.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-12.4.3.1-12.4.2.1">Verify that the tree hash of the ratchet tree matches the <code>tree_hash</code> field
+in GroupInfo.<a href="#section-12.4.3.1-12.4.2.1" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.4.2.2">For each non-empty parent node, verify that it is "parent-hash valid",
-as described in <a href="#verifying-parent-hashes" class="auto internal xref">Section 7.9.2</a>.<a href="#section-12.4.3.1-10.4.2.2" class="pilcrow">¶</a>
+                  <li class="normal" id="section-12.4.3.1-12.4.2.2">For each non-empty parent node, verify that it is "parent-hash valid",
+as described in <a href="#verifying-parent-hashes" class="auto internal xref">Section 7.9.2</a>.<a href="#section-12.4.3.1-12.4.2.2" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.4.2.3">For each non-empty leaf node, validate the LeafNode as described in
-<a href="#leaf-node-validation" class="auto internal xref">Section 7.3</a>.<a href="#section-12.4.3.1-10.4.2.3" class="pilcrow">¶</a>
+                  <li class="normal" id="section-12.4.3.1-12.4.2.3">For each non-empty leaf node, validate the LeafNode as described in
+<a href="#leaf-node-validation" class="auto internal xref">Section 7.3</a>.<a href="#section-12.4.3.1-12.4.2.3" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.4.2.4">
-                    <p id="section-12.4.3.1-10.4.2.4.1">For each non-empty parent node and each entry in the node's
-<code>unmerged_leaves</code> field:<a href="#section-12.4.3.1-10.4.2.4.1" class="pilcrow">¶</a></p>
+                  <li class="normal" id="section-12.4.3.1-12.4.2.4">
+                    <p id="section-12.4.3.1-12.4.2.4.1">For each non-empty parent node and each entry in the node's
+<code>unmerged_leaves</code> field:<a href="#section-12.4.3.1-12.4.2.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-10.4.2.4.2.1">Verify that the entry represents a non-blank leaf node that is a
-descendant of the parent node.<a href="#section-12.4.3.1-10.4.2.4.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-12.4.3.1-12.4.2.4.2.1">Verify that the entry represents a non-blank leaf node that is a
+descendant of the parent node.<a href="#section-12.4.3.1-12.4.2.4.2.1" class="pilcrow">¶</a>
 </li>
-                      <li class="normal" id="section-12.4.3.1-10.4.2.4.2.2">Verify that every non-blank intermediate node beween the leaf node and the
-parent node also has an entry for the leaf node in its <code>unmerged_leaves</code>.<a href="#section-12.4.3.1-10.4.2.4.2.2" class="pilcrow">¶</a>
+                      <li class="normal" id="section-12.4.3.1-12.4.2.4.2.2">Verify that every non-blank intermediate node beween the leaf node and the
+parent node also has an entry for the leaf node in its <code>unmerged_leaves</code>.<a href="#section-12.4.3.1-12.4.2.4.2.2" class="pilcrow">¶</a>
 </li>
                     </ul>
 </li>
                 </ul>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.5">Identify a leaf whose LeafNode is
+              <li class="normal" id="section-12.4.3.1-12.5">Identify a leaf whose LeafNode is
 identical to the one in the KeyPackage.  If no such field exists, return an
-error.  Let <code>my_leaf</code> represent this leaf in the tree.<a href="#section-12.4.3.1-10.5" class="pilcrow">¶</a>
+error.  Let <code>my_leaf</code> represent this leaf in the tree.<a href="#section-12.4.3.1-12.5" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.6">
-                <p id="section-12.4.3.1-10.6.1">Construct a new group state using the information in the GroupInfo object.<a href="#section-12.4.3.1-10.6.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-12.4.3.1-12.6">
+                <p id="section-12.4.3.1-12.6.1">Construct a new group state using the information in the GroupInfo object.<a href="#section-12.4.3.1-12.6.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-10.6.2.1">The GroupContext is the <code>group_context</code> field from the GroupInfo object.<a href="#section-12.4.3.1-10.6.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-12.4.3.1-12.6.2.1">The GroupContext is the <code>group_context</code> field from the GroupInfo object.<a href="#section-12.4.3.1-12.6.2.1" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.6.2.2">The new member's position in the tree is at the leaf <code>my_leaf</code>, as defined
-above.<a href="#section-12.4.3.1-10.6.2.2" class="pilcrow">¶</a>
+                  <li class="normal" id="section-12.4.3.1-12.6.2.2">The new member's position in the tree is at the leaf <code>my_leaf</code>, as defined
+above.<a href="#section-12.4.3.1-12.6.2.2" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.6.2.3">Update the leaf <code>my_leaf</code> with the private key corresponding to the
-public key in the node.<a href="#section-12.4.3.1-10.6.2.3" class="pilcrow">¶</a>
+                  <li class="normal" id="section-12.4.3.1-12.6.2.3">Update the leaf <code>my_leaf</code> with the private key corresponding to the
+public key in the node.<a href="#section-12.4.3.1-12.6.2.3" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.6.2.4">If the <code>path_secret</code> value is set in the GroupSecrets object: Identify the
+                  <li class="normal" id="section-12.4.3.1-12.6.2.4">If the <code>path_secret</code> value is set in the GroupSecrets object: Identify the
 lowest common ancestor of the leaf node <code>my_leaf</code> and of the node of
 the member with leaf index <code>GroupInfo.signer</code>. Set the private key for
-this node to the private key derived from the <code>path_secret</code>.<a href="#section-12.4.3.1-10.6.2.4" class="pilcrow">¶</a>
+this node to the private key derived from the <code>path_secret</code>.<a href="#section-12.4.3.1-12.6.2.4" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.6.2.5">For each parent of the common ancestor, up to the root of the tree, derive
+                  <li class="normal" id="section-12.4.3.1-12.6.2.5">For each parent of the common ancestor, up to the root of the tree, derive
 a new path secret and set the private key for the node to the private key
 derived from the path secret.  The private key MUST be the private key
-that corresponds to the public key in the node.<a href="#section-12.4.3.1-10.6.2.5" class="pilcrow">¶</a>
+that corresponds to the public key in the node.<a href="#section-12.4.3.1-12.6.2.5" class="pilcrow">¶</a>
 </li>
                 </ul>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.7">Use the <code>joiner_secret</code> from the GroupSecrets object to generate the epoch secret
-and other derived secrets for the current epoch.<a href="#section-12.4.3.1-10.7" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-12.7">Use the <code>joiner_secret</code> from the GroupSecrets object to generate the epoch secret
+and other derived secrets for the current epoch.<a href="#section-12.4.3.1-12.7" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.8">Set the confirmed transcript hash in the new state to the value of the
-<code>confirmed_transcript_hash</code> in the GroupInfo.<a href="#section-12.4.3.1-10.8" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-12.8">Set the confirmed transcript hash in the new state to the value of the
+<code>confirmed_transcript_hash</code> in the GroupInfo.<a href="#section-12.4.3.1-12.8" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.9">Verify the confirmation tag in the GroupInfo using the derived confirmation
-key and the <code>confirmed_transcript_hash</code> from the GroupInfo.<a href="#section-12.4.3.1-10.9" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-12.9">Verify the confirmation tag in the GroupInfo using the derived confirmation
+key and the <code>confirmed_transcript_hash</code> from the GroupInfo.<a href="#section-12.4.3.1-12.9" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.10">Use the confirmed transcript hash and confirmation tag to compute the interim
-transcript hash in the new state.<a href="#section-12.4.3.1-10.10" class="pilcrow">¶</a>
+              <li class="normal" id="section-12.4.3.1-12.10">Use the confirmed transcript hash and confirmation tag to compute the interim
+transcript hash in the new state.<a href="#section-12.4.3.1-12.10" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-12.4.3.1-10.11">
-                <p id="section-12.4.3.1-10.11.1">If a <code>PreSharedKeyID</code> was used that has type <code>resumption</code> with usage <code>reinit</code>
-or <code>branch</code>, verify that the <code>epoch</code> field in the GroupInfo is equal to 1.<a href="#section-12.4.3.1-10.11.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-12.4.3.1-12.11">
+                <p id="section-12.4.3.1-12.11.1">If a <code>PreSharedKeyID</code> was used that has type <code>resumption</code> with usage <code>reinit</code>
+or <code>branch</code>, verify that the <code>epoch</code> field in the GroupInfo is equal to 1.<a href="#section-12.4.3.1-12.11.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-12.4.3.1-10.11.2.1">For usage <code>reinit</code>, verify that the last Commit to the referenced group
+<li class="normal" id="section-12.4.3.1-12.11.2.1">For usage <code>reinit</code>, verify that the last Commit to the referenced group
 contains a ReInit proposal and that the <code>group_id</code>, <code>version</code>,
 <code>cipher_suite</code>, and <code>group_context.extensions</code> fields of the GroupInfo match
 the ReInit proposal. Additionally, verify that all the members of the old
-group are also members of the new group, according to the application.<a href="#section-12.4.3.1-10.11.2.1" class="pilcrow">¶</a>
+group are also members of the new group, according to the application.<a href="#section-12.4.3.1-12.11.2.1" class="pilcrow">¶</a>
 </li>
-                  <li class="normal" id="section-12.4.3.1-10.11.2.2">For usage <code>branch</code>, verify that the <code>version</code> and <code>cipher_suite</code> of the new
+                  <li class="normal" id="section-12.4.3.1-12.11.2.2">For usage <code>branch</code>, verify that the <code>version</code> and <code>cipher_suite</code> of the new
 group match those of the old group, and that the members of the new group
 compose a subset of the members of the old group, according to the
-application.<a href="#section-12.4.3.1-10.11.2.2" class="pilcrow">¶</a>
+application.<a href="#section-12.4.3.1-12.11.2.2" class="pilcrow">¶</a>
 </li>
                 </ul>
 </li>
@@ -7943,12 +8019,14 @@ copath node corresponding to the node in the UpdatePath.<a href="#section-16.7-4
 </li>
         <li class="normal" id="section-17-2.6">MLS Signature Labels (<a href="#mls-signature-labels" class="auto internal xref">Section 17.6</a>)<a href="#section-17-2.6" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-17-2.7">MLS Exporter Labels (<a href="#mls-exporter-labels" class="auto internal xref">Section 17.7</a>)<a href="#section-17-2.7" class="pilcrow">¶</a>
+        <li class="normal" id="section-17-2.7">MLS Public Key Encryption Labels (<a href="#mls-public-key-encryption-labels" class="auto internal xref">Section 17.7</a>)<a href="#section-17-2.7" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-17-2.8">MLS Exporter Labels (<a href="#mls-exporter-labels" class="auto internal xref">Section 17.8</a>)<a href="#section-17-2.8" class="pilcrow">¶</a>
 </li>
       </ul>
 <p id="section-17-3">All of these registries should be under a heading of "Messaging Layer Security",
 and assignments are made via the Specification Required policy <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. See
-<a href="#de" class="auto internal xref">Section 17.8</a> for additional information about the MLS Designated Experts (DEs).<a href="#section-17-3" class="pilcrow">¶</a></p>
+<a href="#de" class="auto internal xref">Section 17.9</a> for additional information about the MLS Designated Experts (DEs).<a href="#section-17-3" class="pilcrow">¶</a></p>
 <p id="section-17-4">RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to
 this document<a href="#section-17-4" class="pilcrow">¶</a></p>
 <div id="mls-ciphersuites">
@@ -8553,7 +8631,7 @@ so valid credential type values are in the range 0x0000 to 0xffff.<a href="#sect
         <h3 id="name-mls-signature-labels">
 <a href="#section-17.6" class="section-number selfRef">17.6. </a><a href="#name-mls-signature-labels" class="section-name selfRef">MLS Signature Labels</a>
         </h3>
-<p id="section-17.6-1">The <code>SignWithLabel</code> function defined in <a href="#ciphersuites" class="auto internal xref">Section 5.1</a> avoids the risk of
+<p id="section-17.6-1">The <code>SignWithLabel</code> function defined in <a href="#signing" class="auto internal xref">Section 5.1.2</a> avoids the risk of
 confusion between signatures in different contexts.  Each context is assigned a
 distinct label that is incorporated into the signature.  This registry records
 the labels defined in this document, and allows additional labels to be
@@ -8603,30 +8681,76 @@ signature keys used elsewhere in MLS.<a href="#section-17.6-1" class="pilcrow">�
         </table>
 </section>
 </div>
-<div id="mls-exporter-labels">
+<div id="mls-public-key-encryption-labels">
 <section id="section-17.7">
-        <h3 id="name-mls-exporter-labels">
-<a href="#section-17.7" class="section-number selfRef">17.7. </a><a href="#name-mls-exporter-labels" class="section-name selfRef">MLS Exporter Labels</a>
+        <h3 id="name-mls-public-key-encryption-l">
+<a href="#section-17.7" class="section-number selfRef">17.7. </a><a href="#name-mls-public-key-encryption-l" class="section-name selfRef">MLS Public Key Encryption Labels</a>
         </h3>
-<p id="section-17.7-1">The exporter function defined in <a href="#exporters" class="auto internal xref">Section 8.5</a> allows applications to derive key
-material from the MLS key schedule.  Like the TLS exporter <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, the MLS
-exporter uses a label to distinguish between different applications' use of the
-exporter.  This registry allows applications to register their usage to avoid
-collisions.<a href="#section-17.7-1" class="pilcrow">¶</a></p>
+<p id="section-17.7-1">The <code>EncryptWithLabel</code> function defined in <a href="#public-key-encryption" class="auto internal xref">Section 5.1.3</a> avoids the
+risk of confusion between ciphertexts produced for different purposes in
+different contexts.  Each context is assigned a distinct label that is
+incorporated into the signature.  This registry records the labels defined in
+this document, and allows additional labels to be registered in case extensions
+add other types of public-key encryption using the same HPKE keys used elsewhere
+in MLS.<a href="#section-17.7-1" class="pilcrow">¶</a></p>
 <p id="section-17.7-2">Template:<a href="#section-17.7-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-17.7-3.1">Label: The string to be used as the <code>Label</code> parameter to <code>MLS-Exporter</code><a href="#section-17.7-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-17.7-3.1">Label: The string to be used as the <code>Label</code> parameter to <code>EncryptWithLabel</code><a href="#section-17.7-3.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-17.7-3.2">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 17.1</a><a href="#section-17.7-3.2" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-17.7-3.3">Reference: The document where this credential is defined<a href="#section-17.7-3.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-17.7-4">The registry has no initial contents, since it is intended to be used by
-applications, not the core protocol.  The table below is intended only to show
-the column layout of the registry.<a href="#section-17.7-4" class="pilcrow">¶</a></p>
+<p id="section-17.7-4">Initial contents:<a href="#section-17.7-4" class="pilcrow">¶</a></p>
 <table class="center" id="table-13">
           <caption><a href="#table-13" class="selfRef">Table 13</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Label</th>
+              <th class="text-left" rowspan="1" colspan="1">Recommended</th>
+              <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">"UpdatePathNode"</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">"Welcome"</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
+            </tr>
+          </tbody>
+        </table>
+</section>
+</div>
+<div id="mls-exporter-labels">
+<section id="section-17.8">
+        <h3 id="name-mls-exporter-labels">
+<a href="#section-17.8" class="section-number selfRef">17.8. </a><a href="#name-mls-exporter-labels" class="section-name selfRef">MLS Exporter Labels</a>
+        </h3>
+<p id="section-17.8-1">The exporter function defined in <a href="#exporters" class="auto internal xref">Section 8.5</a> allows applications to derive key
+material from the MLS key schedule.  Like the TLS exporter <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, the MLS
+exporter uses a label to distinguish between different applications' use of the
+exporter.  This registry allows applications to register their usage to avoid
+collisions.<a href="#section-17.8-1" class="pilcrow">¶</a></p>
+<p id="section-17.8-2">Template:<a href="#section-17.8-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-17.8-3.1">Label: The string to be used as the <code>Label</code> parameter to <code>MLS-Exporter</code><a href="#section-17.8-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-17.8-3.2">Recommended: Same as in <a href="#mls-ciphersuites" class="auto internal xref">Section 17.1</a><a href="#section-17.8-3.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-17.8-3.3">Reference: The document where this credential is defined<a href="#section-17.8-3.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-17.8-4">The registry has no initial contents, since it is intended to be used by
+applications, not the core protocol.  The table below is intended only to show
+the column layout of the registry.<a href="#section-17.8-4" class="pilcrow">¶</a></p>
+<table class="center" id="table-14">
+          <caption><a href="#table-14" class="selfRef">Table 14</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Label</th>
@@ -8645,161 +8769,161 @@ the column layout of the registry.<a href="#section-17.7-4" class="pilcrow">¶</
 </section>
 </div>
 <div id="de">
-<section id="section-17.8">
+<section id="section-17.9">
         <h3 id="name-mls-designated-expert-pool">
-<a href="#section-17.8" class="section-number selfRef">17.8. </a><a href="#name-mls-designated-expert-pool" class="section-name selfRef">MLS Designated Expert Pool</a>
+<a href="#section-17.9" class="section-number selfRef">17.9. </a><a href="#name-mls-designated-expert-pool" class="section-name selfRef">MLS Designated Expert Pool</a>
         </h3>
-<p id="section-17.8-1">Specification Required <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> registry requests are registered
+<p id="section-17.9-1">Specification Required <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> registry requests are registered
 after a three-week review period on the MLS DEs' mailing list:
 <a href="mailto:mls-reg-review@ietf.org">mls-reg-review@ietf.org</a>, on the advice of one or more of the MLS DEs. However,
 to allow for the allocation of values prior to publication, the MLS
 DEs may approve registration once they are satisfied that such a
-specification will be published.<a href="#section-17.8-1" class="pilcrow">¶</a></p>
-<p id="section-17.8-2">Registration requests sent to the MLS DEs mailing list for review
+specification will be published.<a href="#section-17.9-1" class="pilcrow">¶</a></p>
+<p id="section-17.9-2">Registration requests sent to the MLS DEs mailing list for review
 SHOULD use an appropriate subject (e.g., "Request to register value
-in MLS Bar registry").<a href="#section-17.8-2" class="pilcrow">¶</a></p>
-<p id="section-17.8-3">Within the review period, the MLS DEs will either approve or deny
+in MLS Bar registry").<a href="#section-17.9-2" class="pilcrow">¶</a></p>
+<p id="section-17.9-3">Within the review period, the MLS DEs will either approve or deny
 the registration request, communicating this decision to the MLS DEs
 mailing list and IANA. Denials SHOULD include an explanation and, if
 applicable, suggestions as to how to make the request successful.
 Registration requests that are undetermined for a period longer than
 21 days can be brought to the IESG's attention for resolution using
-the <a href="mailto:iesg@ietf.org">iesg@ietf.org</a> mailing list.<a href="#section-17.8-3" class="pilcrow">¶</a></p>
-<p id="section-17.8-4">Criteria that SHOULD be applied by the MLS DEs includes determining
+the <a href="mailto:iesg@ietf.org">iesg@ietf.org</a> mailing list.<a href="#section-17.9-3" class="pilcrow">¶</a></p>
+<p id="section-17.9-4">Criteria that SHOULD be applied by the MLS DEs includes determining
 whether the proposed registration duplicates existing functionality,
 whether it is likely to be of general applicability or useful only
 for a single application, and whether the registration description
 is clear. For example, the MLS DEs will apply the ciphersuite-related
-advisory found in <a href="#mls-ciphersuites" class="auto internal xref">Section 17.1</a>.<a href="#section-17.8-4" class="pilcrow">¶</a></p>
-<p id="section-17.8-5">IANA MUST only accept registry updates from the MLS DEs and SHOULD
-direct all requests for registration to the MLS DEs' mailing list.<a href="#section-17.8-5" class="pilcrow">¶</a></p>
-<p id="section-17.8-6">It is suggested that multiple MLS DEs be appointed who are able to
+advisory found in <a href="#mls-ciphersuites" class="auto internal xref">Section 17.1</a>.<a href="#section-17.9-4" class="pilcrow">¶</a></p>
+<p id="section-17.9-5">IANA MUST only accept registry updates from the MLS DEs and SHOULD
+direct all requests for registration to the MLS DEs' mailing list.<a href="#section-17.9-5" class="pilcrow">¶</a></p>
+<p id="section-17.9-6">It is suggested that multiple MLS DEs be appointed who are able to
 represent the perspectives of different applications using this
 specification, in order to enable broadly informed review of
 registration decisions. In cases where a registration decision could
 be perceived as creating a conflict of interest for a particular
-MLS DE, that MLS DE SHOULD defer to the judgment of the other MLS DEs.<a href="#section-17.8-6" class="pilcrow">¶</a></p>
+MLS DE, that MLS DE SHOULD defer to the judgment of the other MLS DEs.<a href="#section-17.9-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="the-messagemls-mime-type">
-<section id="section-17.9">
+<section id="section-17.10">
         <h3 id="name-the-message-mls-mime-type">
-<a href="#section-17.9" class="section-number selfRef">17.9. </a><a href="#name-the-message-mls-mime-type" class="section-name selfRef">The "message/mls" MIME Type</a>
+<a href="#section-17.10" class="section-number selfRef">17.10. </a><a href="#name-the-message-mls-mime-type" class="section-name selfRef">The "message/mls" MIME Type</a>
         </h3>
-<p id="section-17.9-1">This document registers the "message/mls" MIME media type in order to allow other
-protocols (e.g., HTTP <span>[<a href="#RFC7540" class="cite xref">RFC7540</a>]</span>) to convey MLS messages.<a href="#section-17.9-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-17.9-2">
-          <dt id="section-17.9-2.1">Type name:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.2">
-            <p id="section-17.9-2.2.1">message<a href="#section-17.9-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-17.10-1">This document registers the "message/mls" MIME media type in order to allow other
+protocols (e.g., HTTP <span>[<a href="#RFC7540" class="cite xref">RFC7540</a>]</span>) to convey MLS messages.<a href="#section-17.10-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-17.10-2">
+          <dt id="section-17.10-2.1">Type name:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.2">
+            <p id="section-17.10-2.2.1">message<a href="#section-17.10-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-2.3">Subtype name:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.4">
-            <p id="section-17.9-2.4.1">mls<a href="#section-17.9-2.4.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-2.3">Subtype name:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.4">
+            <p id="section-17.10-2.4.1">mls<a href="#section-17.10-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-2.5">Required parameters:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.6">
-            <p id="section-17.9-2.6.1">none<a href="#section-17.9-2.6.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-2.5">Required parameters:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.6">
+            <p id="section-17.10-2.6.1">none<a href="#section-17.10-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-2.7">Optional parameters:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.8">
-            <span class="break"></span><dl class="dlParallel" id="section-17.9-2.8.1">
-              <dt id="section-17.9-2.8.1.1">version</dt>
-              <dd style="margin-left: 1.5em" id="section-17.9-2.8.1.2">
-                <p id="section-17.9-2.8.1.2.1"></p><a href="#section-17.9-2.8.1.2" class="pilcrow">¶</a>
+<dt id="section-17.10-2.7">Optional parameters:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.8">
+            <span class="break"></span><dl class="dlParallel" id="section-17.10-2.8.1">
+              <dt id="section-17.10-2.8.1.1">version</dt>
+              <dd style="margin-left: 1.5em" id="section-17.10-2.8.1.2">
+                <p id="section-17.10-2.8.1.2.1"></p><a href="#section-17.10-2.8.1.2" class="pilcrow">¶</a>
 </dd>
               <dd class="break"></dd>
-<dt id="section-17.9-2.8.1.3">  version:</dt>
-              <dd style="margin-left: 1.5em" id="section-17.9-2.8.1.4">
-                <p id="section-17.9-2.8.1.4.1">The MLS protocol version expressed as a string
+<dt id="section-17.10-2.8.1.3">  version:</dt>
+              <dd style="margin-left: 1.5em" id="section-17.10-2.8.1.4">
+                <p id="section-17.10-2.8.1.4.1">The MLS protocol version expressed as a string
   <code>&lt;major&gt;.&lt;minor&gt;</code>.  If omitted the version is "1.0", which
   corresponds to MLS ProtocolVersion mls10. If for some reason
   the version number in the MIME type parameter differs from the
   ProtocolVersion embedded in the protocol, the protocol takes
-  precedence.<a href="#section-17.9-2.8.1.4.1" class="pilcrow">¶</a></p>
+  precedence.<a href="#section-17.10-2.8.1.4.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
 </dl>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-2.9">Encoding considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.10">
-            <p id="section-17.9-2.10.1">MLS messages are represented using the TLS
+<dt id="section-17.10-2.9">Encoding considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.10">
+            <p id="section-17.10-2.10.1">MLS messages are represented using the TLS
 presentation language <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>. Therefore MLS messages need to be
-treated as binary data.<a href="#section-17.9-2.10.1" class="pilcrow">¶</a></p>
+treated as binary data.<a href="#section-17.10-2.10.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-2.11">Security considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.12">
-            <p id="section-17.9-2.12.1">MLS is an encrypted messaging layer designed
+<dt id="section-17.10-2.11">Security considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.12">
+            <p id="section-17.10-2.12.1">MLS is an encrypted messaging layer designed
 to be transmitted over arbitrary lower layer protocols. The
-security considerations in this document (RFC XXXX) also apply.<a href="#section-17.9-2.12.1" class="pilcrow">¶</a></p>
+security considerations in this document (RFC XXXX) also apply.<a href="#section-17.10-2.12.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-2.13">Interoperability considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.14">
-            <p id="section-17.9-2.14.1">N/A<a href="#section-17.9-2.14.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-2.13">Interoperability considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.14">
+            <p id="section-17.10-2.14.1">N/A<a href="#section-17.10-2.14.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-2.15">Published specification:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.16">
-            <p id="section-17.9-2.16.1">RFC XXXX<a href="#section-17.9-2.16.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-2.15">Published specification:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.16">
+            <p id="section-17.10-2.16.1">RFC XXXX<a href="#section-17.10-2.16.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-2.17">Applications that use this media type:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.18">
-            <p id="section-17.9-2.18.1">MLS-based messaging applications<a href="#section-17.9-2.18.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-2.17">Applications that use this media type:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.18">
+            <p id="section-17.10-2.18.1">MLS-based messaging applications<a href="#section-17.10-2.18.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-2.19">Fragment identifier considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-2.20">
-            <p id="section-17.9-2.20.1">N/A<a href="#section-17.9-2.20.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-2.19">Fragment identifier considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-2.20">
+            <p id="section-17.10-2.20.1">N/A<a href="#section-17.10-2.20.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-17.9-3">Additional information:<a href="#section-17.9-3" class="pilcrow">¶</a></p>
+<p id="section-17.10-3">Additional information:<a href="#section-17.10-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-17.9-4.1">Deprecated alias names for this type: N/A<a href="#section-17.9-4.1" class="pilcrow">¶</a>
+<li class="normal" id="section-17.10-4.1">Deprecated alias names for this type: N/A<a href="#section-17.10-4.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-17.9-4.2">Magic number(s): N/A<a href="#section-17.9-4.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-17.10-4.2">Magic number(s): N/A<a href="#section-17.10-4.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-17.9-4.3">File extension(s): N/A<a href="#section-17.9-4.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-17.10-4.3">File extension(s): N/A<a href="#section-17.10-4.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-17.9-4.4">Macintosh file type code(s): N/A<a href="#section-17.9-4.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-17.10-4.4">Macintosh file type code(s): N/A<a href="#section-17.10-4.4" class="pilcrow">¶</a>
 </li>
         </ul>
-<span class="break"></span><dl class="dlParallel" id="section-17.9-5">
-          <dt id="section-17.9-5.1">Person &amp; email address to contact for further information:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-5.2">
-            <p id="section-17.9-5.2.1">IETF MLS Working Group <a href="mailto:mls@ietf.org">mls@ietf.org</a><a href="#section-17.9-5.2.1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-17.10-5">
+          <dt id="section-17.10-5.1">Person &amp; email address to contact for further information:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-5.2">
+            <p id="section-17.10-5.2.1">IETF MLS Working Group <a href="mailto:mls@ietf.org">mls@ietf.org</a><a href="#section-17.10-5.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-5.3">Intended usage:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-5.4">
-            <p id="section-17.9-5.4.1">COMMON<a href="#section-17.9-5.4.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-5.3">Intended usage:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-5.4">
+            <p id="section-17.10-5.4.1">COMMON<a href="#section-17.10-5.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-5.5">Restrictions on usage:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-5.6">
-            <p id="section-17.9-5.6.1">N/A<a href="#section-17.9-5.6.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-5.5">Restrictions on usage:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-5.6">
+            <p id="section-17.10-5.6.1">N/A<a href="#section-17.10-5.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-5.7">Author:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-5.8">
-            <p id="section-17.9-5.8.1">IETF MLS Working Group<a href="#section-17.9-5.8.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-5.7">Author:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-5.8">
+            <p id="section-17.10-5.8.1">IETF MLS Working Group<a href="#section-17.10-5.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-5.9">Change controller:</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-5.10">
-            <p id="section-17.9-5.10.1">IESG<a href="#section-17.9-5.10.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-5.9">Change controller:</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-5.10">
+            <p id="section-17.10-5.10.1">IESG<a href="#section-17.10-5.10.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-17.9-5.11">Provisional registration? (standards tree only):</dt>
-          <dd style="margin-left: 1.5em" id="section-17.9-5.12">
-            <p id="section-17.9-5.12.1">No<a href="#section-17.9-5.12.1" class="pilcrow">¶</a></p>
+<dt id="section-17.10-5.11">Provisional registration? (standards tree only):</dt>
+          <dd style="margin-left: 1.5em" id="section-17.10-5.12">
+            <p id="section-17.10-5.12.1">No<a href="#section-17.10-5.12.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -9095,8 +9219,8 @@ where <code>th(Z)</code> covers <code>(C, _, D)</code><a href="#appendix-B-5.2.2
       </ol>
 <p id="appendix-B-6">When a new member joins, they will receive a tree that has the following parent
 hash values, and compute the indicated parent-hash validity relationships:<a href="#appendix-B-6" class="pilcrow">¶</a></p>
-<table class="center" id="table-14">
-        <caption><a href="#table-14" class="selfRef">Table 14</a></caption>
+<table class="center" id="table-15">
+        <caption><a href="#table-15" class="selfRef">Table 15</a></caption>
 <thead>
           <tr>
             <th class="text-left" rowspan="1" colspan="1">Node</th>

@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 19 June 2023                                    Inria & Mozilla
+Expires: 22 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                              Phoenix R&D
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 19 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                        16 December 2022
+                                                        19 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 June 2023.
+   This Internet-Draft will expire on 22 June 2023.
 
 Copyright Notice
 
@@ -92,6 +92,9 @@ Table of Contents
      4.2.  Views of a Ratchet Tree
    5.  Cryptographic Objects
      5.1.  Ciphersuites
+       5.1.1.  Public Keys
+       5.1.2.  Signing
+       5.1.3.  Public-Key Encryption
      5.2.  Hash-Based Identifiers
      5.3.  Credentials
        5.3.1.  Credential Validation
@@ -176,9 +179,10 @@ Table of Contents
      17.4.  MLS Proposal Types
      17.5.  MLS Credential Types
      17.6.  MLS Signature Labels
-     17.7.  MLS Exporter Labels
-     17.8.  MLS Designated Expert Pool
-     17.9.  The "message/mls" MIME Type
+     17.7.  MLS Public Key Encryption Labels
+     17.8.  MLS Exporter Labels
+     17.9.  MLS Designated Expert Pool
+     17.10. The "message/mls" MIME Type
    18. References
      18.1.  Normative References
      18.2.  Informative References
@@ -1423,22 +1427,19 @@ Table of Contents
    produces a single ciphertext output from AEAD encryption (aligning
    with [RFC5116]), as opposed to a separate ciphertext and tag.
 
-   Ciphersuites are represented with the CipherSuite type.  HPKE public
-   keys are opaque values in a format defined by the underlying protocol
-   (see the Cryptographic Dependencies section of the HPKE specification
-   for more information).
+   Ciphersuites are represented with the CipherSuite type.  The
+   ciphersuites are defined in Section 17.1.
+
+5.1.1.  Public Keys
+
+   HPKE public keys are opaque values in a format defined by the
+   underlying protocol (see the Cryptographic Dependencies section of
+   the HPKE specification for more information).
 
    opaque HPKEPublicKey<V>;
 
-   The signature algorithm specified in the ciphersuite is the mandatory
-   algorithm to be used for signatures in FramedContentAuthData and the
-   tree signatures.  It MUST be the same as the signature algorithm
-   specified in the credentials in the leaves of the tree (including the
-   leaf node information in KeyPackages used to add new members).
-
-   Like HPKE public keys, signature public keys are represented as
-   opaque values in a format defined by the ciphersuite's signature
-   scheme.
+   Signature public keys are likewise represented as opaque values in a
+   format defined by the ciphersuite's signature scheme.
 
    opaque SignaturePublicKey<V>;
 
@@ -1447,6 +1448,14 @@ Table of Contents
    ECDSA with the NIST curves (P-256, P-384, or P-521), the public key
    is represented as an encoded UncompressedPointRepresentation struct,
    as defined in [RFC8446].
+
+5.1.2.  Signing
+
+   The signature algorithm specified in the ciphersuite is the mandatory
+   algorithm to be used for signatures in FramedContentAuthData and the
+   tree signatures.  It MUST be the same as the signature algorithm
+   specified in the credentials in the leaves of the tree (including the
+   leaf node information in KeyPackages used to add new members).
 
    The signatures used in this document are encoded as specified in
    [RFC8446].  In particular, ECDSA signatures are DER-encoded and EdDSA
@@ -1480,7 +1489,37 @@ Table of Contents
    using a distinct label.  To avoid collisions in these labels, an IANA
    registry is defined in Section 17.6.
 
-   The ciphersuites are defined in section Section 17.1.
+5.1.3.  Public-Key Encryption
+
+   As with signing, MLS includes a label and context in encryption
+   operations to avoid confusion between ciphertexts produced for
+   different purposes.  Encryption and decryption including this label
+   and context are done as follows:
+
+   EncryptWithLabel(PublicKey, Label, Context, Plaintext) =
+     SealBase(PublicKey, EncryptContext, "", Plaintext)
+
+   DecryptWithLabel(PrivateKey, Label, Context, KEMOutput, Ciphertext) =
+     OpenBase(KEMOutput, PrivateKey, EncryptContext, "", Ciphertext)
+
+   Where EncryptContext is specified as:
+
+   struct {
+     opaque label<V>;
+     opaque context<V>;
+   } EncryptContext;
+
+   And its fields set to:
+
+   label = "MLS 1.0 " + Label;
+   context = Context;
+
+   Here, the functions SealBase and OpenBase are defined [RFC9180],
+   using the HPKE algorithms specified by the group's ciphersuite.  If
+   MLS extensions require HPKE encryption operations, they should re-use
+   the EncryptWithLabel construction, using a distinct label.  To avoid
+   collisions in these labels, an IANA registry is defined in
+   Section 17.7.
 
 5.2.  Hash-Based Identifiers
 
@@ -2609,21 +2648,20 @@ Welcome  KeyPackage  GroupInfo   PublicMessage    PrivateMessage -'
    leaf nodes), with each ciphertext being the encryption to the
    respective resolution node.
 
-   The HPKECiphertext values are computed as
+   The HPKECiphertext values are encrypted and decrypted as follows:
 
-   kem_output, context = SetupBaseS(node_public_key, group_context)
-   ciphertext = context.Seal("", path_secret)
+   (kem_output, ciphertext) =
+     EncryptWithLabel(node_public_key, "UpdatePathNode",
+                      group_context, path_secret)
 
-   where node_public_key is the public key of the node that the path
-   secret is being encrypted for, group_context is the provisional
-   GroupContext object for the group, and the functions SetupBaseS and
-   Seal are defined according to [RFC9180].
+   path_secret =
+     DecryptWithLabel(node_private_key, "UpdatePathNode",
+                      group_context, kem_output, ciphertext)
 
-   Decryption is performed in the corresponding way, using the private
-   key of the resolution node.
-
-   context = SetupBaseR(kem_output, node_private_key, group_context)
-   path_secret = context.Open("", ciphertext)
+   Here node_public_key is the public key of the node for which the path
+   secret is encrypted, group_context is the provisional GroupContext
+   object for the group, and the EncryptWithLabel function is as defined
+   in Section 5.1.3.
 
 7.7.  Adding and Removing Leaves
 
@@ -3332,7 +3370,7 @@ psk_secret (or 0) --> KDF.Extract
    the same secret from being generated and used in two different
    places.  To help avoid the same label being used in different
    applications, an IANA registry for these labels has been defined in
-   Section 17.7.
+   Section 17.8.
 
    The exported values are bound to the group epoch from which the
    exporter_secret is derived, and hence reflect a particular state of
@@ -4704,8 +4742,14 @@ psk_secret (or 0) --> KDF.Extract
       one in the Welcome message, return an error.
 
    *  Decrypt the encrypted_group_secrets value with the algorithms
-      indicated by the ciphersuite and the private key corresponding to
-      init_key in the referenced KeyPackage.
+      indicated by the ciphersuite and the private key init_key_priv
+      corresponding to init_key in the referenced KeyPackage.
+
+   encrypted_group_secrets = EncryptWithLabel(init_key, "Welcome",
+                                              encrypted_group_info, group_secrets)
+
+   group_secrets = DecryptWithLabel(kem_output, init_key_priv, "Welcome",
+                                    encrypted_group_info, ciphertext)
 
    *  If a PreSharedKeyID is part of the GroupSecrets and the client is
       not in possession of the corresponding PSK, return an error.
@@ -5594,11 +5638,13 @@ psk_secret (or 0) --> KDF.Extract
 
    *  MLS Signature Labels (Section 17.6)
 
-   *  MLS Exporter Labels (Section 17.7)
+   *  MLS Public Key Encryption Labels (Section 17.7)
+
+   *  MLS Exporter Labels (Section 17.8)
 
    All of these registries should be under a heading of "Messaging Layer
    Security", and assignments are made via the Specification Required
-   policy [RFC8126].  See Section 17.8 for additional information about
+   policy [RFC8126].  See Section 17.9 for additional information about
    the MLS Designated Experts (DEs).
 
    RFC EDITOR: Please replace XXXX throughout with the RFC number
@@ -5944,9 +5990,9 @@ psk_secret (or 0) --> KDF.Extract
 
 17.6.  MLS Signature Labels
 
-   The SignWithLabel function defined in Section 5.1 avoids the risk of
-   confusion between signatures in different contexts.  Each context is
-   assigned a distinct label that is incorporated into the signature.
+   The SignWithLabel function defined in Section 5.1.2 avoids the risk
+   of confusion between signatures in different contexts.  Each context
+   is assigned a distinct label that is incorporated into the signature.
    This registry records the labels defined in this document, and allows
    additional labels to be registered in case extensions add other types
    of signature using the same signature keys used elsewhere in MLS.
@@ -5976,7 +6022,38 @@ psk_secret (or 0) --> KDF.Extract
 
                                  Table 12
 
-17.7.  MLS Exporter Labels
+17.7.  MLS Public Key Encryption Labels
+
+   The EncryptWithLabel function defined in Section 5.1.3 avoids the
+   risk of confusion between ciphertexts produced for different purposes
+   in different contexts.  Each context is assigned a distinct label
+   that is incorporated into the signature.  This registry records the
+   labels defined in this document, and allows additional labels to be
+   registered in case extensions add other types of public-key
+   encryption using the same HPKE keys used elsewhere in MLS.
+
+   Template:
+
+   *  Label: The string to be used as the Label parameter to
+      EncryptWithLabel
+
+   *  Recommended: Same as in Section 17.1
+
+   *  Reference: The document where this credential is defined
+
+   Initial contents:
+
+              +==================+=============+===========+
+              | Label            | Recommended | Reference |
+              +==================+=============+===========+
+              | "UpdatePathNode" | Y           | RFC XXXX  |
+              +------------------+-------------+-----------+
+              | "Welcome"        | Y           | RFC XXXX  |
+              +------------------+-------------+-----------+
+
+                                 Table 13
+
+17.8.  MLS Exporter Labels
 
    The exporter function defined in Section 8.5 allows applications to
    derive key material from the MLS key schedule.  Like the TLS exporter
@@ -6003,9 +6080,9 @@ psk_secret (or 0) --> KDF.Extract
                     | (N/A) | (N/A)       | (N/A)     |
                     +-------+-------------+-----------+
 
-                                  Table 13
+                                  Table 14
 
-17.8.  MLS Designated Expert Pool
+17.9.  MLS Designated Expert Pool
 
    Specification Required [RFC8126] registry requests are registered
    after a three-week review period on the MLS DEs' mailing list: mls-
@@ -6043,7 +6120,7 @@ psk_secret (or 0) --> KDF.Extract
    be perceived as creating a conflict of interest for a particular MLS
    DE, that MLS DE SHOULD defer to the judgment of the other MLS DEs.
 
-17.9.  The "message/mls" MIME Type
+17.10.  The "message/mls" MIME Type
 
    This document registers the "message/mls" MIME media type in order to
    allow other protocols (e.g., HTTP [RFC7540]) to convey MLS messages.
@@ -6356,7 +6433,7 @@ Appendix B.  Evolution of Parent Hashes
    | Z'   | H(Y', ph="", osth=th(X'))            | Yes                 |
    +------+--------------------------------------+---------------------+
 
-                                  Table 14
+                                  Table 15
 
    In other words, the joiner will find the following path-hash links in
    the tree:
