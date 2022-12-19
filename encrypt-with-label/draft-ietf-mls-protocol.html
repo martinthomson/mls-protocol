@@ -28,14 +28,14 @@ in size ranging from two to thousands.
 <meta content="draft-ietf-mls-protocol-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.15.3
-    Python 3.10.8
+    Python 3.10.9
     appdirs 1.4.4
     ConfigArgParse 1.5.3
     google-i18n-address 2.5.2
     html5lib 1.1
     intervaltree 3.1.0
     Jinja2 3.1.2
-    lxml 4.9.1
+    lxml 4.9.2
     MarkupSafe 2.1.1
     pycountry 22.3.5
     PyYAML 6.0
@@ -1055,7 +1055,7 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Barnes, et al.</td>
-<td class="center">Expires 19 June 2023</td>
+<td class="center">Expires 22 June 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1068,12 @@ svg :is([stroke="fill"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-protocol-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-12-16" class="published">16 December 2022</time>
+<time datetime="2022-12-19" class="published">19 December 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-06-19">19 June 2023</time></dd>
+<dd class="expires"><time datetime="2023-06-22">22 June 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1144,7 +1144,7 @@ in size ranging from two to thousands.<a href="#section-abstract-1" class="pilcr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 June 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -3259,11 +3259,11 @@ struct {
 <div class="alignLeft art-text artwork" id="section-5.1.3-6">
 <pre>
 label = "MLS 1.0 " + Label;
-content = Context;
+context = Context;
 </pre><a href="#section-5.1.3-6" class="pilcrow">¶</a>
 </div>
 <p id="section-5.1.3-7">Here, the functions <code>SealBase</code> and <code>OpenBase</code> are defined <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>, using the
-HPKE algorithms specified by the group's cipehersuite.  If MLS extensions
+HPKE algorithms specified by the group's ciphersuite.  If MLS extensions
 require HPKE encryption operations, they should re-use the EncryptWithLabel
 construction, using a distinct label.  To avoid collisions in these labels, an
 IANA registry is defined in <a href="#mls-public-key-encryption-labels" class="auto internal xref">Section 17.7</a>.<a href="#section-5.1.3-7" class="pilcrow">¶</a></p>
@@ -4605,8 +4605,8 @@ path_secret =
                    group_context, kem_output, ciphertext)
 </pre><a href="#section-7.6-5" class="pilcrow">¶</a>
 </div>
-<p id="section-7.6-6">Here <code>node_public_key</code> is the public key of the node that the path secret is
-being encrypted for, <code>group_context</code> is the provisional GroupContext object for
+<p id="section-7.6-6">Here <code>node_public_key</code> is the public key of the node for which the path secret is
+encrypted, <code>group_context</code> is the provisional GroupContext object for
 the group, and the <code>EncryptWithLabel</code> function is as defined in
 <a href="#public-key-encryption" class="auto internal xref">Section 5.1.3</a>.<a href="#section-7.6-6" class="pilcrow">¶</a></p>
 </section>

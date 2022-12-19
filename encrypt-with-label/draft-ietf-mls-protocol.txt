@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 19 June 2023                                    Inria & Mozilla
+Expires: 22 June 2023                                    Inria & Mozilla
                                                                R. Robert
                                                              Phoenix R&D
                                                              J. Millican
@@ -14,7 +14,7 @@ Expires: 19 June 2023                                    Inria & Mozilla
                                                                   Google
                                                           K. Cohn-Gordon
                                                     University of Oxford
-                                                        16 December 2022
+                                                        19 December 2022
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 June 2023.
+   This Internet-Draft will expire on 22 June 2023.
 
 Copyright Notice
 
@@ -1512,10 +1512,10 @@ Table of Contents
    And its fields set to:
 
    label = "MLS 1.0 " + Label;
-   content = Context;
+   context = Context;
 
    Here, the functions SealBase and OpenBase are defined [RFC9180],
-   using the HPKE algorithms specified by the group's cipehersuite.  If
+   using the HPKE algorithms specified by the group's ciphersuite.  If
    MLS extensions require HPKE encryption operations, they should re-use
    the EncryptWithLabel construction, using a distinct label.  To avoid
    collisions in these labels, an IANA registry is defined in
@@ -2658,10 +2658,10 @@ Welcome  KeyPackage  GroupInfo   PublicMessage    PrivateMessage -'
      DecryptWithLabel(node_private_key, "UpdatePathNode",
                       group_context, kem_output, ciphertext)
 
-   Here node_public_key is the public key of the node that the path
-   secret is being encrypted for, group_context is the provisional
-   GroupContext object for the group, and the EncryptWithLabel function
-   is as defined in Section 5.1.3.
+   Here node_public_key is the public key of the node for which the path
+   secret is encrypted, group_context is the provisional GroupContext
+   object for the group, and the EncryptWithLabel function is as defined
+   in Section 5.1.3.
 
 7.7.  Adding and Removing Leaves
 
