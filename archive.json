@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-18T01:23:55.912428+00:00",
+  "timestamp": "2022-12-20T01:24:41.345149+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -10109,15 +10109,15 @@
       "id": "I_kwDOBoyH6c5ZMV9P",
       "title": "Faster remove?",
       "url": "https://github.com/mlswg/mls-protocol/issues/834",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "TWal",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "When removing a participant, we blank its path up to the root because it might know the private key inside these nodes.\r\nWe actually know precisely which nodes contain private key that are known to this participant: it is nodes for which the participant is not an umerged leaf.\r\n\r\nFrom this remark, we could design an alternative Remove that produces less blank nodes:\r\n- blank all nodes on the path for which the participant is unmerged\r\n- remove the participant from the unmerged leaves list of other nodes\r\n\r\nI think this would preserve the parent-hash invariants, but would need to check more thoroughly.\r\n(the intuition might rely on an invariant that is not checked on unmerged leaves, which is that the set of nodes for which a node is unmerged forms a connected path from the leaf going up [note that this invariant would have been true for free with #752!])\r\n\r\nPros:\r\n- less blank nodes are produced\r\n- removing a participant just after adding it does not change the tree, it's not that useful but it's a pretty property!\r\n\r\nCons:\r\n- the remove definition is more complex\r\n- the optimization isn't great if the participant is merged for most nodes (e.g., it has issued an UpdatePath in the past)\r\n\r\nWhat do you think?",
       "createdAt": "2022-12-14T11:26:43Z",
-      "updatedAt": "2022-12-16T07:48:03Z",
-      "closedAt": null,
+      "updatedAt": "2022-12-19T15:02:22Z",
+      "closedAt": "2022-12-19T15:02:22Z",
       "comments": [
         {
           "author": "kkohbrok",
@@ -10279,6 +10279,13 @@
           "body": "The optimization does seem elegant, but at the very least this change should be brought to the list. In particular, I'd love to hear @MartaMularczyk's and @psyoptix' opinion on this from a provable security perspective before we consider merging this into the spec.",
           "createdAt": "2022-12-16T07:48:03Z",
           "updatedAt": "2022-12-16T07:48:03Z"
+        },
+        {
+          "author": "bifurcation",
+          "authorAssociation": "COLLABORATOR",
+          "body": "After discussion at the interim 2022-12-16, there was agreement that this change is not worth making.",
+          "createdAt": "2022-12-19T15:02:09Z",
+          "updatedAt": "2022-12-19T15:02:09Z"
         }
       ]
     },
@@ -58169,25 +58176,35 @@
       "id": "PR_kwDOBoyH6c5FqV_O",
       "title": "Add label and context to public-key encryption",
       "url": "https://github.com/mlswg/mls-protocol/pull/842",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bifurcation",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "As discussed in the virtual interim 2022-12-16, it is possible that extensions might be tempted to re-use HPKE public keys created for MLS.  Even within MLS, we have two different public-key encryption cases, Welcome and Commit (though these currently use different keys).\r\n\r\nCurrently, for Commit encryption, the HPKE `info` parameter is set to the group context.  The content of `info` is actually undefined for Welcome encryption (!)  This PR makes the following changes:\r\n\r\n* Define general `EncryptWithLabel` and `DecryptWithLabel` functions that populte the HPKE `info` parameter with an encoded label and context\r\n* Apply these to Commit and Welcome encryption:\r\n    * Commit: label=\"UpdatePathNode\", context=`group_context`\r\n    * Welcome: label=\"Welcome\", context=`encrypted_group_info`\r\n* Add an IANA registry of public-key encryption labels (as for signing)\r\n\r\nThere is also a bit of reorganization of the Ciphersuites section to split it into three subsections.",
       "createdAt": "2022-12-16T17:28:58Z",
-      "updatedAt": "2022-12-17T14:55:21Z",
+      "updatedAt": "2022-12-19T14:59:47Z",
       "baseRepository": "mlswg/mls-protocol",
       "baseRefName": "main",
       "baseRefOid": "9099b72fb387e4cec03d071444001cb3499066f3",
       "headRepository": "mlswg/mls-protocol",
       "headRefName": "encrypt-with-label",
-      "headRefOid": "3151f50ae958ee98aa1a40cb41e935f83ed0d7ce",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "c1b6d47c6fd6935c510f8a95ef6d6ee0e261b7db",
+      "closedAt": "2022-12-19T14:59:47Z",
+      "mergedAt": "2022-12-19T14:59:47Z",
+      "mergedBy": "bifurcation",
+      "mergeCommit": {
+        "oid": "4727a801d71a12fbd17d33d91e83e501dc1b282e"
+      },
+      "comments": [
+        {
+          "author": "mulmarta",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> FWIW, I'm wondering if we didn't have a domain separation issue in the past when we only had one HPKE public key in KeyPackages and used it for both the Welcome subsequently for UpdatePath as well. Either way, I think this is a good defense-in-depth mechanism.\r\n\r\nNote that any previous analysis of MLS had to take this particular reuse into account. This can't be the case for any arbitrary extensions reusing the key. So if MLS uses an extension that reuses the key, none of the existing analysis applies, which is a much bigger issue.\r\n\r\nThis said, this reuse did decrease security -- it weakened FS in that a joiner had to hold on to their HPKE leaf key, which also allowed to decrypt the init secret from the welcome message, long after joining. ",
+          "createdAt": "2022-12-19T12:48:59Z",
+          "updatedAt": "2022-12-19T12:48:59Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOBoyH6c5I01jL",
@@ -58218,6 +58235,26 @@
               "body": "```suggestion\r\nHere `node_public_key` is the public key of the node for which the path secret is\r\nencrypted, `group_context` is the provisional GroupContext object for\r\n```",
               "createdAt": "2022-12-17T14:50:15Z",
               "updatedAt": "2022-12-17T14:55:21Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOBoyH6c5I4rzr",
+          "commit": {
+            "abbreviatedOid": "3151f50"
+          },
+          "author": "mulmarta",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-12-19T12:42:26Z",
+          "updatedAt": "2022-12-19T12:42:26Z",
+          "comments": [
+            {
+              "originalPosition": 87,
+              "body": "Would be possible to recommend or even RECOMMEND that extensions use separate HPKE keys (which can be included in leaves as extensions)?",
+              "createdAt": "2022-12-19T12:42:26Z",
+              "updatedAt": "2022-12-19T12:42:26Z"
             }
           ]
         }
