@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-20T01:24:41.345149+00:00",
+  "timestamp": "2022-12-22T01:24:56.591062+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -58285,6 +58285,32 @@
       "mergeCommit": {
         "oid": "0d0a41ac674999ccae8f3a81217877b1e9564a13"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 844,
+      "id": "PR_kwDOBoyH6c5F3sD3",
+      "title": "cleanup after plaintext and ciphertext renaming.",
+      "url": "https://github.com/mlswg/mls-protocol/pull/844",
+      "state": "OPEN",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Just stumbled over these remaining occurrences of plaintext/ciphertext. Was this intentional?",
+      "createdAt": "2022-12-20T14:01:44Z",
+      "updatedAt": "2022-12-20T14:01:44Z",
+      "baseRepository": "mlswg/mls-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "4727a801d71a12fbd17d33d91e83e501dc1b282e",
+      "headRepository": "kkohbrok/mls-protocol",
+      "headRefName": "patch-3",
+      "headRefOid": "71d61eadde6812d435f46763bb86ad937bce49f3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
