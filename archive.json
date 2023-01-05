@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-01-03T01:24:05.064956+00:00",
+  "timestamp": "2023-01-05T01:35:09.559516+00:00",
   "repo": "mlswg/mls-protocol",
   "labels": [
     {
@@ -10319,6 +10319,22 @@
           "updatedAt": "2022-12-16T12:03:50Z"
         }
       ]
+    },
+    {
+      "number": 846,
+      "id": "I_kwDOBoyH6c5adXIR",
+      "title": "Change log missing for -16 and -17",
+      "url": "https://github.com/mlswg/mls-protocol/issues/846",
+      "state": "OPEN",
+      "author": "rohan-wire",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-01-03T16:38:37Z",
+      "updatedAt": "2023-01-03T16:38:37Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
